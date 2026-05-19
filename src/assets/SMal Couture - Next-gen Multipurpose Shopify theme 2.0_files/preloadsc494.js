@@ -1,0 +1,2598 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="zh.html">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com/" crossorigin>
+    <link rel="preconnect" href="https://cdn.shopify.com/" crossorigin><link rel="shortcut icon" type="image/png" href="/cdn/shop/files/favicona721.png?crop=center&amp;height=32&amp;v=1709609697&amp;width=32"><title>SMal Couture - Next-gen Multipurpose Shopify theme 2.0</title><meta name="description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!"><meta property="og:site_name" content="SMal Couture">
+<meta property="og:url" content="zh.html">
+<meta property="og:title" content="SMal Couture - Next-gen Multipurpose Shopify theme 2.0">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!"><meta property="og:image" content="/cdn/shop/files/minimog_preview_ee7f2df1-13ab-4bca-a54c-803c838bfb2cfd9b.png?v=1709167944">
+<meta property="og:image:secure_url" content="/cdn/shop/files/minimog_preview_ee7f2df1-13ab-4bca-a54c-803c838bfb2cfd9b.png?v=1709167944">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628"><meta name="twitter:site" content="@https://"><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SMal Couture - Next-gen Multipurpose Shopify theme 2.0">
+<meta name="twitter:description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!">
+<!-- Razorpay Standard Checkout -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<link
+href="../cdn/shop/t/10/assets/component-image-card0d9f.css?v=38157965861074991861739161024"
+rel="stylesheet"
+type="text/css"
+media="all"
+/>
+<style>
+  @font-face {  font-family: M-Heading-Font;  font-weight:400;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Regular.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Heading-Font;  font-weight:500;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Medium.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Heading-Font;  font-weight:600;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-SemiBold.ttf?v=1618297125);  font-display: swap;}:root {  --font-stack-header: 'M-Heading-Font';  --font-weight-header: 400;}@font-face {  font-family: M-Body-Font;  font-weight:400;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Regular.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Body-Font;  font-weight:500;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Medium.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Body-Font;  font-weight:600;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-SemiBold.ttf?v=1618297125);  font-display: swap;}:root {  --font-stack-body: 'M-Body-Font';  --font-weight-body: 400;;}
+</style>
+<style>
+  html {
+    font-size: calc(var(--font-base-size, 16) * 1px);
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-stack-body);
+    font-weight: var(--font-weight-body);
+    font-style: var(--font-style-body);
+    color: rgb(var(--color-foreground));
+    font-size: calc(var(--font-base-size, 16) * 1px);
+    line-height: calc(var(--base-line-height) * 1px);
+    background-color: rgb(var(--color-background));
+    position: relative;
+    min-height: 100%;
+  }
+
+  body,
+  html {
+    overflow-x: clip;
+  }
+
+  html.prevent-scroll,
+  html.prevent-scroll body {
+    height: auto;
+    overflow: hidden !important;
+  }
+
+  html.prevent-scroll {
+    padding-right: var(--m-scrollbar-width);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-stack-header);
+    font-weight: var(--font-weight-header);
+    font-style: var(--font-style-header);
+    color: rgb(var(--color-heading));
+    line-height: normal;
+    letter-spacing: var(--heading-letter-spacing);
+  }
+  h1,
+  .h1 {
+    font-size: calc(((var(--font-h1-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.278;
+  }
+
+  h2,
+  .h2 {
+    font-size: calc(((var(--font-h2-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.267;
+  }
+
+  h3,
+  .h3 {
+    font-size: calc(((var(--font-h3-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.36;
+  }
+
+  h4,
+  .h4 {
+    font-size: calc(((var(--font-h4-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.4;
+  }
+
+  h5,
+  .h5 {
+    font-size: calc(((var(--font-h5-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.5;
+  }
+
+  h6,
+  .h6 {
+    font-size: calc(((var(--font-h6-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.5;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .h1,
+    h1 {
+      font-size: calc(((var(--font-h1-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.238;
+    }
+    .h2,
+    h2 {
+      font-size: calc(((var(--font-h2-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.235;
+    }
+    h3,
+    .h3 {
+      font-size: calc(((var(--font-h3-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.36;
+    }
+    h4,
+    .h4 {
+      font-size: calc(((var(--font-h4-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.4;
+    }
+  }
+
+  @media only screen and (min-width: 1280px) {
+    .h1,
+    h1 {
+      font-size: calc(((var(--font-h1-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.167;
+    }
+    .h2,
+    h2 {
+      font-size: calc(((var(--font-h2-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.238;
+    }
+    h3,
+    .h3 {
+      font-size: calc(((var(--font-h3-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.278;
+    }
+    h4,
+    .h4 {
+      font-size: calc(((var(--font-h4-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.333;
+    }
+    h5,
+    .h5 {
+      font-size: calc(((var(--font-h5-desktop)) / (var(--font-base-size))) * 1rem);
+    }
+    h6,
+    .h6 {
+      font-size: calc(((var(--font-h6-desktop)) / (var(--font-base-size))) * 1rem);
+    }
+  }
+  [style*='--aspect-ratio'] {
+    position: relative;
+    overflow: hidden;
+  }
+  [style*='--aspect-ratio']:before {
+    display: block;
+    width: 100%;
+    content: '';
+    height: 0px;
+  }
+  [style*='--aspect-ratio'] > *:first-child {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute !important;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  [style*='--aspect-ratio']:before {
+    padding-top: calc(100% / (0.0001 + var(--aspect-ratio, 16/9)));
+  }
+  @media (max-width: 767px) {
+    [style*='--aspect-ratio']:before {
+      padding-top: calc(100% / (0.0001 + var(--aspect-ratio-mobile, var(--aspect-ratio, 16/9))));
+    }
+  }
+  .swiper-wrapper {
+    display: flex;
+  }
+  .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+    width: calc(100% / var(--items, 1));
+    flex: 0 0 auto;
+  }
+  @media (max-width: 1023px) {
+    .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+      min-width: 40vw;
+      flex: 0 0 auto;
+    }
+  }
+  @media (max-width: 767px) {
+    .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+      min-width: 66vw;
+      flex: 0 0 auto;
+    }
+  }
+</style>
+<link href="/cdn/shop/t/10/assets/component-product-inventoryf57b.css?v=93544365089947236211742182281" rel="stylesheet" type="text/css" media="all" />
+<link href="/cdn/shop/t/10/assets/collection7fc4.css?v=69337455879684016151739161029" rel="stylesheet" type="text/css" media="all" />
+<!-- collection4880.js removed: React app handles collection; script expected .facest-filters-section and caused "section.dataset" error -->
+<link href="/cdn/shop/t/10/assets/main0492.css?v=110312531101154272181742182253" rel="stylesheet" type="text/css" media="all" />
+<style data-shopify>
+:root,.m-color-default {
+      --color-background: 255,255,255;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #ffffff;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-dark {
+      --color-background: 0,0,0;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #000000;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 75,75,75;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 34,34,34;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-footer {
+      --color-background: 245,245,245;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #f5f5f5;
+  		
+  		--color-foreground: 0,0,0;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 34,34,34;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 34,34,34;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-badge-hot {
+      --color-background: 154,132,200;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #9a84c8;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-badge-new {
+      --color-background: 73,165,148;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #49a594;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-badge-sale {
+      --color-background: 218,63,63;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #da3f3f;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-scheme-cee058e4-58e3-46aa-9af9-219dadc79066 {
+      --color-background: 244,244,244;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #f4f4f4;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 242,242,242;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-scheme-09e5b5b4-774c-4b6c-8025-416ced49cc74 {
+      --color-background: 223,248,239;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #dff8ef;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+  .m-color-default, .m-color-dark, .m-color-footer, .m-color-badge-hot, .m-color-badge-new, .m-color-badge-sale, .m-color-scheme-cee058e4-58e3-46aa-9af9-219dadc79066, .m-color-scheme-09e5b5b4-774c-4b6c-8025-416ced49cc74 {
+  	color: rgb(var(--color-foreground));
+  	background-color: rgb(var(--color-background));
+  }:root {     /* ANIMATIONS */  	--m-duration-short: .1s;     --m-duration-default: .25s;     --m-duration-long: .5s;     --m-duration-image: .65s;     --m-duration-animate: 1s;     --m-animation-duration: 600ms;     --m-animation-fade-in-up: m-fade-in-up var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-left: m-fade-in-left var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-right: m-fade-in-right var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-left-rtl: m-fade-in-left-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-right-rtl: m-fade-in-right-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in: m-fade-in calc(var(--m-animation-duration) * 2) cubic-bezier(0, 0, 0.3, 1);     --m-animation-zoom-fade: m-zoom-fade var(--m-animation-duration) ease forwards;  	/* BODY */  	--base-line-height: 28;   /* INPUTS */   --inputs-border-width: 1px;  	--inputs-radius: 5px;  	/* BUTTON */  	--btn-letter-spacing: 0px;  	--btn-border-radius: 5px;  	--btn-border-width: 1px;  	--btn-line-height: 23px;  	  	/* COUNT BUBBLE */  	--color-cart-wishlist-count: #ffffff;  	--bg-cart-wishlist-count: #da3f3f;  	/* OVERLAY */  	--color-image-overlay: #000000;  	--opacity-image-overlay: 0.2;  	/* Notification */  	--color-success: 58,135,53;  	--color-warning: 210,134,26;    --color-error: 218, 63, 63;    --color-error-bg: #fbeaea;    --color-warning-bg: #faecd7;    --color-success-bg: #d1eccf;  	/* CUSTOM COLOR */  	--text-black: 0,0,0;  	--text-white: 255,255,255;  	--bg-black: 0,0,0;  	--bg-white: 255,255,255;  	--rounded-full: 9999px;  	--bg-card-placeholder: rgba(243,243,243,1);  	--arrow-select-box: url(cdn/shop/t/10/assets/ar-down30df.svg?v=92728264558441377851708482571);  	/* FONT SIZES */  	--font-base-size: 16;  	--font-btn-size: 16px;  	--font-btn-weight: 500;  	--font-h1-desktop: 60;  	--font-h1-tablet: 42;  	--font-h1-mobile: 36;  	--font-h2-desktop: 42;  	--font-h2-tablet: 33;  	--font-h2-mobile: 29;  	--font-h3-desktop: 36;  	--font-h3-tablet: 28;  	--font-h3-mobile: 25;  	--font-h4-desktop: 24;  	--font-h4-tablet: 19;  	--font-h4-mobile: 19;  	--font-h5-desktop: 18;  	--font-h5-mobile: 16;  	--font-h6-desktop: 16;  	--font-h6-mobile: 16;  	--heading-letter-spacing: 0px;   --arrow-down-url: url(//fashion.minimog.co/cdn/shop/t/10/assets/arrow-down.svg?v=157552497485556416461708482571);   --arrow-down-white-url: url(//fashion.minimog.co/cdn/shop/t/10/assets/arrow-down-white.svg?v=70535736727834135531708482571);   --product-title-line-clamp: unset;  	--spacing-sections-desktop: 0px;   --spacing-sections-laptop: 0px;   --spacing-sections-tablet: 0px;   --spacing-sections-mobile: 0px;  	/* LAYOUT */  	--container-width: 1200px;   --fluid-container-width: 1420px;   --fluid-container-offset: 65px;   /* CORNER RADIUS */   --blocks-radius: 0px;   --medium-blocks-radius: 0px;   --pcard-radius: 0px;  }
+</style><link rel="stylesheet" href="/cdn/shop/t/10/assets/cartb325.css?v=100592909120439093551744859892" media="print" onload="this.media='all'">
+<noscript><link href="/cdn/shop/t/10/assets/cartb325.css?v=100592909120439093551744859892" rel="stylesheet" type="text/css" media="all" /></noscript><link href="/cdn/shop/t/10/assets/vendorf89d.css?v=53456814079546620061743041043" rel="stylesheet" type="text/css" media="all" /><link rel="stylesheet" href="/cdn/shop/t/10/assets/custom-styleac66.css?v=68377333970908838601709715430" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="/cdn/shop/t/10/assets/customf70f.css?v=105997007003712207781708482571" media="print" onload="this.media='all'">
+<noscript><link href="/cdn/shop/t/10/assets/custom-styleac66.css?v=68377333970908838601709715430" rel="stylesheet" type="text/css" media="all" /></noscript>
+<noscript><link href="/cdn/shop/t/10/assets/customf70f.css?v=105997007003712207781708482571" rel="stylesheet" type="text/css" media="all" /></noscript><style data-shopify>.m-topbar a[href*="pinterest"],.m-topbar a[href*="twitter"], .m-topbar a[href*="snapchat"], .m-topbar a[href*="youtube"],.m-topbar a[href*="tiktok"]  {	display: none;}body .m-product-card__tag-name {  font-size: 12px;  font-weight: 500;  text-transform: capitalize;  padding: 4px 10px;  border-radius: 40px;}.m-icon-box--small {  border-top: 1px solid rgb(var(--color-border));}.m-icon-box--small .m-icon-box__heading {  line-height: 26px;  font-size: 18px;  margin-bottom: 6px;}body .m-footer--block .social-media-links {  gap: 12px;  margin: 0;  padding: 5px 0;}body .m-footer--block .social-media-links a {  color: #222;  width: 48px;  height: 48px;  padding: 0;  display: inline-flex;  align-items: center;  justify-content: center;  border-radius: 50%;  background-color: #E9E9E9;  transition: all .3s;}body .m-footer--block .social-media-links a:hover {  background-color: #222;  color: #fff;  box-shadow: 0 0 0 0.2rem #222;}
+</style>
+<script src="/cdn/shop/t/10/assets/cart5f39.js?v=45136571885934094081744859885" defer="defer"></script>
+<link href="/cdn/shop/t/10/assets/component-quantity-popover25b5.css?v=4556180740709789911742182236" rel="stylesheet" type="text/css" media="all" />
+<script src="/cdn/shop/t/10/assets/quantity-popover6226.js?v=23117157262199365931742182257" defer="defer"></script>
+
+<script src="/cdn/shop/t/10/assets/product-listb7bf.js?v=133975944838759569291720077299" defer="defer"></script>
+<!-- NOTE: These theme scripts are loaded after React renders (see src/App.js) to avoid null DOM access + duplicate global declarations. -->
+<script src="/cdn/shop/t/10/assets/vendor1216.js?v=6295409234533492311743041055" defer="defer"></script>
+<script src="/cdn/shop/t/10/assets/theme-globalb3c0.js?v=168851424678467187621744859894" defer="defer"></script>
+<!-- Shopify theme quick view enabled so original popup UI works -->
+<script src="/cdn/shop/t/10/assets/product-quick-viewb961.js" defer="defer"></script>
+<script src="/cdn/shop/t/10/assets/animations8aeb.js?v=155369821993258477171720077311" defer="defer"></script><script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.start');</script><meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/23480105/digital_wallets/dialog">
+<meta name="shopify-checkout-api-token" content="be4651516a0fb6ee0b5f652f030ee19a">
+<link rel="alternate" hreflang="x-default" href="index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="de" href="de.html">
+<link rel="alternate" hreflang="zh-Hans" href="zh.html">
+<link rel="alternate" hreflang="es" href="es.html">
+<link rel="alternate" hreflang="zh-Hans-AU" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-BR" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-CA" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-CN" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-DE" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-ES" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-GB" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-US" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-ZA" href="zh.html">
+<script async="async" src="checkouts/internal/preloadsc00a.js?locale=zh-US"></script>
+<link rel="preconnect" href="https://shop.app/" crossorigin="anonymous">
+<script async="async" src="https://shop.app/checkouts/internal/preloadsa620.js?locale=zh-US&amp;shop_id=23480105" crossorigin="anonymous"></script>
+<script id="apple-pay-shop-capabilities" type="application/json">{"shopId":23480105,"countryCode":"US","currencyCode":"USD","merchantCapabilities":["supports3DS"],"merchantId":"gid:\/\/shopify\/Shop\/23480105","merchantName":"SMal Couture","requiredBillingContactFields":["postalAddress","email"],"requiredShippingContactFields":["postalAddress","email"],"shippingType":"shipping","supportedNetworks":["visa","masterCard"],"total":{"type":"pending","label":"SMal Couture","amount":"1.00"},"shopifyPaymentsEnabled":true,"supportsSubscriptions":true}</script>
+<script id="shopify-features" type="application/json">{"accessToken":"be4651516a0fb6ee0b5f652f030ee19a","betas":["rich-media-storefront-analytics"],"domain":"fashion.minimog.co","predictiveSearch":true,"shopId":23480105,"locale":"zh-cn"}</script>
+<script>var Shopify = Shopify || {};
+Shopify.shop = "simplestjewelry.myshopify.com";
+Shopify.locale = "zh-CN";
+Shopify.currency = {"active":"USD","rate":"1.0"};
+Shopify.country = "US";
+Shopify.theme = {"name":"Main home - Minimog","id":126026973289,"schema_name":"Minimog - OS 2.0","schema_version":"5.6.0","theme_store_id":null,"role":"main"};
+Shopify.theme.handle = "null";
+Shopify.theme.style = {"id":null,"handle":null};
+Shopify.cdnHost = "fashion.minimog.co/cdn";
+Shopify.routes = Shopify.routes || {};
+Shopify.routes.root = "zh/index.html";</script>
+<script type="module">!function(o){(o.Shopify=o.Shopify||{}).modules=!0}(window);</script>
+<script>!function(o){function n(){var o=[];function n(){o.push(Array.prototype.slice.apply(arguments))}return n.q=o,n}var t=o.Shopify=o.Shopify||{};t.loadFeatures=n(),t.autoloadFeatures=n()}(window);</script>
+<script>
+  window.ShopifyPay = window.ShopifyPay || {};
+  window.ShopifyPay.apiHost = "shop.app\/pay";
+  window.ShopifyPay.redirectState = null;
+</script>
+<script id="shop-js-analytics" type="application/json">{"pageType":"index"}</script>
+<script defer="defer" async type="module" src="/cdn/shopifycloud/shop-js/modules/v2/client.init-shop-cart-sync_BNHILjVm.zh-CN.esm.js"></script>
+<script defer="defer" async type="module" src="/cdn/shopifycloud/shop-js/modules/v2/chunk.common_DlJvTPQu.esm.js"></script>
+<script src="/cdn/shop/t/10/assets/age-verifierb859.js?v=2731459001429866671720077219" defer="defer"></script>
+<link href="/cdn/shop/t/10/assets/cookie-banner00e8.css?v=42714750342126912691708482571" rel="stylesheet" type="text/css" media="all" />
+<div id="m-cookie-banner" class="m-cookie-banner m-cookie-banner--bottom m-cookie-banner--black" >
+<script type="module">
+  try {
+    await import("/cdn/shopifycloud/shop-js/modules/v2/client.init-shop-cart-sync_BNHILjVm.zh-CN.esm.js");
+    await import("/cdn/shopifycloud/shop-js/modules/v2/chunk.common_DlJvTPQu.esm.js");
+    window.Shopify?.SignInWithShop?.initShopCartSync?.({"fedCMEnabled":true,"windoidEnabled":true});
+  } catch (e) { /* shop-js optional for React app */ }
+</script>
+<link rel="stylesheet" href="/cdn/shop/t/10/assets/age-verifier135f.css?v=12127549815372021561708482571" media="print" onload="this.media='all'">
+<noscript><link href="/cdn/shop/t/10/assets/age-verifier135f.css?v=12127549815372021561708482571" rel="stylesheet" type="text/css" media="all" /></noscript>
+<style data-shopify>#m-section--template--15265873330281__recent-viewed {
+  --column-gap: 30px;
+  --column-gap-mobile: 16px;
+  --row-gap: 40px;
+  --row-gap-mobile: 30px;
+  --items: 5;
+  --section-padding-top: 40px;
+  --section-padding-bottom: 100px;
+}</style>
+<style> #shopify-section-template--15265873330281__main .m-banner-promotion {order: 3 !important; margin-top: 30px; margin-bottom: 0;} #shopify-section-template--15265873330281__main .m-collection-filters-form {margin-bottom: 0;} </style></div><div id="shopify-section-template--15265873330281__recent-viewed" class="shopify-section"><link href="/cdn/shop/t/10/assets/component-product-inventoryf57b.css?v=93544365089947236211742182281" rel="stylesheet" type="text/css" media="all" />
+  <script src="/cdn/shop/t/10/assets/recently-viewed-productsa8de.js?v=172094214565354446861742182264" defer="defer"></script>
+  
+  <style data-shopify>#m-section--template--15265873330281__recent-viewed {
+      --column-gap: 30px;
+      --column-gap-mobile: 16px;
+      --row-gap: 40px;
+      --row-gap-mobile: 30px;
+      --items: 5;
+      --section-padding-top: 40px;
+      --section-padding-bottom: 100px;
+    }</style>
+<!-- <script>
+  window.addEventListener('load', () => {
+    if (typeof Collection !== 'undefined') {
+      MinimogTheme.Collection = new Collection();
+      MinimogTheme.Collection.init();
+    }
+  });
+  if (Shopify.designMode) {
+    document.addEventListener('shopify:section:load', function (event) {
+      MinimogTheme.Collection.init();
+    });
+  }
+</script> -->
+<script>
+  window.Shopify = window.Shopify || {};
+  if (!window.Shopify.featureAssets) window.Shopify.featureAssets = {};
+  window.Shopify.featureAssets['shop-js'] = {"shop-cart-sync":["modules/v2/client.shop-cart-sync_Bctsq2Pb.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"shop-button":["modules/v2/client.shop-button_Bk3ygcGF.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"init-shop-email-lookup-coordinator":["modules/v2/client.init-shop-email-lookup-coordinator_g0L2DCjZ.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"init-fed-cm":["modules/v2/client.init-fed-cm_C73XCEW_.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"init-windoid":["modules/v2/client.init-windoid_BAppMYPv.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"shop-toast-manager":["modules/v2/client.shop-toast-manager_DmhYmnT4.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"shop-cash-offers":["modules/v2/client.shop-cash-offers_C8oLWy3d.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"init-shop-cart-sync":["modules/v2/client.init-shop-cart-sync_BNHILjVm.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"avatar":["modules/v2/client.avatar_BTnouDA3.zh-CN.esm.js"],"shop-login-button":["modules/v2/client.shop-login-button_DA5o6c_g.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"pay-button":["modules/v2/client.pay-button_Cu40ueLb.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js"],"init-customer-accounts":["modules/v2/client.init-customer-accounts_CM-D3yW3.zh-CN.esm.js","modules/v2/client.shop-login-button_DA5o6c_g.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"checkout-modal":["modules/v2/client.checkout-modal_CIKKXzRK.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"init-customer-accounts-sign-up":["modules/v2/client.init-customer-accounts-sign-up_CuphEqiP.zh-CN.esm.js","modules/v2/client.shop-login-button_DA5o6c_g.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"init-shop-for-new-customer-accounts":["modules/v2/client.init-shop-for-new-customer-accounts_Bc_nBZtg.zh-CN.esm.js","modules/v2/client.shop-login-button_DA5o6c_g.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"shop-follow-button":["modules/v2/client.shop-follow-button_B9uhTvkE.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"lead-capture":["modules/v2/client.lead-capture_C8RUQjoC.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"shop-login":["modules/v2/client.shop-login_CO8pw3AW.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"],"payment-terms":["modules/v2/client.payment-terms_Dojn90uc.zh-CN.esm.js","modules/v2/chunk.common_DlJvTPQu.esm.js","modules/v2/chunk.modal_DIrGbgaW.esm.js"]};
+</script>
+<script id="__st">var __st={"a":23480105,"offset":-18000,"reqid":"c519c1e0-334e-4a1d-ba3b-9647ab006546-1768196419","pageurl":"fashion.minimog.co\/zh","u":"c4be20adc4cd","p":"home"};</script>
+<script>window.ShopifyPaypalV4VisibilityTracking = true;</script>
+<script id="captcha-bootstrap">/* Disabled for React app */ window.Shopify=window.Shopify||{};window.Shopify.captcha=window.Shopify.captcha||{protect:function(){}};</script>
+<script integrity="sha256-4kQ18oKyAcykRKYeNunJcIwy7WH5gtpwJnB7kiuLZ1E=" data-source-attribution="shopify.loadfeatures" defer="defer" src="/cdn/shopifycloud/storefront/assets/storefront/load_feature-a0a9edcb.js" crossorigin="anonymous"></script>
+<script crossorigin="anonymous" defer="defer" src="/cdn/shopifycloud/storefront/assets/shopify_pay/storefront-65b4c6d75501.js?v=20250812"></script>
+<script data-source-attribution="shopify.dynamic_checkout.dynamic.init">var Shopify=Shopify||{};Shopify.PaymentButton=Shopify.PaymentButton||{isStorefrontPortableWallets:!0,init:function(){window.Shopify.PaymentButton.init=function(){};var t=document.createElement("script");t.src="/cdn/shopifycloud/portable-wallets/latest/portable-wallets.zh-cn.js",t.type="module",document.head.appendChild(t)}};
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.buyer_consent">
+  function portableWalletsHideBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.add("hidden"),t.setAttribute("aria-hidden","true"),n.removeEventListener("click",e))}function portableWalletsShowBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.remove("hidden"),t.removeAttribute("aria-hidden"),n.addEventListener("click",e))}window.Shopify?.PaymentButton&&(window.Shopify.PaymentButton.hideBuyerConsent=portableWalletsHideBuyerConsent,window.Shopify.PaymentButton.showBuyerConsent=portableWalletsShowBuyerConsent);
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.cart.bootstrap">document.addEventListener("DOMContentLoaded",(function(){function t(){return document.querySelector("shopify-accelerated-checkout-cart, shopify-accelerated-checkout")}if(t())Shopify.PaymentButton.init();else{new MutationObserver((function(e,n){t()&&(Shopify.PaymentButton.init(),n.disconnect())})).observe(document.body,{childList:!0,subtree:!0})}}));
+</script>
+<link id="shopify-accelerated-checkout-styles" rel="stylesheet" media="screen" href="/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout.css" crossorigin="anonymous">
+<style id="shopify-accelerated-checkout-cart">
+        #shopify-buyer-consent {
+  margin-top: 1em;
+  display: inline-block;
+  width: 100%;
+}
+
+#shopify-buyer-consent.hidden {
+  display: none;
+}
+
+#shopify-subscription-policy-button {
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+#shopify-subscription-policy-button::before {
+  box-shadow: none;
+}
+
+      </style>
+
+<script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.end');</script>
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+    <!-- <script>window.MinimogTheme = {};window.MinimogLibs = {};window.MinimogStrings = {  addToCart: "添加到购物车",  soldOut: "售罄",  unavailable: "不可用",  inStock: "有存货",  lowStock: '低库存',  inventoryQuantityHtml: '<span class ="m-product-inventory__quantity"> {{ quantity }} </span>库存',  inventoryLowQuantityHtml: '唯一<span class ="m-product-inventory__quantity"> {{ quantity }} </span>左',  checkout: "查看",  viewCart: "查看购物车",  cartRemove: "消除",  zipcodeValidate: "邮政编码不能为空",  noShippingRate: "您的地址没有运费。",  shippingRatesResult: "我们发现您的地址有 {{count}} 个运费",  recommendTitle: "为您推荐",  shipping: "船运",  add: "添加",  itemAdded: "产品已成功添加到购物车",  requiredField: "添加到购物车之前，请填写所有必填字段（*）！",  hours: "小时",  mins: "分钟",  outOfStock: "缺货",  sold: "卖",  available: "可用的",  preorder: "预购",  sold_out_items_message: "该产品已经售罄。",  unitPrice: "单价",  unitPriceSeparator: "每",  cartError: "更新您的购物车时出错。请再试一次。",  quantityError: "没有足够的可用物品。仅剩{{ quantity }}。' }}",  selectVariant: "在将产品添加到购物车之前，请选择一个型号。",  valideDateTimeDelivery: "请选择当前或未来时间。"};window.MinimogThemeStyles = {  product: "https://fashion.minimog.co/cdn/shop/t/10/assets/product.css?v=125051813082444491211742182237"};window.MinimogThemeScripts = {  productModel: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-model.js?v=74883181231862109891720077216",  productMedia: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-media.js?v=162792397983317663931742182248",  variantsPicker: "https://fashion.minimog.co/cdn/shop/t/10/assets/variant-picker.js?v=66761027898496351631742182239",  productInfo: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-info.js?v=106318422310266846111744859888"};window.MinimogSettings = {  design_mode: false,  requestPath: "\/zh",  template: "index",  templateName: "index",currency_code: "USD",  money_format: "${{amount}}",  base_url: window.location.origin + Shopify.routes.root,  money_with_currency_format: "${{amount}} USD",  theme: {    id: 126026973289,    name: "Main home - Minimog",    role: "main",    version: "5.6.0",    online_store_version: "2.0",    preview_url: "https://fashion.minimog.co?preview_theme_id=126026973289",  },  shop_domain: "https:\/\/fashion.minimog.co",  shop_locale: {    published: [{"shop_locale":{"locale":"en","enabled":true,"primary":true,"published":true}},{"shop_locale":{"locale":"de","enabled":true,"primary":false,"published":true}},{"shop_locale":{"locale":"zh-CN","enabled":true,"primary":false,"published":true}},{"shop_locale":{"locale":"es","enabled":true,"primary":false,"published":true}}],    current: "zh-CN",    primary: "en",  },  routes: {    root: "\/zh",    cart: "\/zh\/cart",    product_recommendations_url: "\/zh\/recommendations\/products",    cart_add_url: '/zh/cart/add',    cart_change_url: '/zh/cart/change',    cart_update_url: '/zh/cart/update',    predictive_search_url: '/zh/search/suggest',    search_url: '/zh/search'  },  hide_unavailable_product_options: true,  pcard_image_ratio: "3\/4",  cookie_consent_allow: "Allow cookies",  cookie_consent_message: "This website uses cookies to ensure you get the best experience on our website.",  cookie_consent_placement: "bottom",  cookie_consent_learnmore_link: "https:\/\/www.cookiesandyou.com\/",  cookie_consent_learnmore: "Learn more",  cookie_consent_theme: "black",  cookie_consent_decline: "Decline",  show_cookie_consent: true,  product_colors: "red: #FF6961,\nyellow: #FDDA76,\nblack: #000000,\nblack band: #000000,\nblue: #8DB4D2,\ngreen: #C1E1C1,\npurple: #B19CD9,\nsilver: #EEEEEF,\nwhite: #FFFFFF,\nbrown: #836953,\nlight brown: #B5651D,\ndark turquoise: #23cddc,\norange: #FFB347,\ntan: #E9D1BF,\nviolet: #B490B0,\npink: #FFD1DC,\ngrey: #E0E0E0,\nsky: #96BDC6,\npale leaf: #CCD4BF,\nlight blue: #b1c5d4,\ndark grey: #aca69f,\nbeige: #EBE6DB,\nbeige band: #EED9C4,\ndark blue: #063e66,\ncream: #F1F2E2,\nlight pink: #FBCFCD,\nmint: #bedce3,\ndark gray: #3A3B3C,\nrosy brown: #c4a287,\nlight grey:#D3D3D3,\ncopper: #B87333,\nrose gold: #ECC5C0,\nnight blue: #151B54,\ncoral: #FF7F50,\nlight purple: #C6AEC7,\nivy green: #5b7763,\nsand: #f2d2a9,\npale grey: #878785,\nlead: #6c6b6c,\nheathered cashew: #bdb59f,\ncoca: #c7babd,\nheathered oat: #d3c1aa,\njean blue: #515d6d,\npelican: #e1d6c5,\ntoasted coconut: #9c7b58,\nnavy: #484d5b,\nheathered blue: #3c3c3c,\nheathered green: #534d36,\nheathered grey: #555c62,\nkalamata: #808487,\nslate grey: #484d5b,\ncharcoal: #8b8b8b,\nheathered charcoal: #8b8b8b",  use_ajax_atc: true,  discount_code_enable: true,  enable_cart_drawer: true,  pcard_show_lowest_prices: false,  date_now: "2026\/01\/12  0:40:00-0500 (EST)",  foxKitBaseUrl: "foxkit.app"};</script> -->
+
+    <!-- <script>
+  // Fixed: Largest Contentful Paint image
+  let checkConfig = setInterval(() => {
+    const config = MinimogTheme.config
+    if (config) {
+      clearInterval(checkConfig)
+      
+      // Fix slideshow
+      const slidesImgDesktop = document.querySelectorAll(".m-slide__bg img");
+      slidesImgDesktop && slidesImgDesktop.forEach(img => {
+        if (config.mqlMobile) {
+          img.setAttribute('loading', 'lazy')
+        } else {
+          img.removeAttribute('loading')
+        }
+      });
+      // Fix logos
+      const logoDesktop = document.querySelector(".m-header__desktop .m-logo img");
+      if (config.mqlMobile) {
+        if (logoDesktop) logoDesktop.setAttribute('loading', 'lazy')
+      } else {
+        if (logoDesktop) logoDesktop.removeAttribute('loading')
+      }
+    }
+  }, 100)
+</script> -->
+  <!-- BEGIN app block: shopify://apps/foxkit-sales-boost/blocks/foxkit-theme-helper/13f41957-6b79-47c1-99a2-e52431f06fff -->
+<style data-shopify>
+  
+  :root {
+  	--foxkit-border-radius-btn: 4px;
+  	--foxkit-height-btn: 45px;
+  	--foxkit-btn-primary-bg: #212121;
+  	--foxkit-btn-primary-text: #FFFFFF;
+  	--foxkit-btn-primary-hover-bg: #000000;
+  	--foxkit-btn-primary-hover-text: #FFFFFF;
+  	--foxkit-btn-secondary-bg: #FFFFFF;
+  	--foxkit-btn-secondary-text: #000000;
+  	--foxkit-btn-secondary-hover-bg: #000000;
+  	--foxkit-btn-secondary-hover-text: #FFFFFF;
+  	--foxkit-text-color: #666666;
+  	--foxkit-heading-text-color: #000000;
+  	--foxkit-prices-color: #000000;
+  	--foxkit-badge-color: #000000;
+  	--foxkit-border-color: #ebebeb;
+  }
+  
+  .foxkit-critical-hidden {
+  	display: none !important;
+  }
+</style>
+<script>
+   var ShopifyRootUrl = "\/zh";
+   var _useRootBaseUrl = null
+   window.FoxKitThemeHelperEnabled = true;
+   window.FoxKitPlugins = window.FoxKitPlugins || {}
+   window.FoxKitStrings = window.FoxKitStrings || {}
+   window.FoxKitAssets = window.FoxKitAssets || {}
+   window.FoxKitModules = window.FoxKitModules || {}
+   window.FoxKitSettings = {
+     discountPrefix: "FX",
+     showWaterMark: null,
+     multipleLanguages: false,
+     primaryLocale: false,
+     combineWithProductDiscounts: true,
+     enableAjaxAtc: true,
+     discountApplyBy: "shopify_functions",
+     foxKitBaseUrl: "foxkit.app",
+     shopDomain: "https:\/\/fashion.minimog.co",
+     baseUrl: _useRootBaseUrl ? "/" : ShopifyRootUrl.endsWith('index.html') ? ShopifyRootUrl : ShopifyRootUrl + '/',
+     currencyCode: "USD",
+    //  moneyFormat: !!window.MinimogTheme ? window.MinimogSettings.money_format : "${{amount}}",
+     moneyWithCurrencyFormat: "${{amount}} USD",
+     template: "index",
+     templateName: "index",
+     optimizePerformance: false,routes: {
+       root: "\/zh",
+       cart: "\/zh\/cart",
+       cart_add_url: '/zh/cart/add',
+       cart_change_url: '/zh/cart/change',
+       cart_update_url: '/zh/cart/update'
+     },
+     dateNow: "2026\/01\/12  0:40:00-0500 (EST)",
+    //  isMinimogTheme: !!window.MinimogTheme,
+     designMode: false,
+     pageType: "index",
+     pageUrl: "\/zh",
+     selectors: {}
+   };
+
+  FoxKitStrings = {"en":{"date_format":"MM\/dd\/yyyy","discount_summary":"You will get \u003cstrong\u003e{discount_value} OFF\u003c\/strong\u003e on each product","discount_title":"SPECIAL OFFER","free":"FREE","add_to_cart_button":"Add to cart","add_button":"Add","added_button":"Added","bundle_button":"Add selected item(s)","bundle_select":"Select","bundle_selected":"Selected","bundle_total":"Total price","bundle_saved":"Saved","bundle_items_added":"The products in the bundle are added to the cart.","bundle_warning":"Add at least 1 item to build your bundle","bundle_this_item":"This item","qty_discount_title":"{item_count} item(s) get {discount_value} OFF","qty_discount_note":"on each product","prepurchase_title":"Frequently bought with \"{product_title}\"","prepurchase_added":"You just added","incart_title":"Customers also bought with \"{product_title}\"","sizechart_button":"Size chart","field_name":"Enter your name","field_email":"Enter your email","field_birthday":"Date of birth","discount_noti":"* Discount will be calculated and applied at checkout","fox_discount_noti":"* You are entitled to 1 discount offer of \u003cspan\u003e{price}\u003c\/span\u003e (\u003cspan\u003e{discount_title}\u003c\/span\u003e). This offer \u003cb\u003ecan't be combined\u003c\/b\u003e with any other discount you add here!","bis_open":"Notify me when available","bis_heading":"Back in stock alert 📬","bis_desc":"We will send you a notification as soon as this product is available again.","bis_submit":"Notify me","bis_email":"Your email","bis_name":"Your name","bis_phone":"Your phone number","bis_note":"Your note","bis_signup":"Email me with news and offers","bis_thankyou":"Thank you! We'll send you an email when this product is available!","preorder_discount_title":"🎁 Preorder now to get \u003cstrong\u003e{discount_value} OFF\u003c\/strong\u003e","preorder_shipping_note":"🚚 Item will be delivered on or before \u003cstrong\u003e{eta}\u003c\/strong\u003e","preorder_button":"Pre-order","preorder_badge":"Pre-Order","preorder_end_note":"🔥 Preorder will end at \u003cstrong\u003e{end_time}\u003c\/strong\u003e","required_fields":"Please fill all the required fields(*) before Add to cart!","view_cart":"View cart","shipping_label":"Shipping","item_added_to_cart":"{product_title} is added to cart!","email_used":"Email has already been used!","copy_button":"Copy","copied_button":"Copied","locked":false}};
+
+  FoxKitAssets = {
+    sizechart: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/size-chart.js",
+    preorder: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/preorder.js",
+    preorderBadge: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/preorder-badge.js",
+    prePurchase: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/pre-purchase.js",
+    prePurchaseStyle: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/pre-purchase.css",
+    inCart: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/incart.js",
+    inCartStyle: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/incart.css",
+    productCountdown: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/product-countdown.css"
+  }
+  FoxKitPlugins.popUpLock = false
+  FoxKitPlugins.luckyWheelLock = 
+
+  
+  
+    FoxKitPlugins.Countdown = Object.values({"65e7ccaf5af454c7ac006b45":{"target_products":["gid:\/\/shopify\/Product\/7168246120553"],"time_unit_day":"days","time_unit_hour":"hrs","time_unit_min":"mins","time_unit_sec":"secs","deleted":false,"locked":false,"_id":"65e7ccaf5af454c7ac006b45","active":true,"title":"🔥 Hurry up! Sale ends in:","duration":20,"expires_date":"2024-03-06T01:52:54.847Z","cdt_type":"evergreen","cdt_style":"style-2","applies_to":"specific_products","schedule":false,"total_quantity":100,"sold_from":3,"sold_to":15,"show_flashsale":false,"schedule_time":"2024-03-06T01:53:50.777Z","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T01:53:51.763Z","updatedAt":"2024-03-06T01:53:51.763Z","__v":0},"65e93fa77be33ace6aeeda50":{"target_products":["gid:\/\/shopify\/Product\/7157991735401"],"time_unit_day":"days","time_unit_hour":"hrs","time_unit_min":"mins","time_unit_sec":"secs","deleted":false,"locked":false,"_id":"65e93fa77be33ace6aeeda50","active":true,"title":"🔥 Hurry up! Sale ends in:","duration":20,"expires_date":"2024-03-07T04:16:00.667Z","cdt_type":"evergreen","cdt_style":"style-1","applies_to":"specific_products","schedule":false,"total_quantity":100,"sold_from":3,"sold_to":15,"show_flashsale":false,"schedule_time":"2024-03-07T04:18:06.319Z","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-07T04:16:39.567Z","updatedAt":"2024-03-07T04:18:07.432Z","__v":0}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}))
+    FoxKitPlugins.PreOrder = Object.values({"65e8363df362f9c7a09cfee2":{"discount":{"value":10,"type":"PERCENTAGE"},"applies_to":"","target_products":[],"deleted":false,"locked":false,"shipping_date_choice":"NONE","target_variants":[],"enable_all_variants":true,"inventory_reserve":"ON_SALE","fulfillment_trigger":"ASAP","_id":"65e8363df362f9c7a09cfee2","active":true,"title":"Product: Cotton bucket hat","target_product":"gid:\/\/shopify\/Product\/7167890620521","active_discount":false,"start_time":"2024-03-06T09:23:46.032Z","end_time":"2024-03-06T09:23:46.032Z","eta":"2024-03-06T09:23:46.032Z","set_end_time":false,"show_eta":false,"condition":"always","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T09:24:13.900Z","updatedAt":"2024-03-06T09:24:14.150Z","id":"preorder-1","__v":0,"metafield_gid":"gid:\/\/shopify\/Metafield\/22995331809385"},"65e84694f362f9c7a0a704e8":{"discount":{"value":10,"type":"PERCENTAGE"},"applies_to":"","target_products":[],"deleted":false,"locked":false,"shipping_date_choice":"NONE","target_variants":[],"enable_all_variants":true,"inventory_reserve":"ON_SALE","fulfillment_trigger":"ASAP","_id":"65e84694f362f9c7a0a704e8","active":true,"title":"Product: Luxury Crossbody Bags","target_product":"gid:\/\/shopify\/Product\/7161294848105","active_discount":true,"start_time":"2024-03-06T10:19:42.853Z","end_time":"2024-03-06T10:19:42.853Z","eta":"2024-03-06T10:19:42.853Z","set_end_time":false,"show_eta":false,"condition":"always","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:33:56.848Z","updatedAt":"2024-03-06T10:59:43.654Z","id":"preorder-2","__v":0,"metafield_gid":"gid:\/\/shopify\/Metafield\/22996684177513"}}).filter(entry => entry.active)
+    FoxKitPlugins.PrePurchase = Object.values({"65e84bd3f362f9c7a0aa63e1":{"discount":{"value":0,"type":"PERCENTAGE"},"active":true,"target_products":["gid:\/\/shopify\/Product\/7161294946409","gid:\/\/shopify\/Product\/7161295700073","gid:\/\/shopify\/Product\/7157991309417"],"recommended_products":["gid:\/\/shopify\/Product\/7161294946409","gid:\/\/shopify\/Product\/7161295700073","gid:\/\/shopify\/Product\/7157991309417"],"deleted":false,"locked":false,"_id":"65e84bd3f362f9c7a0aa63e1","title":"Pre-purchase offer","applies_to":"all_products","recommend_to":"specific_products","recommend_intent":"complementary","active_discount":false,"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:56:19.230Z","updatedAt":"2024-11-06T07:20:53.408Z","id":"prepurchase-1","__v":0,"productHandles":["plastic-bag-ban","polarised-sunglasses","round-neck-sweater"]}}).filter(entry => entry.active)
+    FoxKitPlugins.InCart = Object.values({"65e84a84f362f9c7a0a99045":{"discount":{"value":10,"type":"PERCENTAGE"},"target_products":["gid:\/\/shopify\/Product\/7159271391337","gid:\/\/shopify\/Product\/7159271194729","gid:\/\/shopify\/Product\/7159270473833"],"recommended_products":["gid:\/\/shopify\/Product\/7159271194729","gid:\/\/shopify\/Product\/7159270473833","gid:\/\/shopify\/Product\/7157991309417"],"deleted":false,"locked":false,"_id":"65e84a84f362f9c7a0a99045","active":true,"title":"In cart offers","applies_to":"all_products","recommend_to":"specific_products","recommend_intent":"complementary","active_discount":true,"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:50:44.877Z","updatedAt":"2025-02-17T03:52:27.573Z","id":"incart-1","__v":0,"productHandles":["mini-dress-with-ruffled-straps","multi-cargo-cotton-shorts","round-neck-sweater"]}}).filter(entry => entry.active)
+    FoxKitPlugins.QuantityDiscount = Object.values({"65e84560f362f9c7a0a64921":{"target_products":["gid:\/\/shopify\/Product\/7159271391337","gid:\/\/shopify\/Product\/7166457774185"],"sub_title":"on each product","highlight_label":"","button_label":"Add","default_title":"Buy {quantity} get {discount_value} off","sale_badge":"Save {discount_value}","default_selected":0,"discount_titles":["",""],"deleted":false,"locked":false,"_id":"65e84560f362f9c7a0a64921","active":true,"title":"Volume discount","offer_heading":"Buy more save more!","applies_to":"specific_products","show_variant_selector":false,"layout":"standard","card_radius":4,"hide_submit_button":false,"discounts":[{"min_qty":3,"value":5,"type":"PERCENTAGE","highlighted":true},{"min_qty":5,"value":10,"type":"PERCENTAGE","highlighted":false}],"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:28:48.572Z","updatedAt":"2024-03-07T02:49:05.550Z","__v":0}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}))
+    FoxKitPlugins.Bundle = Object.values({"65e842c35af454c7ac43d2c9":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157385756777","gid:\/\/shopify\/Product\/7157380776041","gid:\/\/shopify\/Product\/7157383790697"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":true,"default_selected":true,"deleted":false,"locked":false,"_id":"65e842c35af454c7ac43d2c9","shop":"simplestjewelry.myshopify.com","active":true,"title":"Product bundles layout 1","bundle_heading":"Frequently bought together","button_label":"Add selected item(s)","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157385756777":"1","gid:\/\/shopify\/Product\/7157380776041":"1","gid:\/\/shopify\/Product\/7157383790697":"1"},"design":"design-1","show_target_only":true,"target_product":"gid:\/\/shopify\/Product\/7157380776041","active_discount":true,"createdAt":"2024-03-06T10:17:39.790Z","updatedAt":"2024-03-06T10:23:25.895Z","id":"bundle-1","__v":0,"productHandles":["the-black-pullover","the-charcoal-overshirt","the-cocoa-shirt"]},"65e843f05af454c7ac44ac78":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157383790697","gid:\/\/shopify\/Product\/7157384085609","gid:\/\/shopify\/Product\/7157383725161"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":true,"default_selected":true,"deleted":false,"locked":false,"_id":"65e843f05af454c7ac44ac78","shop":"simplestjewelry.myshopify.com","active":true,"title":"Product bundles layout 2","bundle_heading":"Frequently bought together","button_label":"Add selected item(s)","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157383790697":"1","gid:\/\/shopify\/Product\/7157384085609":"1","gid:\/\/shopify\/Product\/7157383725161":"1"},"design":"design-3","show_target_only":true,"target_product":"gid:\/\/shopify\/Product\/7157383790697","active_discount":true,"createdAt":"2024-03-06T10:22:40.994Z","updatedAt":"2024-03-06T10:22:40.994Z","id":"bundle-2","__v":0,"productHandles":["the-cocoa-shirt","the-heavyweight-overshirt","the-oxford-shirt"]},"6697ea8b12e04d57656ae0aa":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157380907113","gid:\/\/shopify\/Product\/7157381628009"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":false,"default_selected":true,"deleted":false,"locked":false,"_id":"6697ea8b12e04d57656ae0aa","shop":"simplestjewelry.myshopify.com","active":true,"title":"Tutorial Video","bundle_heading":"Frequently bought together","button_label":"Add to cart","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157380907113":"1","gid:\/\/shopify\/Product\/7157381628009":"1"},"design":"design-1","show_target_only":false,"target_product":"gid:\/\/shopify\/Product\/7157381628009","active_discount":true,"createdAt":"2024-07-17T16:00:11.133Z","updatedAt":"2024-07-17T16:00:11.133Z","id":"bundle-3","__v":0,"productHandles":["the-chino-short","the-black-crew"]}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}));
+    FoxKitPlugins.Menus = Object.values({"65efd86ac1f3374bfc2c8982":{"id":"65efd86ac1f3374bfc2c8982","data":{"orders":{"layout":["f-1710216069HnvUZ","f-1710216069X0Y71","f-171021606995OfQ","f-171021606958GlJ","f-1710216069Gt9nY","f-1710216069Aivj7","f-17102160696maOj","f-1710216069VAZz9","f-1710216069iwg7X","f-1710216069rG8BF","f-1710216069kEyjS","f-1710216069yzrAX","f-1710216069084oS","f-1710216069G7t2L","f-1710216069Mqmrd","f-1710216069uvz9e","f-17102160698LrpX","f-1710216069UVWj0","f-1710216069NXp1X","f-1710216069G8AZj","f-171021606931kr9","f-1710216069qCcqm","f-17102160694HtHs","f-1710216069uOdAR","f-1710216069KChdw","f-1710216069Mi3iU","f-17102160696Mf4r","f-1710216069WhORc","f-1710216069ybFsI","f-1710216069UXWj4","f-1710216069R8qmv","f-1710216069JJG6h","f-1710216069q6JWE","f-1710216069D5dHh","f-1710216069u5PVb","f-1710216069WLoSm","f-171021606998Sci","f-1710216069lIPzv","f-1710216069ZPhez","f-1710216069I4Jwg","f-17102160697LW05","f-1710216069aB6mg","f-1710216069WGKjx","f-1710216069GYWLX","f-1710216069huOpg","f-1710216069YLrJm","f-1710216069LIYGD","f-1710216069ueQd0","f-17102160694GXt4","f-1710216069kJF5Y","f-1710216069J7RXS","f-17102160698PfGU","f-1710216069t5pm6","f-1710216069z2Sup","f-1710216069ZOZQh","f-17102160695sb5X","f-1710216069AYKOO","f-1710216069GI4D8","f-1710216069lPaeM","f-1710216069Fw6A0","f-1710216069kRWf0","f-1710216069ULSSj","f-1710216069SPcqc","f-1710216069W7QCo","f-1710216069A4YT9","f-1710216069agOyZ","f-1710216069QKgxw","f-1710216069VqfRT","f-17102160696VrnH","f-17102160695CODQ","f-1710216069IGO1R","f-1710216069vYODZ","f-1710216069FaTb8","f-1710216069CFnWj","f-171021606913eTB","f-1710216069luzjE","f-17102160694xwCt","f-1710216069y2l3y","f-1710216069n7z9X","f-1710216069sNRRe","f-1710216069Z0YpE","f-1710216069qeXYU","f-1710216069oJKAp","f-1710216069NnQh2","f-1730365722iO4AW","f-1730365779I9Atj","f-1730365833waYJn","f-1730365892ZmeH6"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"0\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"0\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":600,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":24}}},"65efd86ac1f3374bfc2c8983":{"id":"65efd86ac1f3374bfc2c8983","data":{"orders":{"layout":["f-1710216069J1eXs","f-1710216069QDqHu","f-1710216069rU2Tx","f-1710216069vSnwc","f-1710216069MZoVw","f-1710216069pRo8J","f-17102160697xLHH","f-1710216069Mffwd","f-1710216069HEyZT","f-1710216069gl3gS","f-1710216069ajKAs","f-1710216069DcU4K","f-1710216069qzJbX","f-1710216069mWeJr","f-1710216069nscal","f-1710216069H4g4G","f-17102160692wgbu","f-1710216069BiaUC","f-1710216069hIWMb","f-1710216069RiWEO","f-1710216069MqYxO","f-1710216069XrwHD","f-1710216069cRgz2","f-1710216069y6wNp","f-17102160694oNlr","f-1710216069hgB36","f-1710216069dDGJ9","f-1710216069Y5k0F","f-171021606929wQa","f-171021606938wiD","f-1710216069cw4Y9","f-1710216069W78uR"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"2\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"2\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":30}}},"65efd86ac1f3374bfc2c8984":{"id":"65efd86ac1f3374bfc2c8984","data":{"orders":{"layout":["f-1710216069smRVC","f-1710216069q7Wr5","f-1710216069YAFvP","f-17102160690cmzU","f-1710216069wOosx","f-1710216069tLCSt","f-1710216069nRECo","f-1710216069SfNgJ","f-1710216069HSh3k","f-1710216069kjJNt","f-1710216069TA4kU","f-1710216069rnmDW","f-1710216069rUVNA","f-1710216069hdPRm","f-1710216069I5Cx5","f-1710216069SINRv","f-1710216069vbgeH","f-17102160695Zhy3","f-1710216069w2kju"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"1\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"1\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(0,0,0,1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":36}}},"65efd86ac1f3374bfc2c8985":{"id":"65efd86ac1f3374bfc2c8985","data":{"orders":{"layout":["f-1710216069y0QPC","f-1710216069O7JlZ","f-1710216069WwYKB","f-1710216069INhQt","f-1710216069UV7VA","f-1710216069XBcxS","f-1710216069uQHQd","f-1710216069Dh8PW","f-1710216069kjthZ","f-1710216069sDX3W","f-17102160697dquB","f-1710216069VSpVF","f-1710216069bActS","f-17102160690L40L","f-1710216069dogzU","f-1710216069WBeQY","f-1710216069GaiNP"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"4\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"4\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":30}}},"65fa420d5ee6d973b8649bd9":{"id":"65fa420d5ee6d973b8649bd9","data":{"orders":{"layout":["main-menu-item-1","main-menu-item-2","main-menu-item-3","main-menu-item-4","main-menu-item-5","main-menu-item-6","main-menu-item-7"],"main-menu-item-1":["sub-menu-item-1","sub-menu-item-2","sub-menu-item-3","sub-menu-item-4","sub-menu-item-5","sub-menu-item-6","sub-menu-item-7"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"3\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"3\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(34, 34, 34, 0.6)","submenu_text_hover":"rgba(34, 34, 34, 1)","item_space":30}}}});
+    FoxKitPlugins.Menus = FoxKitPlugins.Menus?.map((item) => {
+      if (typeof item === 'string') return JSON.parse(item);
+      return item;
+    });
+    FoxKitPlugins.MenuData = Object.values({"65efd86ac1f3374bfc2c8982":{"id":"65efd86ac1f3374bfc2c8982","data":{"f-1710216069HnvUZ":{"title":"Main home","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"auto","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069X0Y71":{"title":"Boutique","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027137129","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606995OfQ":{"title":"Chateau","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027202665","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606958GlJ":{"title":"Couture","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027169897","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Gt9nY":{"title":"Tailor","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989814377","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Aivj7":{"title":"Mod","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989879913","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696maOj":{"title":"Bold","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989847145","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VAZz9":{"title":"Parade","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027333737","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069iwg7X":{"title":"Luxe","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027268201","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069rG8BF":{"title":"Sartorial","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989683305","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kEyjS":{"title":"Women wear","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027006057","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069yzrAX":{"title":"Local brand","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027071593","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069084oS":{"title":"Sapphire","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027235433","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069G7t2L":{"title":"Grove","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027104361","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Mqmrd":{"title":"Dapper","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989912681","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uvz9e":{"title":"Fast fashion","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615866046","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160698LrpX":{"title":"Glamour","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615800510","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UVWj0":{"title":"Chic","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615767742","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069NXp1X":{"title":"Instyle","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615734974","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069G8AZj":{"title":"Ready to wear","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615833278","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606931kr9":{"title":"Feminine","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616193726","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069qCcqm":{"title":"Vogue","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615636670","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694HtHs":{"title":"Trendy style","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615702206","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uOdAR":{"title":"Elegant mood","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615669438","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069KChdw":{"title":"Modern day","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615898814","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Mi3iU":{"title":"Bra store","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615931582","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696Mf4r":{"title":"Backpack","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615964350","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WhORc":{"title":"Jewelry","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615997118","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ybFsI":{"title":"Active wear","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616029886","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UXWj4":{"title":"Sneaker","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120304304191","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069R8qmv":{"title":"Watch","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616062654","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069JJG6h":{"title":"Bags","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616128190","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069q6JWE":{"title":"Coachella","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=131618603185","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069D5dHh":{"title":"Keyboard","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121266602048","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069u5PVb":{"title":"Pet Clothes","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121265520704","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WLoSm":{"title":"Smart Light","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121263685696","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606998Sci":{"title":"Halloween","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=131608838321","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069lIPzv":{"title":"Hat","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120306630719","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ZPhez":{"title":"Baby","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616160958","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069I4Jwg":{"title":"Glasses","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120309776447","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160697LW05":{"title":"Houseware","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120264884288","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069aB6mg":{"title":"Book","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120264917056","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WGKjx":{"title":"Socks","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120328945727","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GYWLX":{"title":"Bedding","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120329764927","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069huOpg":{"title":"Living","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120333467711","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069YLrJm":{"title":"Hand santizer","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120335827007","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069LIYGD":{"title":"Plantie","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120336220223","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ueQd0":{"title":"Coffee","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342249535","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694GXt4":{"title":"Paintme","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120338546751","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kJF5Y":{"title":"Stationery","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120338874431","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069J7RXS":{"title":"Case phone","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342511679","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160698PfGU":{"title":"Electronic","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342708287","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069t5pm6":{"title":"Juice","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120344674367","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069z2Sup":{"title":"Mirror","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120345067583","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ZOZQh":{"title":"Supplyment","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120346837055","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160695sb5X":{"title":"Barber","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120347263039","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069AYKOO":{"title":"Furniture","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349589567","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GI4D8":{"title":"Skateboard","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349851711","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069lPaeM":{"title":"Pizza","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349687871","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Fw6A0":{"title":"Print","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120259510336","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kRWf0":{"title":"Nails polish","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120259575872","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ULSSj":{"title":"Bathroom","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260591680","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069SPcqc":{"title":"Skincare","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260755520","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069W7QCo":{"title":"Toy","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260886592","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069A4YT9":{"title":"Beauty","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120262230080","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069agOyZ":{"title":"Drink","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120263540800","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069QKgxw":{"title":"Candles","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120263737408","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VqfRT":{"title":"Pet","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=126739447985","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696VrnH":{"title":"Organic","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=126749278385","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160695CODQ":{"title":"Postcard","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127300599985","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069IGO1R":{"title":"Speaker","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127219990705","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069vYODZ":{"title":"Pan","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127702794417","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069FaTb8":{"title":"Paint","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127705284785","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069CFnWj":{"title":"BFCM","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127793365169","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606913eTB":{"title":"Christmas","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127855558833","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069luzjE":{"title":"Gym","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127864799409","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694xwCt":{"title":"POD store","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=128081625265","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069y2l3y":{"title":"Surfboard","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121141493824","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069n7z9X":{"title":"Bike","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121175769152","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069sNRRe":{"title":"Ceramic","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121219547200","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Z0YpE":{"title":"Camping","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121222987840","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069qeXYU":{"title":"Cake","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121224888384","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069oJKAp":{"title":"Soap","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121243140160","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069NnQh2":{"title":"Floral","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121244549184","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365722iO4AW":{"title":"Xmas-Drink","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?preview_theme_id=129991114857","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365779I9Atj":{"title":"Xmas-Clothing","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?preview_theme_id=130013626473","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365833waYJn":{"title":"Xmas-Skincare","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?\u0026preview_theme_id=129991377001","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365892ZmeH6":{"title":"BFCM-Kid","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?\u0026preview_theme_id=130015887465","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"}}},"65efd86ac1f3374bfc2c8983":{"id":"65efd86ac1f3374bfc2c8983","data":{"f-1710216069J1eXs":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 1 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069QDqHu":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"type":"menu-item"},"f-1710216069rU2Tx":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid mix","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069vSnwc":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider 1 column","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/demo.minimog.co\/products\/denim-jacket?preview_theme_id=125615669438","external":false},"type":"menu-item"},"f-1710216069MZoVw":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/quilted-shopper?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069pRo8J":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider vertical","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/wool-blend-jacket?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-17102160697xLHH":{"show_on_desktop":true,"show_on_mobile":true,"title":"Sider full-width","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/boxy-denim-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069Mffwd":{"show_on_desktop":true,"show_on_mobile":true,"title":"Gift card","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/store-gift-card?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069HEyZT":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product color swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069gl3gS":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product image swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"type":"menu-item"},"f-1710216069ajKAs":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product dropdown swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/wool-blend-jacket?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-1710216069DcU4K":{"show_on_desktop":true,"show_on_mobile":true,"title":"Lightbox image","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069qzJbX":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product video","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/video-3d-model-product?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069mWeJr":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product 3D, AR models","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/video-3d-model-product?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069nscal":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom field","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/calendar-postcard?preview_theme_id=127300599985","external":false},"type":"menu-item"},"f-1710216069H4g4G":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom description","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160692wgbu":{"show_on_desktop":true,"show_on_mobile":true,"title":"Short description","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069BiaUC":{"show_on_desktop":true,"show_on_mobile":true,"title":"Real-time visitors","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hIWMb":{"show_on_desktop":true,"show_on_mobile":true,"title":"Dynamic checkout button","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069RiWEO":{"show_on_desktop":true,"show_on_mobile":true,"title":"Trust badge","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069MqYxO":{"show_on_desktop":true,"show_on_mobile":true,"title":"Delivery information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069XrwHD":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collapsible tabs information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069cRgz2":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product tabs information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069y6wNp":{"show_on_desktop":true,"show_on_mobile":true,"title":"Sticky add to cart","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160694oNlr":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product recently viewed","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hgB36":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product recommentdations","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069dDGJ9":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product complementary","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069Y5k0F":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 1","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-black?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-171021606929wQa":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 2","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-earth-tone?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-171021606938wiD":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 3","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-gold-tone?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-1710216069cw4Y9":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 4","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/calendar-postcard?preview_theme_id=127300599985","external":false},"type":"menu-item"},"f-1710216069W78uR":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 5","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/dried-flower-card?preview_theme_id=127300599985","external":false},"type":"menu-item"}}},"65efd86ac1f3374bfc2c8984":{"id":"65efd86ac1f3374bfc2c8984","data":{"f-1710216069smRVC":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter left sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/activewear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069q7Wr5":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter right sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/dresses\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069YAFvP":{"show_on_desktop":true,"show_on_mobile":true,"title":"Canvas sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/casualwear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160690cmzU":{"show_on_desktop":true,"show_on_mobile":true,"title":"Hidden sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/sweaters-1\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069wOosx":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter by tags","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/tunics\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069tLCSt":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/tops-1\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069nRECo":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 3 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/skirts\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069SfNgJ":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 4 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/jackets\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069HSh3k":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 5 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/coats\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069kjJNt":{"show_on_desktop":true,"show_on_mobile":true,"title":"List view","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/leggings\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069TA4kU":{"show_on_desktop":true,"show_on_mobile":true,"title":"Pagination page","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/bodysuits\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069rnmDW":{"show_on_desktop":true,"show_on_mobile":true,"title":"Load more button","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/rompers\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069rUVNA":{"show_on_desktop":true,"show_on_mobile":true,"title":"Infinite scrolling","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/blazers\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hdPRm":{"show_on_desktop":true,"show_on_mobile":true,"title":"Full-width layout","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/bottoms\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069I5Cx5":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom content","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/formalwear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069SINRv":{"show_on_desktop":true,"show_on_mobile":true,"title":"Cookies law info","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069vbgeH":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collections list","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160695Zhy3":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collection list style 2","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-1710216069w2kju":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collection list style 3","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126027333737","external":false},"type":"menu-item"}}},"65efd86ac1f3374bfc2c8985":{"id":"65efd86ac1f3374bfc2c8985","data":{"f-1710216069y0QPC":{"title":"Product bundles layout 1","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-charcoal-overshirt\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069O7JlZ":{"title":"Product bundles layout 2","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-cocoa-shirt\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WwYKB":{"title":"Volume discount","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/linen-blend-waistcoat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069INhQt":{"title":"Pre-purchase offers","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UV7VA":{"title":"In-cart offers","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069XBcxS":{"title":"Back in stock","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-bag-with-fringing?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uQHQd":{"title":"Pre-order product","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Dh8PW":{"title":"Size Chart","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/linen-blend-waistcoat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kjthZ":{"title":"Variant group images","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/striped-knit-bandeau-crop-top?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069sDX3W":{"title":"Cart countdown","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160697dquB":{"title":"Lucky wheel","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125609410750\u0026fox_show_lucky_wheel=true","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":false,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VSpVF":{"title":"Popup","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069bActS":{"title":"Free shipping goal","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160690L40L":{"title":"Sale notification","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/best-sellers-fashion-2024?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069dogzU":{"title":"Stock countdown","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WBeQY":{"title":"Countdown timer layout 1","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GaiNP":{"title":"Countdown timer layout 2","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-soft-coat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"}}},"65fa420d5ee6d973b8649bd9":{"id":"65fa420d5ee6d973b8649bd9","data":{"main-menu-item-1":{"title":"Blog","link":{"value":"","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"dropdown","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-2":{"title":"About us","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/about-us?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-3":{"title":"Contact us","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/contact-us?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-4":{"title":"FAQs","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/faqs?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-5":{"title":"Find a store","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/store-locator?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-6":{"title":"My account","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/account?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-7":{"title":"Age verifier pop-up","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=132173496497","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"sub-menu-item-1":{"title":"Grid layout","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125609410750","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-2":{"title":"List view","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615636670","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-3":{"title":"Blog with left sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615472830","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-4":{"title":"Blog with right sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615603902","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-5":{"title":"Single post style 1","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125609410750","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-6":{"title":"Single post style 2","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125615603902","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-7":{"title":"Single post with sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125615472830","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"}}}});
+    FoxKitPlugins.MenuData = FoxKitPlugins.MenuData?.map((item) => {
+      if (typeof item === 'string') return JSON.parse(item);
+      return item;
+    });
+
+    
+
+  
+
+  
+  FoxKitPlugins.StockCountdown = {"target_collections":[],"target_products":[{"value":"gid:\/\/shopify\/Product\/7168246120553","label":"Denim Jacket","handle":"denim-jacket-new","featuredImage":{"originalSrc":"https:\/\/cdn.shopify.com\/s\/files\/1\/2348\/0105\/products\/35h.jpg?v=1709689441"},"variants":{"edges":[{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930400361","title":"M \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930433129","title":"M \/ Black","price":"19.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930465897","title":"M \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930498665","title":"L \/ Blue","price":"29.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930531433","title":"L \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930564201","title":"L \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930596969","title":"XL \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930629737","title":"XL \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930662505","title":"XL \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930695273","title":"XXL \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930728041","title":"XXL \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930760809","title":"XXL \/ Pink","price":"39.00"}}]},"hasOnlyDefaultVariant":false},{"value":"gid:\/\/shopify\/Product\/7157381628009","label":"The Black Crew","handle":"the-black-crew","featuredImage":{"originalSrc":"https:\/\/cdn.shopify.com\/s\/files\/1\/2348\/0105\/products\/47871702.webp?v=1708332569"},"variants":{"edges":[{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41094012371049","title":"Black","price":"50.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41094012403817","title":"White","price":"50.00"}}]},"hasOnlyDefaultVariant":false}],"deleted":false,"_id":"65e84ea25af454c7ac4b7fa1","shop":"simplestjewelry.myshopify.com","active":true,"applies_to":"specific_products","countdown_type":"use_custom_range","from":5,"message":"Only {{stock_number}} item(s) left in stock!","to":10,"productHandles":[]};
+  if(FoxKitPlugins.StockCountdown) FoxKitPlugins.StockCountdown.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.StockCountdown?.locales?.[Shopify.locale];
+
+  
+    FoxKitPlugins.SalesPop = {"target_products":["gid:\/\/shopify\/Product\/7157992882281","gid:\/\/shopify\/Product\/7157992783977","gid:\/\/shopify\/Product\/7158002679913","gid:\/\/shopify\/Product\/7161798426729","gid:\/\/shopify\/Product\/7161298616425","gid:\/\/shopify\/Product\/7159271653481","gid:\/\/shopify\/Product\/7161293996137","gid:\/\/shopify\/Product\/7157381628009","gid:\/\/shopify\/Product\/7157382971497","gid:\/\/shopify\/Product\/7157379956841"],"deleted":false,"auto_sync_order":true,"orders":[{"orderName":"#1032","created_at":"2025-12-27T18:38:39Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"cotton-cargo-bermuda-shorts","productId":"7159271030889"},{"orderName":"#1031","created_at":"2025-12-17T15:21:38Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"baby-girls-sweatshirts","productId":"7424096469097"},{"orderName":"#1030","created_at":"2025-11-27T07:48:32Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"strappy-crop-top","productId":"7159272407145"},{"orderName":"#1029","created_at":"2025-10-31T08:02:21Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1028","created_at":"2025-10-29T19:12:43Z","name":"jo@gmail.com Jo","location":"New York, New York, United States","country":"United States","city":"New York","province":"New York","firstName":"jo@gmail.com","lastName":"Jo","productHandle":"long-denim-skirt","productId":"7159272439913"},{"orderName":"#1027","created_at":"2025-09-11T05:08:02Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1026","created_at":"2025-09-07T18:20:37Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1025","created_at":"2025-09-02T03:59:52Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"printed-tank-top","productId":"7159270801513"},{"orderName":"#1024","created_at":"2025-09-01T06:09:00Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"cateye-sunglasses","productId":"7159272472681"},{"orderName":"#1023","created_at":"2025-08-16T12:45:40Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"multi-cargo-cotton-shorts","productId":"7159270473833"},{"orderName":"#1022","created_at":"2025-07-29T03:27:25Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"linen-blend-waistcoat","productId":"7159271391337"},{"orderName":"#1021","created_at":"2025-07-03T20:20:06Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-cocoa-shirt","productId":"7157383790697"},{"orderName":"#1020","created_at":"2025-06-10T09:10:07Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-utility-backpack","productId":"7157379793001"},{"orderName":"#1019","created_at":"2025-05-27T01:28:48Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1018","created_at":"2025-05-27T01:25:59Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1017","created_at":"2025-05-26T14:10:24Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-charcoal-overshirt","productId":"7157380776041"},{"orderName":"#1016","created_at":"2025-05-20T02:10:56Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1015","created_at":"2025-05-16T07:02:18Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"scuba-pencil-skirt","productId":"7158015983721"},{"orderName":"#1014","created_at":"2025-05-07T02:56:58Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1013","created_at":"2025-05-05T11:57:38Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"home-deer-slipper","productId":"7424096632937"},{"orderName":"#1012","created_at":"2025-05-05T11:55:54Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"black-boots","productId":"7161295863913"},{"orderName":"#1011","created_at":"2025-04-27T08:51:36Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"sweater-with-lights-1","productId":"7424096829545"},{"orderName":"#1010","created_at":"2025-04-24T18:09:42Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"multi-cargo-cotton-shorts","productId":"7159270473833"},{"orderName":"#1009","created_at":"2024-12-26T06:27:47Z","name":"John Doe","location":"Springfield, California, United States","country":"United States","city":"Springfield","province":"California","firstName":"John","lastName":"Doe","productHandle":"vanilla-flavored","productId":"7423106646121"},{"orderName":"#1008","created_at":"2024-12-26T06:25:36Z","name":"John Doe","location":"Springfield, California, United States","country":"United States","city":"Springfield","province":"California","firstName":"John","lastName":"Doe","productHandle":"the-transit-backpack","productId":"7157379694697"},{"orderName":"#1007","created_at":"2024-10-21T06:01:31Z","name":"Dari Doc","location":"Apopka, Florida, United States","country":"United States","city":"Apopka","province":"Florida","firstName":"Dari","lastName":"Doc","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1006","created_at":"2024-10-21T05:13:16Z","name":"Dari Doc","location":"Apopka, Florida, United States","country":"United States","city":"Apopka","province":"Florida","firstName":"Dari","lastName":"Doc","productHandle":"printed-tank-top","productId":"7159270801513"},{"orderName":"#1005","created_at":"2024-10-13T15:06:20Z","name":"dasdas dasssad","location":"dqweqw, Illinois, United States","country":"United States","city":"dqweqw","province":"Illinois","firstName":"dasdas","lastName":"dasssad","productHandle":"polarised-sunglasses","productId":"7161295700073"},{"orderName":"#1004","created_at":"2024-10-13T15:00:51Z","name":"rwefsdff sdfsdfdsf","location":"ewqewqe, Illinois, United States","country":"United States","city":"ewqewqe","province":"Illinois","firstName":"rwefsdff","lastName":"sdfsdfdsf","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1003","created_at":"2024-05-24T08:29:16Z","name":"kiaqetkwyytabjatmd cazlgcom","location":"Fort Worth, Texas, United States","country":"United States","city":"Fort Worth","province":"Texas","firstName":"kiaqetkwyytabjatmd","lastName":"cazlgcom","productHandle":"plastic-bag-ban","productId":"7161294946409"}],"priority_products":[],"_id":"65e84e2af362f9c7a0ac1226","shop":"simplestjewelry.myshopify.com","active":true,"data_source":"real","delay_show":5,"delay_time":"10-15","display_time":"5","last_sync_at":"2025-12-27T18:38:42.871Z","locations":"Morgantown United States, Kuttu Federated States of Micronesia, Wuhu China, East Quincy United States, Raumbach Germany, Wuyang China, Tondela Portugal, N'Djamena Chad, Yanbei China, Quangang China, Le Pallet France, Servon-sur-Vilaine France, Tumut Australia, Goodman United States, Keluke China, Rauchenwarth Austria, Harran Turkey","max_show":20,"names":"Enrique West, Damien Braun, Ellie Osborne, Cierra Vega, Alden Cantrell, Kierra Gentry, Pierre Cox, Thomas Crane","position":"bottom-left","show_on_mobile":true,"target_to":"product","time":"{{time}} ago - {{location}}","title":"{{name}} has purchased!","max_orders":30,"productHandles":["relaxed-fit-masculine","short-fitted","short-sleeve-t-shirt","short-sleeve-white","cotton-t-shirt-dress-dark-taupe","sleeveless-ribbed-t-shirt","straw-shopeer-bag","the-black-crew","the-black-hoodie","the-black-messenger"]};
+    if(FoxKitPlugins.SalesPop) FoxKitPlugins.SalesPop.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.SalesPop?.locales?.[Shopify.locale]
+  
+
+  
+    FoxKitPlugins.CartCountdown = {"deleted":false,"_id":"65e84eaef362f9c7a0ac63c4","shop":"simplestjewelry.myshopify.com","active":true,"duration":5,"message":"These products are limited, checkout within {{timer}}","message_out":"You're out of time! Checkout now to avoid losing your order!","mins_label":"m","repeat":true,"secs_label":"s","show_on_drawer":true,"productHandles":[]};
+    if(FoxKitPlugins.CartCountdown) FoxKitPlugins.CartCountdown.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.CartCountdown?.locales?.[Shopify.locale]
+  
+  
+    FoxKitPlugins.CartGoal = {"discount":{"type":"FREE_SHIPPING","value":0},"disable_foxkit_discount":true,"deleted":false,"_id":"65e84dd5f362f9c7a0abe03a","shop":"simplestjewelry.myshopify.com","active":true,"goal_amount":300,"message":"Buy {{variable}} more to enjoy \u003cstrong\u003eFREE Shipping\u003c\/strong\u003e","message_reached":"Congrats! You are eligible for \u003cstrong\u003eFREE Shipping\u003c\/strong\u003e","productHandles":[]};
+    if(FoxKitPlugins.CartGoal) FoxKitPlugins.CartGoal.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.CartGoal?.locales?.[Shopify.locale];
+  
+</script>
+
+<link href="https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.css" rel="stylesheet" type="text/css" media="all" />
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/vendor.js' defer='defer' fetchpriority='high'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.js' defer='defer' fetchpriority='high'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/global.js' defer='defer' fetchpriority='low'></script>
+
+
+
+
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/slider-component.js' fetchpriority='low' defer='defer'></script>
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/incart-upsell.js' fetchpriority='low' defer='defer'></script>
+  <link id='FoxKit-Incart' rel='stylesheet' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/incart.css' fetchpriority='low' media='print' onload="this.media='all'">
+  <link rel='preload' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/component-slider.css' as='style' onload="this.onload=null;this.rel='stylesheet'" fetchpriority='low'>
+  <script>
+    FoxKitPlugins.IncartSettings = {"active":true,"deleted":false,"_id":"6729e6ae8b054ca331920f26","shop":"simplestjewelry.myshopify.com","plugin":"InCart","offer_heading":"Customers also bought with \"{product_title}\"","image_ratio":"adapt","card_style":"style-2","slider_control":true,"button_label":"Add","btn_style":"text","productHandles":[]};
+    if(FoxKitPlugins.IncartSettings) FoxKitPlugins.IncartSettings.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.IncartSettings?.locales?.[Shopify.locale]
+  </script>
+
+
+
+		<link rel='preload' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/pre-purchase.css' as='style' onload="this.onload=null;this.rel='stylesheet'" fetchpriority='low'>
+
+
+
+
+  <link href="https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/menu.css" rel="stylesheet" type="text/css" media="all" />
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/mega-menu.js' fetchpriority='high' defer='defer'></script>
+
+
+
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cartgoal.js' fetchpriority='low' defer='defer'></script>
+  <link id='FoxKit-CartGoal' rel='stylesheet' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cart-goal.css' fetchpriority='low' media='print' onload="this.media='all'">
+
+
+  <script>
+    FoxKitPlugins.PreOrderSettings = null;
+    if(FoxKitPlugins.PreOrderSettings) FoxKitPlugins.PreOrderSettings.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.PreOrderSettings?.locales?.[Shopify.locale]
+  </script>
+  
+
+
+
+
+
+
+
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/sales-pop.js' fetchpriority='low' defer='defer'></script>
+
+
+
+  <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cart-countdown.js' fetchpriority='low' defer='defer'></script>
+
+
+  <style id='FoxKit-Custom-CSS'>
+    .foxkit-sales-pop__title {  font-weight: 400;}.f-menu__link {  color: inherit;}.f-menu {  --f-menu-bg: rgb(var(--color-background));}.f-menu__submenu {  --f-submenu-bg: rgb(var(--color-background));}.m-menu__item foxkit-menu {  display: block;  padding: 0;}.m-menu__item:not([data-index="3"]) foxkit-menu {  margin: 0 -12px;  column-gap: 36px;  column-rule: 1px solid rgb(var(--color-border));}.m-menu__item[data-index="0"] foxkit-menu {  column-count: 7;}.m-menu__item[data-index="1"] foxkit-menu,.m-menu__item[data-index="2"] foxkit-menu,.m-menu__item[data-index="4"] foxkit-menu {  column-count: 4;  width: 66.67%;}.m-header__desktop .f-menu__submenu.f-menu__submenu--level-1 {  box-shadow: 0 5px 15px #00000012;  padding: 16px;  top: -16px !important;  left: calc(100% + 16px);}.m-header__desktop .f-menu__submenu:before {  content: "";  position: absolute;  width: 100%;  height: 100%;  top: 0;  left: -35px;  z-index: -1;}.f-menu--vertical .f-menu__link {  padding-right: 12px !important;}.m-header__desktop .f-menu--vertical {  --submenu-column-width: 250px;}.m-header__desktop .m-menu__item[data-index="3"] .f-menu a {  display: flex;}.f-menu a {  font-weight: 400;  display: block;  overflow: hidden;  white-space: normal;  padding: 8px 12px !important;}.f-menu__badge {  font-size: 12px;  text-transform: capitalize;  width: 42px;  font-weight: 500;  border-radius: 11px;  display: inline-flex;  justify-content: center;  align-items: center;  position: absolute;  top: 4px;}.m-menu-mobile__item[data-index="0"] .f-menu-mobile .f-menu__item {  width: 50%;}.m-menu-mobile__item[data-index="0"] .f-menu-mobile {  flex-wrap: wrap;  flex-direction: row;}.f-menu-mobile {  padding: 0 4px;}.f-menu-mobile .f-menu__submenu {  padding-left: 12px;}.m-megamenu-mobile__block {  padding-top: 18px;}[dir="rtl"] {  .f-menu--vertical .f-menu__arrow {    left: var(--item-space);    right: auto;    transform: scaleX(-1);  }  .f-menu__badge {    margin-left: 0;    margin-right: 5px;  }  .f-menu-mobile .f-menu__submenu {    padding-left: 0;    padding-right: 12px;  }  .m-header__desktop .f-menu__submenu:before {  right: -35px;}  .m-header__desktop .f-menu__submenu {      right: calc(100% + 16px);  }}@media (min-width: 1024px) {  .f-menu a:hover {    background-color: rgba(var(--color-foreground), 0.07);    color: rgb(var(--color-foreground));  }  .f-menu__item:hover>.f-menu__link,  .f-menu__submenu .f-menu__item:hover>.f-menu__link{    color: rgb(var(--color-foreground));  }}@media (max-width: 1400px) {  .m-menu__item[data-index="0"] foxkit-menu {    column-count: 6;  }}@media (max-width: 1280px) {  .m-menu__item:not([data-index="3"]) foxkit-menu {    column-gap: 20px;  }}@media (max-width: 1110px) {  .m-menu__item[data-index="0"] foxkit-menu {    column-count: 5;  }  .m-menu__item[data-index="1"] foxkit-menu,  .m-menu__item[data-index="2"] foxkit-menu,  .m-menu__item[data-index="4"] foxkit-menu {    width: 75%;  }}.foxkit-popup {  width: 800px !important;}.foxkit-popup__content {  padding: 0;}.foxkit-popup__submit {  position: absolute;  top: 0;  left: 0;  width: 100%;  height: 100%;  font-size: 0;  opacity: 0;  margin: 0;  padding: 0;}.foxkit-modal .foxkit-modal__close {  display: none;}a.f-menu__link.f-menu__link--level-1 {  overflow: visible;}a.f-menu__link.f-menu__link--level-1::-webkit-scrollbar {    display: none;}@media (max-width: 767px) {  .m-menu-drawer__wrapper {      width: 100% !important;  }}
+  </style>
+
+
+  <!-- Google Tag Manager and showcase script disabled for local React dev -->
+  <!--
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TQD9RJFT');</script>
+
+  <script src="https://d6vygj6nlotna.cloudfront.net/public/minimog/minimog-showcase_v2.js" defer></script>
+  -->
+
+
+
+
+<!-- END app block --><link href="https://monorail-edge.shopifysvc.com/" rel="dns-prefetch">
+<script>(function(){if ("sendBeacon" in navigator && "performance" in window) {try {var session_token_from_headers = performance.getEntriesByType('navigation')[0].serverTiming.find(x => x.name == '_s').description;} catch {var session_token_from_headers = undefined;}var session_cookie_matches = document.cookie.match(/_shopify_s=([^;]*)/);var session_token_from_cookie = session_cookie_matches && session_cookie_matches.length === 2 ? session_cookie_matches[1] : "";var session_token = session_token_from_headers || session_token_from_cookie || "";function handle_abandonment_event(e) {var entries = performance.getEntries().filter(function(entry) {return /monorail-edge.shopifysvc.com/.test(entry.name);});if (!window.abandonment_tracked && entries.length === 0) {window.abandonment_tracked = true;var currentMs = Date.now();var navigation_start = performance.timing.navigationStart;var payload = {shop_id: 23480105,url: window.location.href,navigation_start,duration: currentMs - navigation_start,session_token,page_type: "index"};window.navigator.sendBeacon("https://monorail-edge.shopifysvc.com/v1/produce", JSON.stringify({schema_id: "online_store_buyer_site_abandonment/1.1",payload: payload,metadata: {event_created_at_ms: currentMs,event_sent_at_ms: currentMs}}));}}window.addEventListener('pagehide', handle_abandonment_event);}}());</script>
+<!-- Shopify Web Pixels Manager disabled for local React dev -->
+<!--
+<script id="web-pixels-manager-setup">(function e(e,d,r,n,o){if(void 0===o&&(o={}),!Boolean(null===(a=null===(i=window.Shopify)||void 0===i?void 0:i.analytics)||void 0===a?void 0:a.replayQueue)){var i,a;window.Shopify=window.Shopify||{};var t=window.Shopify;t.analytics=t.analytics||{};var s=t.analytics;s.replayQueue=[],s.publish=function(e,d,r){return s.replayQueue.push([e,d,r]),!0};try{self.performance.mark("wpm:start")}catch(e){}var l=function(){var e={modern:/Edge?\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Firefox\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Chrom(ium|e)\/(9{2}|\d{3,})\.\d+(\.\d+|)|(Maci|X1{2}).+ Version\/(15\.\d+|(1[6-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(9{2}|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(15[._]\d+|(1[6-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|SamsungBrowser\/([2-9]\d|\d{3,})\.\d+/,legacy:/Edge?\/(1[6-9]|[2-9]\d|\d{3,})\.\d+(\.\d+|)|Firefox\/(5[4-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)|Chrom(ium|e)\/(5[1-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)([\d.]+$|.*Safari\/(?![\d.]+ Edge\/[\d.]+$))|(Maci|X1{2}).+ Version\/(10\.\d+|(1[1-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(3[89]|[4-9]\d|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(10[._]\d+|(1[1-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Mobile Safari.+OPR\/([89]\d|\d{3,})\.\d+\.\d+|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?(15\.([5-9]|\d{2,})|(1[6-9]|[2-9]\d|\d{3,})\.\d+)\.\d+|SamsungBrowser\/(5\.\d+|([6-9]|\d{2,})\.\d+)|Android.+MQ{2}Browser\/(14(\.(9|\d{2,})|)|(1[5-9]|[2-9]\d|\d{3,})(\.\d+|))(\.\d+|)|K[Aa][Ii]OS\/(3\.\d+|([4-9]|\d{2,})\.\d+)(\.\d+|)/},d=e.modern,r=e.legacy,n=navigator.userAgent;return n.match(d)?"modern":n.match(r)?"legacy":"unknown"}(),u="modern"===l?"modern":"legacy",c=(null!=n?n:{modern:"",legacy:""})[u],f=function(e){return[e.baseUrl,"/wpm","/b",e.hashVersion,"modern"===e.buildTarget?"m":"l",".js"].join("")}({baseUrl:d,hashVersion:r,buildTarget:u}),m=function(e){var d=e.version,r=e.bundleTarget,n=e.surface,o=e.pageUrl,i=e.monorailEndpoint;return{emit:function(e){var a=e.status,t=e.errorMsg,s=(new Date).getTime(),l=JSON.stringify({metadata:{event_sent_at_ms:s},events:[{schema_id:"web_pixels_manager_load/3.1",payload:{version:d,bundle_target:r,page_url:o,status:a,surface:n,error_msg:t},metadata:{event_created_at_ms:s}}]});if(!i)return console&&console.warn&&console.warn("[Web Pixels Manager] No Monorail endpoint provided, skipping logging."),!1;try{return self.navigator.sendBeacon.bind(self.navigator)(i,l)}catch(e){}var u=new XMLHttpRequest;try{return u.open("POST.html",i,!0),u.setRequestHeader("Content-Type","text/plain"),u.send(l),!0}catch(e){return console&&console.warn&&console.warn("[Web Pixels Manager] Got an unhandled error while logging to Monorail."),!1}}}}({version:r,bundleTarget:l,surface:e.surface,pageUrl:self.location.href,monorailEndpoint:e.monorailEndpoint});try{o.browserTarget=l,function(e){var d=e.src,r=e.async,n=void 0===r||r,o=e.onload,i=e.onerror,a=e.sri,t=e.scriptDataAttributes,s=void 0===t?{}:t,l=document.createElement("script"),u=document.querySelector("head"),c=document.querySelector("body");if(l.async=n,l.src=d,a&&(l.integrity=a,l.crossOrigin="anonymous"),s)for(var f in s)if(Object.prototype.hasOwnProperty.call(s,f))try{l.dataset[f]=s[f]}catch(e){}if(o&&l.addEventListener("load",o),i&&l.addEventListener("error",i),u)u.appendChild(l);else{if(!c)throw new Error("Did not find a head or body element to append the script");c.appendChild(l)}}({src:f,async:!0,onload:function(){if(!function(){var e,d;return Boolean(null===(d=null===(e=window.Shopify)||void 0===e?void 0:e.analytics)||void 0===d?void 0:d.initialized)}()){var d=window.webPixelsManager.init(e)||void 0;if(d){var r=window.Shopify.analytics;r.replayQueue.forEach((function(e){var r=e[0],n=e[1],o=e[2];d.publishCustomEvent(r,n,o)})),r.replayQueue=[],r.publish=d.publishCustomEvent,r.visitor=d.visitor,r.initialized=!0}}},onerror:function(){return m.emit({status:"failed",errorMsg:"".concat(f," has failed to load")})},sri:function(e){var d=/^sha384-[A-Za-z0-9+/=]+$/;return"string"==typeof e&&d.test(e)}(c)?c:"",scriptDataAttributes:o}),m.emit({status:"loading"})}catch(e){m.emit({status:"failed",errorMsg:(null==e?void 0:e.message)||"Unknown error"})}}})({shopId: 23480105,storefrontBaseUrl: "https://fashion.minimog.co",extensionsBaseUrl: "https://extensions.shopifycdn.com/cdn/shopifycloud/web-pixels-manager",monorailEndpoint: "https://monorail-edge.shopifysvc.com/unstable/produce_batch",surface: "storefront-renderer",enabledBetaFlags: ["2dca8a86","a0d5f9d2"],webPixelsConfigList: [{"id":"33718377","configuration":"{\"accountID\":\"82f25811-b8d7-463e-980a-687c6e4ebc88\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"d0369370d97f2cca6d5c273406637796","type":"APP","apiClientId":5433881,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"31326313","configuration":"{\"accountID\":\"2de2ed03-0af8-4fa2-a602-a56f522d5573\",\"configs\":\"foxify,420dde02-66e0-4e84-a285-abcd1bbc3790,https:\/\/tracking.foxecom.app\/track\/batch\",\"appType\":\"production\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"22c5c1aa7eb30e90f9586cff580af32a","type":"APP","apiClientId":12239405057,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"shopify-app-pixel","configuration":"{}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"APP","privacyPurposes":["ANALYTICS","MARKETING"]},{"id":"shopify-custom-pixel","eventPayloadVersion":"v1","runtimeContext":"LAX","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"CUSTOM","privacyPurposes":["ANALYTICS","MARKETING"]}],isMerchantRequest: false,initData: {"shop":{"name":"SMal Couture","paymentSettings":{"currencyCode":"USD"},"myshopifyDomain":"simplestjewelry.myshopify.com","countryCode":"US","storefrontUrl":"https:\/\/fashion.minimog.co\/zh"},"customer":null,"cart":null,"checkout":null,"productVariants":[],"purchasingCompany":null},},"cdn.html","7cecd0b6w90c54c6cpe92089d5m57a67346",{"modern":"","legacy":""},{"shopId":"23480105","storefrontBaseUrl":"https:\/\/fashion.minimog.co","extensionBaseUrl":"https:\/\/extensions.shopifycdn.com\/cdn\/shopifycloud\/web-pixels-manager","surface":"storefront-renderer","enabledBetaFlags":"[\"2dca8a86\", \"a0d5f9d2\"]","isMerchantRequest":"false","hashVersion":"7cecd0b6w90c54c6cpe92089d5m57a67346","publish":"custom","events":"[[\"page_viewed\",{}]]"});</script>
+-->
+<!-- Shopify Analytics disabled for local React dev -->
+<!--
+<script>
+  window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+  window.ShopifyAnalytics.meta.currency = 'USD';
+  var meta = {"page":{"pageType":"home","requestId":"c519c1e0-334e-4a1d-ba3b-9647ab006546-1768196419"}};
+  for (var attr in meta) {
+    window.ShopifyAnalytics.meta[attr] = meta[attr];
+  }
+</script>
+-->
+<script class="analytics">
+  (function () {
+    var customDocumentWrite = function(content) {
+      var jquery = null;
+
+      if (window.jQuery) {
+        jquery = window.jQuery;
+      } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+      }
+
+      if (jquery) {
+        jquery('body').append(content);
+      }
+    };
+
+    var hasLoggedConversion = function(token) {
+      if (token) {
+        return document.cookie.indexOf('loggedConversion=' + token) !== -1;
+      }
+      return false;
+    }
+
+    var setCookieIfConversion = function(token) {
+      if (token) {
+        var twoMonthsFromNow = new Date(Date.now());
+        twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+
+        document.cookie = 'loggedConversion=' + token + '; expires=' + twoMonthsFromNow;
+      }
+    }
+
+    window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+    var trekkie = window.ShopifyAnalytics.lib = window.trekkie = window.trekkie || [];
+    if (trekkie.integrations) {
+      return;
+    }
+    trekkie.methods = [
+      'identify',
+      'page',
+      'ready',
+      'track',
+      'trackForm',
+      'trackLink'
+    ];
+    trekkie.factory = function(method) {
+      return function() {
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(method);
+        trekkie.push(args);
+        return trekkie;
+      };
+    };
+    for (var i = 0; i < trekkie.methods.length; i++) {
+      var key = trekkie.methods[i];
+      trekkie[key] = trekkie.factory(key);
+    }
+    trekkie.load = function(config) {
+      trekkie.config = config || {};
+      trekkie.config.initialDocumentCookie = document.cookie;
+      var first = document.getElementsByTagName('script')[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.onerror = function(e) {
+        var scriptFallback = document.createElement('script');
+        scriptFallback.type = 'text/javascript';
+        scriptFallback.onerror = function(error) {
+                var Monorail = {
+      produce: function produce(monorailDomain, schemaId, payload) {
+        var currentMs = new Date().getTime();
+        var event = {
+          schema_id: schemaId,
+          payload: payload,
+          metadata: {
+            event_created_at_ms: currentMs,
+            event_sent_at_ms: currentMs
+          }
+        };
+        return Monorail.sendRequest("https://" + monorailDomain + "/v1/produce", JSON.stringify(event));
+      },
+      sendRequest: function sendRequest(endpointUrl, payload) {
+        // Try the sendBeacon API
+        if (window && window.navigator && typeof window.navigator.sendBeacon === 'function' && typeof window.Blob === 'function' && !Monorail.isIos12()) {
+          var blobData = new window.Blob([payload], {
+            type: 'text/plain'
+          });
+
+          if (window.navigator.sendBeacon(endpointUrl, blobData)) {
+            return true;
+          } // sendBeacon was not successful
+
+        } // XHR beacon
+
+        var xhr = new XMLHttpRequest();
+
+        try {
+          xhr.open('POST.html', endpointUrl);
+          xhr.setRequestHeader('Content-Type', 'text/plain');
+          xhr.send(payload);
+        } catch (e) {
+          console.log(e);
+        }
+
+        return false;
+      },
+      isIos12: function isIos12() {
+        return window.navigator.userAgent.lastIndexOf('iPhone; CPU iPhone OS 12_') !== -1 || window.navigator.userAgent.lastIndexOf('iPad; CPU OS 12_') !== -1;
+      }
+    };
+    Monorail.produce('monorail-edge.shopifysvc.com',
+      'trekkie_storefront_load_errors/1.1',
+      {shop_id: 23480105,
+      theme_id: 126026973289,
+      app_name: "storefront",
+      context_url: window.location.href,
+      source_url: "//fashion.minimog.co/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js"});
+
+        };
+        scriptFallback.async = true;
+        scriptFallback.src = '/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js';
+        first.parentNode.insertBefore(scriptFallback, first);
+      };
+      script.async = true;
+      script.src = '/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js';
+      first.parentNode.insertBefore(script, first);
+    };
+    trekkie.load(
+      {"Trekkie":{"appName":"storefront","development":false,"defaultAttributes":{"shopId":23480105,"isMerchantRequest":null,"themeId":126026973289,"themeCityHash":"3595513633792165589","contentLanguage":"zh-CN","currency":"USD","eventMetadataId":"c55f4840-a956-4eab-b327-ff2d60449e95"},"isServerSideCookieWritingEnabled":true,"monorailRegion":"shop_domain","enabledBetaFlags":["65f19447"]},"Session Attribution":{},"S2S":{"facebookCapiEnabled":false,"source":"trekkie-storefront-renderer","apiClientId":580111}}
+    );
+
+    var loaded = false;
+    trekkie.ready(function() {
+      if (loaded) return;
+      loaded = true;
+
+      window.ShopifyAnalytics.lib = window.trekkie;
+
+      var originalDocumentWrite = document.write;
+      document.write = customDocumentWrite;
+      try { window.ShopifyAnalytics.merchantGoogleAnalytics.call(this); } catch(error) {};
+      document.write = originalDocumentWrite;
+
+      window.ShopifyAnalytics.lib.page(null,{"pageType":"home","requestId":"c519c1e0-334e-4a1d-ba3b-9647ab006546-1768196419","shopifyEmitted":true});
+
+      var match = window.location.pathname.match(/checkouts\/(.+)\/(thank_you|post_purchase)/)
+      var token = match? match[1]: undefined;
+      if (!hasLoggedConversion(token)) {
+        setCookieIfConversion(token);
+        
+      }
+    });
+
+
+        /* Disabled for localhost - causes Failed to fetch
+        var eventsListenerScript = document.createElement('script');
+        eventsListenerScript.async = true;
+        eventsListenerScript.src = "/cdn/shopifycloud/storefront/assets/shop_events_listener-3da45d37.js";
+        document.getElementsByTagName('head')[0].appendChild(eventsListenerScript);
+        */
+
+})();</script>
+<style>
+    .m-page-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999999;
+        background: #fff;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 100vw;
+        max-height: 100vh;
+				transition-property: opacity, visibility;
+				transition-duration: var(--m-duration-default);
+				transition-timing-function: ease;
+      }
+      .m-page-transition.fade-out {
+        opacity: 0;
+        visibility: hidden;
+      }
+			.m-page-transition.m-page-transition--design-mode {
+				opacity: 1;
+				visibility: visible;
+			}
+      .m-page-transition.fade-in {
+        opacity: 1;
+        visibility: visible;
+      }
+      .m-page-transition.fade-out .m-page-transition__spinner-content {
+        display: none;
+      }
+			.m-page-transition.m-page-transition--design-mode .m-page-transition__spinner-content {
+				display: block;
+			}
+      @keyframes pageTransitionSpinner {
+        0% {
+          -webkit-transform: rotate3d(0, 0, 1, 0deg);
+          transform: rotate3d(0, 0, 1, 0deg);
+        }
+        25% {
+          -webkit-transform: rotate3d(0, 0, 1, 90deg);
+          transform: rotate3d(0, 0, 1, 90deg);
+        }
+        50% {
+          -webkit-transform: rotate3d(0, 0, 1, 180deg);
+          transform: rotate3d(0, 0, 1, 180deg);
+        }
+        75% {
+          -webkit-transform: rotate3d(0, 0, 1, 270deg);
+          transform: rotate3d(0, 0, 1, 270deg);
+        }
+        100% {
+          -webkit-transform: rotate3d(0, 0, 1, 360deg);
+          transform: rotate3d(0, 0, 1, 360deg);
+        }
+      }
+			@keyframes m-blink {
+				25% {
+					opacity: 0.5;
+				}
+				50% {
+					opacity: 0;
+				}
+				75% {
+					opacity: 0.5;
+				}
+			}
+      .m-page-transition__loading {
+        position: absolute;
+        animation: pageTransitionSpinner 1.5s linear infinite;
+        width: var(--loading-size);
+        height: var(--loading-size);
+        top: 10px;
+        left: 10px;
+        border-radius: 50%;
+        box-shadow: 0 2px 0 0 var(--loading-color);
+        transform-origin: calc(var(--loading-size) / 2) calc(var(--loading-size) / 2 + 1px);
+      }
+      .m-page-transition__logo {
+        animation: m-blink 1.5s linear infinite;
+        position: absolute;
+        width: var(--loading-size);
+        height: var(--loading-size);
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .m-page-transition__spinner {
+        width: var(--loading-size);
+        height: var(--loading-size);
+        display: inline-block;
+        overflow: hidden;
+        background: transparent;
+      }
+      .m-page-transition__spinner-content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform: translateZ(0) scale(0.8);
+        backface-visibility: hidden;
+        transform-origin: 0 0;
+      }
+      .m-page-transition__spinner-content div {
+        box-sizing: content-box;
+      }
+  </style>
+ 
+
+
+  <style data-shopify>
+    .m-button--scroll-top {
+      position: fixed;
+      right: 16px;
+      bottom: 86px;
+      z-index: 99;
+      border-radius: 50%;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      opacity: 0;
+    }
+
+    .m-button--scroll-top.is-show {
+      opacity: 1;
+    }
+
+    .m-scroll-top-target {
+      width: 0;
+      height: 0;
+      visibility: hidden;
+      opacity: 0;
+    }
+    @media (max-width: 767px) {
+      .m-button--scroll-top {
+        width: 40px;
+        height: 40px;
+      }
+      .m-button--scroll-top svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  </style>
+<!-- Disabled for localhost - perf-kit causes Failed to fetch
+<script
+  defer
+  src="/cdn/shopifycloud/perf-kit/shopify-perf-kit-3.0.3.min.js"
+  data-application="storefront-renderer"
+  data-shop-id="23480105"
+  data-render-region="gcp-asia-southeast1"
+  data-page-type="index"
+  data-theme-instance-id="126026973289"
+  data-theme-name="Minimog - OS 2.0"
+  data-theme-version="5.6.0"
+  data-monorail-region="shop_domain"
+  data-resource-timing-sampling-rate="10"
+  data-shs="true"
+  data-shs-beacon="true"
+  data-shs-export-with-fetch="true"
+  data-shs-logs-sample-rate="1"
+  data-shs-beacon-endpoint="https://fashion.minimog.co/api/collect"
+></script>
+-->
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="index.html">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com/" crossorigin>
+    <link rel="preconnect" href="https://cdn.shopify.com/" crossorigin><link rel="shortcut icon" type="image/png" href="/cdn/shop/files/favicona721.png?crop=center&amp;height=32&amp;v=1709609697&amp;width=32"><title>SMal Couture - Next-gen Multipurpose Shopify theme 2.0</title><meta name="description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!"><meta property="og:site_name" content="SMal Couture">
+<meta property="og:url" content="index.html">
+<meta property="og:title" content="SMal Couture - Next-gen Multipurpose Shopify theme 2.0">
+<meta property="og:type" content="website">
+<meta property="og:description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!"><meta property="og:image" content="/cdn/shop/files/minimog_preview_ee7f2df1-13ab-4bca-a54c-803c838bfb2cfd9b.png?v=1709167944">
+<meta property="og:image:secure_url" content="/cdn/shop/files/minimog_preview_ee7f2df1-13ab-4bca-a54c-803c838bfb2cfd9b.png?v=1709167944">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628"><meta name="twitter:site" content="@https://"><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SMal Couture - Next-gen Multipurpose Shopify theme 2.0">
+<meta name="twitter:description" content="Your perfect online store is just one step away. Get Minimog’s high-converting Shopify template and start selling in minutes. Purchase now!">
+
+<style>
+  @font-face {  font-family: M-Heading-Font;  font-weight:400;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Regular.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Heading-Font;  font-weight:500;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Medium.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Heading-Font;  font-weight:600;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-SemiBold.ttf?v=1618297125);  font-display: swap;}:root {  --font-stack-header: 'M-Heading-Font';  --font-weight-header: 400;}@font-face {  font-family: M-Body-Font;  font-weight:400;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Regular.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Body-Font;  font-weight:500;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-Medium.ttf?v=1618297125);  font-display: swap;}@font-face {  font-family: M-Body-Font;  font-weight:600;  src: url(https://cdn.shopify.com/s/files/1/0561/2742/2636/files/Jost-SemiBold.ttf?v=1618297125);  font-display: swap;}:root {  --font-stack-body: 'M-Body-Font';  --font-weight-body: 400;;}
+</style>
+<style>
+  .m-page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999999;
+      background: #fff;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100vw;
+      max-height: 100vh;
+      transition-property: opacity, visibility;
+      transition-duration: var(--m-duration-default);
+      transition-timing-function: ease;
+    }
+    .m-page-transition.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .m-page-transition.m-page-transition--design-mode {
+      opacity: 1;
+      visibility: visible;
+    }
+    .m-page-transition.fade-in {
+      opacity: 1;
+      visibility: visible;
+    }
+    .m-page-transition.fade-out .m-page-transition__spinner-content {
+      display: none;
+    }
+    .m-page-transition.m-page-transition--design-mode .m-page-transition__spinner-content {
+      display: block;
+    }
+    @keyframes pageTransitionSpinner {
+      0% {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+      }
+      25% {
+        -webkit-transform: rotate3d(0, 0, 1, 90deg);
+        transform: rotate3d(0, 0, 1, 90deg);
+      }
+      50% {
+        -webkit-transform: rotate3d(0, 0, 1, 180deg);
+        transform: rotate3d(0, 0, 1, 180deg);
+      }
+      75% {
+        -webkit-transform: rotate3d(0, 0, 1, 270deg);
+        transform: rotate3d(0, 0, 1, 270deg);
+      }
+      100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+      }
+    }
+    @keyframes m-blink {
+      25% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 0;
+      }
+      75% {
+        opacity: 0.5;
+      }
+    }
+    .m-page-transition__loading {
+      position: absolute;
+      animation: pageTransitionSpinner 1.5s linear infinite;
+      width: var(--loading-size);
+      height: var(--loading-size);
+      top: 10px;
+      left: 10px;
+      border-radius: 50%;
+      box-shadow: 0 2px 0 0 var(--loading-color);
+      transform-origin: calc(var(--loading-size) / 2) calc(var(--loading-size) / 2 + 1px);
+    }
+    .m-page-transition__logo {
+      animation: m-blink 1.5s linear infinite;
+      position: absolute;
+      width: var(--loading-size);
+      height: var(--loading-size);
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .m-page-transition__spinner {
+      width: var(--loading-size);
+      height: var(--loading-size);
+      display: inline-block;
+      overflow: hidden;
+      background: transparent;
+    }
+    .m-page-transition__spinner-content {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform: translateZ(0) scale(0.8);
+      backface-visibility: hidden;
+      transform-origin: 0 0;
+    }
+    .m-page-transition__spinner-content div {
+      box-sizing: content-box;
+    }
+</style>
+<style data-shopify>
+  .m-button--scroll-top {
+    position: fixed;
+    right: 16px;
+    bottom: 86px;
+    z-index: 99;
+    border-radius: 50%;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    opacity: 0;
+  }
+
+  .m-button--scroll-top.is-show {
+    opacity: 1;
+  }
+
+  .m-scroll-top-target {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+  }
+  @media (max-width: 767px) {
+    .m-button--scroll-top {
+      width: 40px;
+      height: 40px;
+    }
+    .m-button--scroll-top svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+</style>
+<style> #shopify-section-sections--15265868120169__annoucement .m-announcement-bar__container {--container-width: 600px;} </style>
+<style>
+  #m-section--template--15265873625193__scrolling_promotion_jjrFyf {
+    --section-padding-top: 26px;
+    --section-padding-bottom: 26px;
+    --item-gap: 40px;
+    --item-gap-mobile: 20px;
+    --duration: 30s;
+  }
+</style>
+<style> .m-section__subheading,.m-richtext__subtitle {font-weight: 500; font-size: 18px;} .m-section__header {--m-section-header-spacing-bottom: 40px;} .m-button--link {--btn-link-border: 1px;} </style>
+<style> #shopify-section-sections--15265867989097__footer .m-footer--block-spacing {width: 10%;} #shopify-section-sections--15265867989097__footer .m-newsletter-form {margin-top: 24px;} #shopify-section-sections--15265867989097__footer .m-footer--block-newsletter .m-footer--block-title {font-weight: 400; font-size: 25px;} @media (min-width: 1280px) {#shopify-section-sections--15265867989097__footer .m-footer--block-newsletter .m-footer--block-title {font-size: 36px; margin-bottom: 12px; } #shopify-section-sections--15265867989097__footer .m-footer__copyright, #shopify-section-sections--15265867989097__footer .m-footer--bottom-menu {font-size: 14px; }} </style></div><div id="shopify-section-sections--15265867989097__mobile-sticky-bar" class="shopify-section shopify-section-group-footer-group"><link href="/cdn/shop/t/10/assets/mobile-sticky-bar22f8.css?v=80304117456380572521709196363" rel="stylesheet" type="text/css" media="all" />
+<style> #shopify-section-template--15265873625193__gallery_LXcceh .container-full {padding-inline: 0;} </style></div><div id="shopify-section-template--15265873625193__16225125199f82d8fe" class="shopify-section"><link href="/cdn/shop/t/10/assets/icon-box7490.css?v=144636186511075217321708482571" rel="stylesheet" type="text/css" media="all" />
+
+  <style> #shopify-section-template--15265873625193__16225125199f82d8fe .m-icon-box__icon {margin-right: 12px;} #shopify-section-template--15265873625193__16225125199f82d8fe .m-icon-box--small {border-top-width: 0;} </style>
+
+
+  <style>
+    #m-section--template--15265873625193__16225125199f82d8fe {
+      --section-padding-top: 46px;
+      --section-padding-bottom: 46px;
+      --column-gap: 30px;
+      --column-gap-mobile: 10px;
+      --row-gap: 40px;
+      --row-gap-mobile: 30px;
+      --items: 4;
+    }
+  </style>
+<style> #shopify-section-template--15265873625193__testimonials_pnyUnX .m-svg-icon {width: 12px; height: 12px;} #shopify-section-template--15265873625193__testimonials_pnyUnX .m-stars {column-gap: 2px;} @media (min-width: 1280px) {#shopify-section-template--15265873625193__testimonials_pnyUnX .m-testimonials__header {margin-bottom: 40px; }} @media (max-width: 767px) {#shopify-section-template--15265873625193__testimonials_pnyUnX .m-testimonials__header {margin-bottom: 24px; } #shopify-section-template--15265873625193__testimonials_pnyUnX .m-section__header {text-align: center; }} </style></div><!-- Failed to render section "11cfb44f-b725-4daf-8ee7-4bbf2c63914d": section file "instagram.liquid" does not exist --><div id="shopify-section-template--15265873625193__gallery_LXcceh" class="shopify-section"><link href="/cdn/shop/t/10/assets/gallery2ba7.css?v=79694741426206280901739161040" rel="stylesheet" type="text/css" media="all" />
+
+  <style data-shopify>#m-section-template--15265873625193__gallery_LXcceh {
+      --section-padding-top: 100px;
+      --section-padding-bottom: 0px;
+      --column-gap: 0px;
+      --row-gap: 0px;
+      --column-gap-mobile: 10px;
+    }</style>
+<style> #shopify-section-template--15265873625193__custom_content_KiFzqG .m-image-comparison__heading {box-shadow: none; border-radius: 5px; padding: 5px 12px; letter-spacing: 0; min-height: 34px;} #shopify-section-template--15265873625193__custom_content_KiFzqG .m-richtext__description {font-size: 16px;} #shopify-section-template--15265873625193__custom_content_KiFzqG .m-image-comparison__after .m-image-comparison__heading {bottom: 20px; top: auto;} @media (max-width: 767px) {#shopify-section-template--15265873625193__custom_content_KiFzqG .m-image-comparison__heading, #shopify-section-template--15265873625193__custom_content_KiFzqG .m-richtext__description br {display: none; } #shopify-section-template--15265873625193__custom_content_KiFzqG .m-custom-content__wrapper {flex-direction: column-reverse; } #shopify-section-template--15265873625193__custom_content_KiFzqG .m-custom-content__block {padding: 0 15px; }} </style></div><div id="shopify-section-template--15265873625193__testimonials_pnyUnX" class="shopify-section"><link href="/cdn/shop/t/10/assets/testimonialsb133.css?v=172606885566058821791739161026" rel="stylesheet" type="text/css" media="all" />
+
+
+
+  <style data-shopify>
+    #m-section--template--15265873625193__testimonials_pnyUnX {
+      --star-color: #000000;
+      --section-padding-top: 100px;
+      --section-padding-bottom: 100px;
+    }</style>
+<style> #shopify-section-template--15265873625193__collection_list_tjXYY7 .m-collection-list {--mobile-column-width: 40vw;} #shopify-section-template--15265873625193__collection_list_tjXYY7 .m-collection-card__image {max-width: 140px; margin: 0 auto;} #shopify-section-template--15265873625193__collection_list_tjXYY7 .m-collection-card__title {font-size: 18px;} </style></div><div id="shopify-section-template--15265873625193__custom_content_KiFzqG" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+  <style>
+    #m-custom-template--15265873625193__custom_content_KiFzqG {
+      --column-gap: 0px;
+      --column-gap-mobile: 48px;
+      --section-padding-top: 100px;
+      --section-padding-bottom: 100px;
+    }
+  </style>
+<style> @media (max-width: 767px) {#shopify-section-template--15265873625193__custom_content_hh6hmV br {display: none; }} </style></div><div id="shopify-section-template--15265873625193__collection_list_tjXYY7" class="shopify-section"><link href="/cdn/shop/t/10/assets/component-collection-cardf43f.css?v=109177214257835540641709792998" rel="stylesheet" type="text/css" media="all" />
+  <link href="/cdn/shop/t/10/assets/collection-listb1f4.css?v=22520980523807214251708482571" rel="stylesheet" type="text/css" media="all" />
+  
+  
+  
+  
+  <style data-shopify>
+    #m-collection-list-template--15265873625193__collection_list_tjXYY7 {
+      --offset-margin: calc((100vw - 1420px) / 2);
+    }
+    
+    
+  </style>
+<style> #shopify-section-template--15265873625193__custom_content_xALaMf .m-divider {height: 1px; width: 100%; background: rgb(var(--color-border));} </style></div><div id="shopify-section-template--15265873625193__custom_content_f3reLw" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+  <style>
+    #m-custom-template--15265873625193__custom_content_f3reLw {
+      --column-gap: 0px;
+      --column-gap-mobile: 16px;
+      --section-padding-top: 100px;
+      --section-padding-bottom: 100px;
+    }
+  </style>
+  <style> #shopify-section-template--15265873625193__custom_content_btgYN3 .m-custom-content__wrapper, #shopify-section-template--15265873625193__custom_content_btgYN3 .m-block-first {position: relative; z-index: 1;} </style></div><div id="shopify-section-template--15265873625193__custom_content_hh6hmV" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+    <style>
+      #m-custom-template--15265873625193__custom_content_hh6hmV {
+        --column-gap: 30px;
+        --column-gap-mobile: 16px;
+        --section-padding-top: 100px;
+        --section-padding-bottom: 0px;
+      }
+    </style>
+  <style> #shopify-section-template--15265873625193__custom_content_f3reLw .m-richtext__description {font-size: 16px;} </style></div><div id="shopify-section-template--15265873625193__custom_content_btgYN3" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+    <style>
+      #m-custom-template--15265873625193__custom_content_btgYN3 {
+        --column-gap: 0px;
+        --column-gap-mobile: 0px;
+        --section-padding-top: 0px;
+        --section-padding-bottom: 0px;
+      }
+    </style>
+<style> #shopify-section-template--15265873625193__brands_list_XfN79B .m-section__heading {font-size: 18px; font-weight: 500;} @media (max-width: 767px) {#shopify-section-template--15265873625193__brands_list_XfN79B .m-brands-list__inner {grid-template-columns: repeat(3, minmax(0, 1fr)); }} </style></div><div id="shopify-section-template--15265873625193__custom_content_xALaMf" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+  <style>
+    #m-custom-template--15265873625193__custom_content_xALaMf {
+      --column-gap: 30px;
+      --column-gap-mobile: 16px;
+      --section-padding-top: 0px;
+      --section-padding-bottom: 0px;
+    }
+  </style>
+<style>
+  #m-brand-list-template--15265873625193__brands_list_XfN79B {
+    --items: 6;
+    --column-gap: 0px;
+    --column-gap-mobile: 10px;
+    --row-gap: 30px;
+    --row-gap-mobile: 10px;
+    --section-padding-top: 100px;
+    --section-padding-bottom: 80px;
+  }
+</style>
+<style> #shopify-section-template--15265873625193__scrolling_promotion_jjrFyf .m-scrolling-promotion-section {border-width: 1px 0 1px 0; border-color: rgb(var(--color-border));} @media (max-width: 767px) {#shopify-section-template--15265873625193__scrolling_promotion_jjrFyf .m-promotion__text {font-size: 30px; } #shopify-section-template--15265873625193__scrolling_promotion_jjrFyf .m-promotion__item img {--image-height: 70px; } #shopify-section-template--15265873625193__scrolling_promotion_jjrFyf .m-section-py {padding-top: 15px; padding-bottom: 15px; }} </style></div><div id="shopify-section-template--15265873625193__collection_tabs_QE4TLj" class="shopify-section"><link href="/cdn/shop/t/10/assets/collection-tabse491.css?v=77167415001130614471708482571" rel="stylesheet" type="text/css" media="all" />
+
+
+
+
+  <style>
+    #m-collection-tabs--template--15265873625193__collection_tabs_QE4TLj {
+      --section-padding-top: 100px ;
+      --section-padding-bottom: 0px;
+    }
+  </style>
+<style> #shopify-section-template--15265873625193__162251092958fcda7c .m-section__header {--m-section-header-spacing-bottom: 60px;} </style></div><div id="shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21" class="shopify-section shopify-section-custom-content"><link href="/cdn/shop/t/10/assets/custom-content07f8.css?v=122562997671464857791739161087" rel="stylesheet" type="text/css" media="all" />
+
+  <style>
+    #m-custom-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 {
+      --column-gap: 0px;
+      --column-gap-mobile: 0px;
+      --section-padding-top: 90px;
+      --section-padding-bottom: 0px;
+    }
+  </style>
+  <style> #shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 .container-full {padding-left: 0; padding-right: 0;} #shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 .m-button--fixed {border-color: #e2e2e2; padding: 24px 0; margin-bottom: 24px;} @media (min-width: 1280px) {#shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 .m-image-card__content {padding-top: 115px; }} @media (max-width: 767px) {#shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 .m-button--fixed {border: none; margin-bottom: 0; justify-content: center; column-gap: 12px; } #shopify-section-template--15265873625193__7ea56e8d-5794-4708-8812-8ee9604a3a21 .m-image-card__content {padding-top: 30px; }} </style></div><div id="shopify-section-template--15265873625193__lookbook_MB4Mr4" class="shopify-section"><link href="/cdn/shop/t/10/assets/lookbook78ef.css?v=14820979469267541361739161066" rel="stylesheet" type="text/css" media="all" />
+
+
+    <style>
+      #m-lookbook--template--15265873625193__lookbook_MB4Mr4 {
+        --section-padding-top: 100px;
+        --section-padding-bottom: 100px;
+        --column-gap: 30px;
+        --column-gap-mobile: 16px;
+        --row-gap: 30px;
+        --row-gap-mobile: 24px;
+      }
+    </style>
+<style> #shopify-section-template--15265873625193__16225316461d1cff80 .m-collection-card__title {font-weight: 400;} @media (max-width: 767px) {#shopify-section-template--15265873625193__16225316461d1cff80 .m-slider-controls[class*="-bottom-left"], #shopify-section-template--15265873625193__16225316461d1cff80 .m-section__header {text-align: center; }} </style></div><div id="shopify-section-template--15265873625193__162251092958fcda7c" class="shopify-section m-section-product-tabs"><link href="/cdn/shop/t/10/assets/component-product-inventoryf57b.css?v=93544365089947236211742182281" rel="stylesheet" type="text/css" media="all" />
+
+<link href="/cdn/shop/t/10/assets/tabs4470.css?v=178306799878391602721708482571" rel="stylesheet" type="text/css" media="all" />
+<link href="/cdn/shop/t/10/assets/product-tabsfd6b.css?v=169280664793534131951709537804" rel="stylesheet" type="text/css" media="all" />
+<style>
+  #m-section--template--15265873625193__162251092958fcda7c {
+    --column-gap: 30px;
+    --column-gap-mobile: 16px;
+    --row-gap: 40px;
+    --items: 5;
+    --section-padding-top: 100px;
+    --section-padding-bottom: 10px;
+  }
+</style>
+<style data-shopify>
+  #m-collection-list-template--15265873625193__16225316461d1cff80 {
+    --offset-margin: calc((100vw - 1420px) / 2);
+  }
+  
+    
+      @media (min-width: 1280px) {
+        .m-collection-list--template--15265873625193__16225316461d1cff80 [data-enable-slider="true"] .m-collection-list__content {
+          padding-left: calc(max(65px, var(--offset-margin)) - 15px);
+        }
+        [dir="rtl"] .m-collection-list--template--15265873625193__16225316461d1cff80 [data-enable-slider="true"] .m-collection-list__content {
+          padding-left: 0;
+          padding-right: calc(max(65px, var(--offset-margin)) - 15px);
+        }
+      }
+    
+  
+  
+    @media (min-width: 1280px) {
+      .m-collection-list--template--15265873625193__16225316461d1cff80 .m-collection-list__content {
+        margin-right: calc( 1 / 4 * -20%);
+      }
+      [dir="rtl"] .m-collection-list--template--15265873625193__16225316461d1cff80 .m-collection-list__content {
+        margin-right: 0;
+        margin-left: calc( 1 / 4 * -20%);
+      }
+    }
+  
+</style>
+<style> #shopify-section-sections--15265868120169__header .m-topbar a[href*="facebook"] {order: 2;} #shopify-section-sections--15265868120169__header .social-media-links {column-gap: 30px;} </style>
+<style data-shopify>
+  :root {
+    --logo-width-desktop: 145px;
+    --logo-width-mobile: 110px;
+    --logo-width-sticky: 145px;
+    --logo-height-sticky: 43.046875px;
+    --header-transparent-text-color: 255, 255, 255;
+  }
+</style>
+<style>
+  html {
+    font-size: calc(var(--font-base-size, 16) * 1px);
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-stack-body);
+    font-weight: var(--font-weight-body);
+    font-style: var(--font-style-body);
+    color: rgb(var(--color-foreground));
+    font-size: calc(var(--font-base-size, 16) * 1px);
+    line-height: calc(var(--base-line-height) * 1px);
+    background-color: rgb(var(--color-background));
+    position: relative;
+    min-height: 100%;
+  }
+
+  body,
+  html {
+    overflow-x: clip;
+  }
+
+  html.prevent-scroll,
+  html.prevent-scroll body {
+    height: auto;
+    overflow: hidden !important;
+  }
+
+  html.prevent-scroll {
+    padding-right: var(--m-scrollbar-width);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-stack-header);
+    font-weight: var(--font-weight-header);
+    font-style: var(--font-style-header);
+    color: rgb(var(--color-heading));
+    line-height: normal;
+    letter-spacing: var(--heading-letter-spacing);
+  }
+  h1,
+  .h1 {
+    font-size: calc(((var(--font-h1-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.278;
+  }
+
+  h2,
+  .h2 {
+    font-size: calc(((var(--font-h2-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.267;
+  }
+
+  h3,
+  .h3 {
+    font-size: calc(((var(--font-h3-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.36;
+  }
+
+  h4,
+  .h4 {
+    font-size: calc(((var(--font-h4-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.4;
+  }
+
+  h5,
+  .h5 {
+    font-size: calc(((var(--font-h5-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.5;
+  }
+
+  h6,
+  .h6 {
+    font-size: calc(((var(--font-h6-mobile)) / (var(--font-base-size))) * 1rem);
+    line-height: 1.5;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .h1,
+    h1 {
+      font-size: calc(((var(--font-h1-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.238;
+    }
+    .h2,
+    h2 {
+      font-size: calc(((var(--font-h2-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.235;
+    }
+    h3,
+    .h3 {
+      font-size: calc(((var(--font-h3-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.36;
+    }
+    h4,
+    .h4 {
+      font-size: calc(((var(--font-h4-tablet)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.4;
+    }
+  }
+
+  @media only screen and (min-width: 1280px) {
+    .h1,
+    h1 {
+      font-size: calc(((var(--font-h1-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.167;
+    }
+    .h2,
+    h2 {
+      font-size: calc(((var(--font-h2-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.238;
+    }
+    h3,
+    .h3 {
+      font-size: calc(((var(--font-h3-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.278;
+    }
+    h4,
+    .h4 {
+      font-size: calc(((var(--font-h4-desktop)) / (var(--font-base-size))) * 1rem);
+      line-height: 1.333;
+    }
+    h5,
+    .h5 {
+      font-size: calc(((var(--font-h5-desktop)) / (var(--font-base-size))) * 1rem);
+    }
+    h6,
+    .h6 {
+      font-size: calc(((var(--font-h6-desktop)) / (var(--font-base-size))) * 1rem);
+    }
+  }
+  [style*='--aspect-ratio'] {
+    position: relative;
+    overflow: hidden;
+  }
+  [style*='--aspect-ratio']:before {
+    display: block;
+    width: 100%;
+    content: '';
+    height: 0px;
+  }
+  [style*='--aspect-ratio'] > *:first-child {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute !important;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  [style*='--aspect-ratio']:before {
+    padding-top: calc(100% / (0.0001 + var(--aspect-ratio, 16/9)));
+  }
+  @media (max-width: 767px) {
+    [style*='--aspect-ratio']:before {
+      padding-top: calc(100% / (0.0001 + var(--aspect-ratio-mobile, var(--aspect-ratio, 16/9))));
+    }
+  }
+  .swiper-wrapper {
+    display: flex;
+  }
+  .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+    width: calc(100% / var(--items, 1));
+    flex: 0 0 auto;
+  }
+  @media (max-width: 1023px) {
+    .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+      min-width: 40vw;
+      flex: 0 0 auto;
+    }
+  }
+  @media (max-width: 767px) {
+    .swiper-container:not(.swiper-container-initialized) .swiper-slide {
+      min-width: 66vw;
+      flex: 0 0 auto;
+    }
+  }
+</style>
+<link href="/cdn/shop/t/10/assets/main0492.css?v=110312531101154272181742182253" rel="stylesheet" type="text/css" media="all" />
+<style data-shopify>
+:root,.m-color-default {
+      --color-background: 255,255,255;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #ffffff;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-dark {
+      --color-background: 0,0,0;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #000000;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 75,75,75;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 34,34,34;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-footer {
+      --color-background: 245,245,245;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #f5f5f5;
+  		
+  		--color-foreground: 0,0,0;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 34,34,34;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 34,34,34;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-badge-hot {
+      --color-background: 154,132,200;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #9a84c8;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-badge-new {
+      --color-background: 73,165,148;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #49a594;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-badge-sale {
+      --color-background: 218,63,63;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #da3f3f;
+  		
+  		--color-foreground: 255,255,255;
+  		--color-foreground-secondary: 255,255,255;
+      --color-heading: 255,255,255;
+  		--color-button: 255,255,255;
+  		--color-button-text: 34,34,34;
+  		--color-outline-button: 255,255,255;
+      --color-button-hover: 255, 255, 255;
+      --color-button-text-hover: 34, 34, 34;
+  		--color-border: 222,222,222;
+  		--color-price-sale: 255,255,255;
+  		--color-price-regular: 255,255,255;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 255,255,255;
+  		--color-tooltip-text: 34,34,34;
+  	}
+  
+.m-color-scheme-cee058e4-58e3-46aa-9af9-219dadc79066 {
+      --color-background: 244,244,244;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #f4f4f4;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 242,242,242;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+.m-color-scheme-09e5b5b4-774c-4b6c-8025-416ced49cc74 {
+      --color-background: 223,248,239;
+      --color-background-secondary: 245,245,245;
+  		
+  	  --gradient-background: #dff8ef;
+  		
+  		--color-foreground: 34,34,34;
+  		--color-foreground-secondary: 102,102,102;
+      --color-heading: 34,34,34;
+  		--color-button: 0,0,0;
+  		--color-button-text: 255,255,255;
+  		--color-outline-button: 0,0,0;
+      --color-button-hover: 34, 34, 34;
+      --color-button-text-hover: 255, 255, 255;
+  		--color-border: 238,238,238;
+  		--color-price-sale: 232,78,78;
+  		--color-price-regular: 0,0,0;
+  		--color-form-field: 255,255,255;
+  		--color-form-field-text: 0,0,0;
+  		--color-tooltip: 34,34,34;
+  		--color-tooltip-text: 255,255,255;
+  	}
+  
+  .m-color-default, .m-color-dark, .m-color-footer, .m-color-badge-hot, .m-color-badge-new, .m-color-badge-sale, .m-color-scheme-cee058e4-58e3-46aa-9af9-219dadc79066, .m-color-scheme-09e5b5b4-774c-4b6c-8025-416ced49cc74 {
+  	color: rgb(var(--color-foreground));
+  	background-color: rgb(var(--color-background));
+  }:root {     /* ANIMATIONS */  	--m-duration-short: .1s;     --m-duration-default: .25s;     --m-duration-long: .5s;     --m-duration-image: .65s;     --m-duration-animate: 1s;     --m-animation-duration: 600ms;     --m-animation-fade-in-up: m-fade-in-up var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-left: m-fade-in-left var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-right: m-fade-in-right var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-left-rtl: m-fade-in-left-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in-right-rtl: m-fade-in-right-rtl var(--m-animation-duration) cubic-bezier(0, 0, 0.3, 1) forwards;     --m-animation-fade-in: m-fade-in calc(var(--m-animation-duration) * 2) cubic-bezier(0, 0, 0.3, 1);     --m-animation-zoom-fade: m-zoom-fade var(--m-animation-duration) ease forwards;  	/* BODY */  	--base-line-height: 28;   /* INPUTS */   --inputs-border-width: 1px;  	--inputs-radius: 5px;  	/* BUTTON */  	--btn-letter-spacing: 0px;  	--btn-border-radius: 5px;  	--btn-border-width: 1px;  	--btn-line-height: 23px;  	  	/* COUNT BUBBLE */  	--color-cart-wishlist-count: #ffffff;  	--bg-cart-wishlist-count: #da3f3f;  	/* OVERLAY */  	--color-image-overlay: #000000;  	--opacity-image-overlay: 0.2;  	/* Notification */  	--color-success: 58,135,53;  	--color-warning: 210,134,26;    --color-error: 218, 63, 63;    --color-error-bg: #fbeaea;    --color-warning-bg: #faecd7;    --color-success-bg: #d1eccf;  	/* CUSTOM COLOR */  	--text-black: 0,0,0;  	--text-white: 255,255,255;  	--bg-black: 0,0,0;  	--bg-white: 255,255,255;  	--rounded-full: 9999px;  	--bg-card-placeholder: rgba(243,243,243,1);  	--arrow-select-box: url(cdn/shop/t/10/assets/ar-down30df.svg?v=92728264558441377851708482571);  	/* FONT SIZES */  	--font-base-size: 16;  	--font-btn-size: 16px;  	--font-btn-weight: 500;  	--font-h1-desktop: 60;  	--font-h1-tablet: 42;  	--font-h1-mobile: 36;  	--font-h2-desktop: 42;  	--font-h2-tablet: 33;  	--font-h2-mobile: 29;  	--font-h3-desktop: 36;  	--font-h3-tablet: 28;  	--font-h3-mobile: 25;  	--font-h4-desktop: 24;  	--font-h4-tablet: 19;  	--font-h4-mobile: 19;  	--font-h5-desktop: 18;  	--font-h5-mobile: 16;  	--font-h6-desktop: 16;  	--font-h6-mobile: 16;  	--heading-letter-spacing: 0px;   --arrow-down-url: url(//fashion.minimog.co/cdn/shop/t/10/assets/arrow-down.svg?v=157552497485556416461708482571);   --arrow-down-white-url: url(//fashion.minimog.co/cdn/shop/t/10/assets/arrow-down-white.svg?v=70535736727834135531708482571);   --product-title-line-clamp: unset;  	--spacing-sections-desktop: 0px;   --spacing-sections-laptop: 0px;   --spacing-sections-tablet: 0px;   --spacing-sections-mobile: 0px;  	/* LAYOUT */  	--container-width: 1200px;   --fluid-container-width: 1420px;   --fluid-container-offset: 65px;   /* CORNER RADIUS */   --blocks-radius: 0px;   --medium-blocks-radius: 0px;   --pcard-radius: 0px;  }
+</style><link rel="stylesheet" href="/cdn/shop/t/10/assets/cartb325.css?v=100592909120439093551744859892" media="print" onload="this.media='all'">
+<noscript><link href="/cdn/shop/t/10/assets/cartb325.css?v=100592909120439093551744859892" rel="stylesheet" type="text/css" media="all" /></noscript><link href="/cdn/shop/t/10/assets/vendorf89d.css?v=53456814079546620061743041043" rel="stylesheet" type="text/css" media="all" /><link rel="stylesheet" href="/cdn/shop/t/10/assets/custom-styleac66.css?v=68377333970908838601709715430" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="/cdn/shop/t/10/assets/customf70f.css?v=105997007003712207781708482571" media="print" onload="this.media='all'">
+<noscript><link href="/cdn/shop/t/10/assets/custom-styleac66.css?v=68377333970908838601709715430" rel="stylesheet" type="text/css" media="all" /></noscript>
+<noscript><link href="/cdn/shop/t/10/assets/customf70f.css?v=105997007003712207781708482571" rel="stylesheet" type="text/css" media="all" /></noscript><style data-shopify>.m-topbar a[href*="pinterest"],.m-topbar a[href*="twitter"], .m-topbar a[href*="snapchat"], .m-topbar a[href*="youtube"],.m-topbar a[href*="tiktok"]  {	display: none;}body .m-product-card__tag-name {  font-size: 12px;  font-weight: 500;  text-transform: capitalize;  padding: 4px 10px;  border-radius: 40px;}.m-icon-box--small {  border-top: 1px solid rgb(var(--color-border));}.m-icon-box--small .m-icon-box__heading {  line-height: 26px;  font-size: 18px;  margin-bottom: 6px;}body .m-footer--block .social-media-links {  gap: 12px;  margin: 0;  padding: 5px 0;}body .m-footer--block .social-media-links a {  color: #222;  width: 48px;  height: 48px;  padding: 0;  display: inline-flex;  align-items: center;  justify-content: center;  border-radius: 50%;  background-color: #E9E9E9;  transition: all .3s;}body .m-footer--block .social-media-links a:hover {  background-color: #222;  color: #fff;  box-shadow: 0 0 0 0.2rem #222;}
+</style>
+
+
+
+
+    <meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/23480105/digital_wallets/dialog">
+<meta name="shopify-checkout-api-token" content="be4651516a0fb6ee0b5f652f030ee19a">
+<link rel="alternate" hreflang="x-default" href="index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="de" href="de.html">
+<link rel="alternate" hreflang="zh-Hans" href="zh.html">
+<link rel="alternate" hreflang="es" href="es.html">
+<link rel="alternate" hreflang="zh-Hans-AU" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-BR" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-CA" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-CN" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-DE" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-ES" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-GB" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-US" href="zh.html">
+<link rel="alternate" hreflang="zh-Hans-ZA" href="zh.html">
+
+<link rel="preconnect" href="https://shop.app/" crossorigin="anonymous">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link id="shopify-accelerated-checkout-styles" rel="stylesheet" media="screen" href="/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout.css" crossorigin="anonymous">
+<style id="shopify-accelerated-checkout-cart">
+        #shopify-buyer-consent {
+  margin-top: 1em;
+  display: inline-block;
+  width: 100%;
+}
+
+#shopify-buyer-consent.hidden {
+  display: none;
+}
+
+#shopify-subscription-policy-button {
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+#shopify-subscription-policy-button::before {
+  box-shadow: none;
+}
+
+      </style>
+
+
+
+    
+    
+
+    
+  <!-- BEGIN app block: shopify://apps/foxkit-sales-boost/blocks/foxkit-theme-helper/13f41957-6b79-47c1-99a2-e52431f06fff -->
+<style data-shopify>
+  
+  :root {
+  	--foxkit-border-radius-btn: 4px;
+  	--foxkit-height-btn: 45px;
+  	--foxkit-btn-primary-bg: #212121;
+  	--foxkit-btn-primary-text: #FFFFFF;
+  	--foxkit-btn-primary-hover-bg: #000000;
+  	--foxkit-btn-primary-hover-text: #FFFFFF;
+  	--foxkit-btn-secondary-bg: #FFFFFF;
+  	--foxkit-btn-secondary-text: #000000;
+  	--foxkit-btn-secondary-hover-bg: #000000;
+  	--foxkit-btn-secondary-hover-text: #FFFFFF;
+  	--foxkit-text-color: #666666;
+  	--foxkit-heading-text-color: #000000;
+  	--foxkit-prices-color: #000000;
+  	--foxkit-badge-color: #000000;
+  	--foxkit-border-color: #ebebeb;
+  }
+  
+  .foxkit-critical-hidden {
+  	display: none !important;
+  }
+</style>
+
+
+<link href="https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.css" rel="stylesheet" type="text/css" media="all" />
+
+
+
+
+
+
+
+  
+  
+  <link id='FoxKit-Incart' rel='stylesheet' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/incart.css' fetchpriority='low' media='print' onload="this.media='all'">
+  <link rel='preload' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/component-slider.css' as='style' onload="this.onload=null;this.rel='stylesheet'" fetchpriority='low'>
+  
+
+
+
+		<link rel='preload' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/pre-purchase.css' as='style' onload="this.onload=null;this.rel='stylesheet'" fetchpriority='low'>
+
+
+
+
+  <link href="https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/menu.css" rel="stylesheet" type="text/css" media="all" />
+  
+
+
+
+  
+  <link id='FoxKit-CartGoal' rel='stylesheet' href='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cart-goal.css' fetchpriority='low' media='print' onload="this.media='all'">
+
+
+  
+  
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+  <style id='FoxKit-Custom-CSS'>
+    .foxkit-sales-pop__title {  font-weight: 400;}.f-menu__link {  color: inherit;}.f-menu {  --f-menu-bg: rgb(var(--color-background));}.f-menu__submenu {  --f-submenu-bg: rgb(var(--color-background));}.m-menu__item foxkit-menu {  display: block;  padding: 0;}.m-menu__item:not([data-index="3"]) foxkit-menu {  margin: 0 -12px;  column-gap: 36px;  column-rule: 1px solid rgb(var(--color-border));}.m-menu__item[data-index="0"] foxkit-menu {  column-count: 7;}.m-menu__item[data-index="1"] foxkit-menu,.m-menu__item[data-index="2"] foxkit-menu,.m-menu__item[data-index="4"] foxkit-menu {  column-count: 4;  width: 66.67%;}.m-header__desktop .f-menu__submenu.f-menu__submenu--level-1 {  box-shadow: 0 5px 15px #00000012;  padding: 16px;  top: -16px !important;  left: calc(100% + 16px);}.m-header__desktop .f-menu__submenu:before {  content: "";  position: absolute;  width: 100%;  height: 100%;  top: 0;  left: -35px;  z-index: -1;}.f-menu--vertical .f-menu__link {  padding-right: 12px !important;}.m-header__desktop .f-menu--vertical {  --submenu-column-width: 250px;}.m-header__desktop .m-menu__item[data-index="3"] .f-menu a {  display: flex;}.f-menu a {  font-weight: 400;  display: block;  overflow: hidden;  white-space: normal;  padding: 8px 12px !important;}.f-menu__badge {  font-size: 12px;  text-transform: capitalize;  width: 42px;  font-weight: 500;  border-radius: 11px;  display: inline-flex;  justify-content: center;  align-items: center;  position: absolute;  top: 4px;}.m-menu-mobile__item[data-index="0"] .f-menu-mobile .f-menu__item {  width: 50%;}.m-menu-mobile__item[data-index="0"] .f-menu-mobile {  flex-wrap: wrap;  flex-direction: row;}.f-menu-mobile {  padding: 0 4px;}.f-menu-mobile .f-menu__submenu {  padding-left: 12px;}.m-megamenu-mobile__block {  padding-top: 18px;}[dir="rtl"] {  .f-menu--vertical .f-menu__arrow {    left: var(--item-space);    right: auto;    transform: scaleX(-1);  }  .f-menu__badge {    margin-left: 0;    margin-right: 5px;  }  .f-menu-mobile .f-menu__submenu {    padding-left: 0;    padding-right: 12px;  }  .m-header__desktop .f-menu__submenu:before {  right: -35px;}  .m-header__desktop .f-menu__submenu {      right: calc(100% + 16px);  }}@media (min-width: 1024px) {  .f-menu a:hover {    background-color: rgba(var(--color-foreground), 0.07);    color: rgb(var(--color-foreground));  }  .f-menu__item:hover>.f-menu__link,  .f-menu__submenu .f-menu__item:hover>.f-menu__link{    color: rgb(var(--color-foreground));  }}@media (max-width: 1400px) {  .m-menu__item[data-index="0"] foxkit-menu {    column-count: 6;  }}@media (max-width: 1280px) {  .m-menu__item:not([data-index="3"]) foxkit-menu {    column-gap: 20px;  }}@media (max-width: 1110px) {  .m-menu__item[data-index="0"] foxkit-menu {    column-count: 5;  }  .m-menu__item[data-index="1"] foxkit-menu,  .m-menu__item[data-index="2"] foxkit-menu,  .m-menu__item[data-index="4"] foxkit-menu {    width: 75%;  }}.foxkit-popup {  width: 800px !important;}.foxkit-popup__content {  padding: 0;}.foxkit-popup__submit {  position: absolute;  top: 0;  left: 0;  width: 100%;  height: 100%;  font-size: 0;  opacity: 0;  margin: 0;  padding: 0;}.foxkit-modal .foxkit-modal__close {  display: none;}a.f-menu__link.f-menu__link--level-1 {  overflow: visible;}a.f-menu__link.f-menu__link--level-1::-webkit-scrollbar {    display: none;}@media (max-width: 767px) {  .m-menu-drawer__wrapper {      width: 100% !important;  }}
+  </style>
+
+
+  
+
+
+
+
+
+
+<!-- END app block --><link href="https://monorail-edge.shopifysvc.com/" rel="dns-prefetch">
+<script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.start');</script>
+<script async="async" src="checkouts/internal/preloadsc494.js?locale=en-US"></script>
+<script async="async" src="https://shop.app/checkouts/internal/preloads2ded.js?locale=en-US&amp;shop_id=23480105" crossorigin="anonymous"></script>
+<script id="apple-pay-shop-capabilities" type="application/json">{"shopId":23480105,"countryCode":"US","currencyCode":"USD","merchantCapabilities":["supports3DS"],"merchantId":"gid:\/\/shopify\/Shop\/23480105","merchantName":"SMal Couture","requiredBillingContactFields":["postalAddress","email"],"requiredShippingContactFields":["postalAddress","email"],"shippingType":"shipping","supportedNetworks":["visa","masterCard"],"total":{"type":"pending","label":"SMal Couture","amount":"1.00"},"shopifyPaymentsEnabled":true,"supportsSubscriptions":true}</script>
+<script id="shopify-features" type="application/json">{"accessToken":"be4651516a0fb6ee0b5f652f030ee19a","betas":["rich-media-storefront-analytics"],"domain":"fashion.minimog.co","predictiveSearch":true,"shopId":23480105,"locale":"en"}</script>
+<script>var Shopify = Shopify || {};
+Shopify.shop = "simplestjewelry.myshopify.com";
+Shopify.locale = "en";
+Shopify.currency = {"active":"USD","rate":"1.0"};
+Shopify.country = "US";
+Shopify.theme = {"name":"Main home - Minimog","id":126026973289,"schema_name":"Minimog - OS 2.0","schema_version":"5.6.0","theme_store_id":null,"role":"main"};
+Shopify.theme.handle = "null";
+Shopify.theme.style = {"id":null,"handle":null};
+Shopify.cdnHost = "fashion.minimog.co/cdn";
+Shopify.routes = Shopify.routes || {};
+Shopify.routes.root = "index.html";</script>
+<script type="module">!function(o){(o.Shopify=o.Shopify||{}).modules=!0}(window);</script>
+<script>!function(o){function n(){var o=[];function n(){o.push(Array.prototype.slice.apply(arguments))}return n.q=o,n}var t=o.Shopify=o.Shopify||{};t.loadFeatures=n(),t.autoloadFeatures=n()}(window);</script>
+<script>
+  window.ShopifyPay = window.ShopifyPay || {};
+  window.ShopifyPay.apiHost = "shop.app\/pay";
+  window.ShopifyPay.redirectState = null;
+</script>
+<script id="shop-js-analytics" type="application/json">{"pageType":"index"}</script>
+<script defer="defer" async type="module" src="/cdn/shopifycloud/shop-js/modules/v2/client.init-shop-cart-sync_CG-L-Qzi.en.esm.js"></script>
+<script defer="defer" async type="module" src="/cdn/shopifycloud/shop-js/modules/v2/chunk.common_B8yXDTDb.esm.js"></script>
+<script type="module">
+  try {
+    await import("/cdn/shopifycloud/shop-js/modules/v2/client.init-shop-cart-sync_CG-L-Qzi.en.esm.js");
+    await import("/cdn/shopifycloud/shop-js/modules/v2/chunk.common_B8yXDTDb.esm.js");
+    window.Shopify?.SignInWithShop?.initShopCartSync?.({"fedCMEnabled":true,"windoidEnabled":true});
+  } catch (e) { /* shop-js optional for React app */ }
+</script>
+<script>
+  window.Shopify = window.Shopify || {};
+  if (!window.Shopify.featureAssets) window.Shopify.featureAssets = {};
+  window.Shopify.featureAssets['shop-js'] = {"shop-cart-sync":["modules/v2/client.shop-cart-sync_C7TtgCZT.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"shop-button":["modules/v2/client.shop-button_aOcg-RjH.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"init-shop-email-lookup-coordinator":["modules/v2/client.init-shop-email-lookup-coordinator_D-37GF_a.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"init-fed-cm":["modules/v2/client.init-fed-cm_DGh7x7ZX.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"init-windoid":["modules/v2/client.init-windoid_C5PxDKWE.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"shop-toast-manager":["modules/v2/client.shop-toast-manager_BmSBWum3.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"shop-cash-offers":["modules/v2/client.shop-cash-offers_DkchToOx.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"init-shop-cart-sync":["modules/v2/client.init-shop-cart-sync_CG-L-Qzi.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"avatar":["modules/v2/client.avatar_BTnouDA3.en.esm.js"],"shop-login-button":["modules/v2/client.shop-login-button_DrVPCwAQ.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"pay-button":["modules/v2/client.pay-button_Cw45D1uM.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js"],"init-customer-accounts":["modules/v2/client.init-customer-accounts_BNYsaOzg.en.esm.js","modules/v2/client.shop-login-button_DrVPCwAQ.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"checkout-modal":["modules/v2/client.checkout-modal_NoX7b1qq.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"init-customer-accounts-sign-up":["modules/v2/client.init-customer-accounts-sign-up_pIEGEpjr.en.esm.js","modules/v2/client.shop-login-button_DrVPCwAQ.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"init-shop-for-new-customer-accounts":["modules/v2/client.init-shop-for-new-customer-accounts_BIu2e6le.en.esm.js","modules/v2/client.shop-login-button_DrVPCwAQ.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"shop-follow-button":["modules/v2/client.shop-follow-button_B6YY9G4U.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"lead-capture":["modules/v2/client.lead-capture_o2hOda6W.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"shop-login":["modules/v2/client.shop-login_DA8-MZ-E.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"],"payment-terms":["modules/v2/client.payment-terms_BFsudFhJ.en.esm.js","modules/v2/chunk.common_B8yXDTDb.esm.js","modules/v2/chunk.modal_dvVUSHam.esm.js"]};
+</script>
+<script id="__st">var __st={"a":23480105,"offset":-18000,"reqid":"00e806e2-913f-49dd-b8c6-e988850536f4-1768196408","pageurl":"fashion.minimog.co\/","u":"1b97768385e6","p":"home"};</script>
+<script>window.ShopifyPaypalV4VisibilityTracking = true;</script>
+<script id="captcha-bootstrap">/* Disabled for React app - avoids "Cannot assign to read only property 'protect'" with Object.freeze(Shopify.captcha) */ window.Shopify=window.Shopify||{};window.Shopify.captcha=window.Shopify.captcha||{protect:function(){}};</script>
+<script integrity="sha256-4kQ18oKyAcykRKYeNunJcIwy7WH5gtpwJnB7kiuLZ1E=" data-source-attribution="shopify.loadfeatures" defer="defer" src="/cdn/shopifycloud/storefront/assets/storefront/load_feature-a0a9edcb.js" crossorigin="anonymous"></script>
+<script crossorigin="anonymous" defer="defer" src="/cdn/shopifycloud/storefront/assets/shopify_pay/storefront-65b4c6d75501.js?v=20250812"></script>
+<script data-source-attribution="shopify.dynamic_checkout.dynamic.init">var Shopify=Shopify||{};Shopify.PaymentButton=Shopify.PaymentButton||{isStorefrontPortableWallets:!0,init:function(){window.Shopify.PaymentButton.init=function(){};var t=document.createElement("script");t.src="/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js",t.type="module",document.head.appendChild(t)}};
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.buyer_consent">
+  function portableWalletsHideBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.add("hidden"),t.setAttribute("aria-hidden","true"),n.removeEventListener("click",e))}function portableWalletsShowBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.remove("hidden"),t.removeAttribute("aria-hidden"),n.addEventListener("click",e))}window.Shopify?.PaymentButton&&(window.Shopify.PaymentButton.hideBuyerConsent=portableWalletsHideBuyerConsent,window.Shopify.PaymentButton.showBuyerConsent=portableWalletsShowBuyerConsent);
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.cart.bootstrap">document.addEventListener("DOMContentLoaded",(function(){function t(){return document.querySelector("shopify-accelerated-checkout-cart, shopify-accelerated-checkout")}if(t())Shopify.PaymentButton.init();else{new MutationObserver((function(e,n){t()&&(Shopify.PaymentButton.init(),n.disconnect())})).observe(document.body,{childList:!0,subtree:!0})}}));
+</script>
+<script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.end');</script>
+<script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+<!-- <script>window.MinimogTheme = {};window.MinimogLibs = {};window.MinimogStrings = {  addToCart: "Add to cart",  soldOut: "Sold Out",  unavailable: "Unavailable",  inStock: "In Stock",  lowStock: 'Low stock',  inventoryQuantityHtml: '<span class="m-product-inventory__quantity">{{ quantity }}</span> In stock',  inventoryLowQuantityHtml: 'Only <span class="m-product-inventory__quantity">{{ quantity }}</span> left',  checkout: "Check out",  viewCart: "View Cart",  cartRemove: "Remove",  zipcodeValidate: "Zip code can\u0026#39;t be blank",  noShippingRate: "There are no shipping rates for your address.",  shippingRatesResult: "We found {{count}} shipping rate(s) for your address",  recommendTitle: "Recommendation for you",  shipping: "Shipping",  add: "Add",  itemAdded: "Product added to cart successfully",  requiredField: "Please fill all the required fields(*) before Add To Cart!",  hours: "hours",  mins: "mins",  outOfStock: "Out of stock",  sold: "Sold",  available: "Available",  preorder: "Pre-order",  sold_out_items_message: "The product is already sold out.",  unitPrice: "Unit price",  unitPriceSeparator: "per",  cartError: "There was an error while updating your cart. Please try again.",  quantityError: "Not enough items available. Only {{ quantity }} left.' }}",  selectVariant: "Please select a variant before adding the product to your cart.",  valideDateTimeDelivery: "Please choose the current or future time."};window.MinimogThemeStyles = {  product: "https://fashion.minimog.co/cdn/shop/t/10/assets/product.css?v=125051813082444491211742182237"};window.MinimogThemeScripts = {  productModel: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-model.js?v=74883181231862109891720077216",  productMedia: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-media.js?v=162792397983317663931742182248",  variantsPicker: "https://fashion.minimog.co/cdn/shop/t/10/assets/variant-picker.js?v=66761027898496351631742182239",  productInfo: "https://fashion.minimog.co/cdn/shop/t/10/assets/product-info.js?v=106318422310266846111744859888"};window.MinimogSettings = {  design_mode: false,  requestPath: "\/",  template: "index",  templateName: "index",currency_code: "USD",  money_format: "${{amount}}",  base_url: window.location.origin + Shopify.routes.root,  money_with_currency_format: "${{amount}} USD",  theme: {    id: 126026973289,    name: "Main home - Minimog",    role: "main",    version: "5.6.0",    online_store_version: "2.0",    preview_url: "https://fashion.minimog.co?preview_theme_id=126026973289",  },  shop_domain: "https:\/\/fashion.minimog.co",  shop_locale: {    published: [{"shop_locale":{"locale":"en","enabled":true,"primary":true,"published":true}},{"shop_locale":{"locale":"de","enabled":true,"primary":false,"published":true}},{"shop_locale":{"locale":"zh-CN","enabled":true,"primary":false,"published":true}},{"shop_locale":{"locale":"es","enabled":true,"primary":false,"published":true}}],    current: "en",    primary: "en",  },  routes: {    root: "\/",    cart: "\/cart",    product_recommendations_url: "\/recommendations\/products",    cart_add_url: '/cart/add',    cart_change_url: '/cart/change',    cart_update_url: '/cart/update',    predictive_search_url: '/search/suggest',    search_url: '/search'  },  hide_unavailable_product_options: true,  pcard_image_ratio: "3\/4",  cookie_consent_allow: "Allow cookies",  cookie_consent_message: "This website uses cookies to ensure you get the best experience on our website.",  cookie_consent_placement: "bottom",  cookie_consent_learnmore_link: "https:\/\/www.cookiesandyou.com\/",  cookie_consent_learnmore: "Learn more",  cookie_consent_theme: "black",  cookie_consent_decline: "Decline",  show_cookie_consent: true,  product_colors: "red: #FF6961,\nyellow: #FDDA76,\nblack: #000000,\nblack band: #000000,\nblue: #8DB4D2,\ngreen: #C1E1C1,\npurple: #B19CD9,\nsilver: #EEEEEF,\nwhite: #FFFFFF,\nbrown: #836953,\nlight brown: #B5651D,\ndark turquoise: #23cddc,\norange: #FFB347,\ntan: #E9D1BF,\nviolet: #B490B0,\npink: #FFD1DC,\ngrey: #E0E0E0,\nsky: #96BDC6,\npale leaf: #CCD4BF,\nlight blue: #b1c5d4,\ndark grey: #aca69f,\nbeige: #EBE6DB,\nbeige band: #EED9C4,\ndark blue: #063e66,\ncream: #F1F2E2,\nlight pink: #FBCFCD,\nmint: #bedce3,\ndark gray: #3A3B3C,\nrosy brown: #c4a287,\nlight grey:#D3D3D3,\ncopper: #B87333,\nrose gold: #ECC5C0,\nnight blue: #151B54,\ncoral: #FF7F50,\nlight purple: #C6AEC7,\nivy green: #5b7763,\nsand: #f2d2a9,\npale grey: #878785,\nlead: #6c6b6c,\nheathered cashew: #bdb59f,\ncoca: #c7babd,\nheathered oat: #d3c1aa,\njean blue: #515d6d,\npelican: #e1d6c5,\ntoasted coconut: #9c7b58,\nnavy: #484d5b,\nheathered blue: #3c3c3c,\nheathered green: #534d36,\nheathered grey: #555c62,\nkalamata: #808487,\nslate grey: #484d5b,\ncharcoal: #8b8b8b,\nheathered charcoal: #8b8b8b",  use_ajax_atc: true,  discount_code_enable: true,  enable_cart_drawer: true,  pcard_show_lowest_prices: false,  date_now: "2026\/01\/12  0:40:00-0500 (EST)",  foxKitBaseUrl: "foxkit.app"};</script> -->
+<script>
+
+
+</script>
+<script>
+   var ShopifyRootUrl = "\/";
+   var _useRootBaseUrl = null
+   window.FoxKitThemeHelperEnabled = true;
+   window.FoxKitPlugins = window.FoxKitPlugins || {}
+   window.FoxKitStrings = window.FoxKitStrings || {}
+   window.FoxKitAssets = window.FoxKitAssets || {}
+   window.FoxKitModules = window.FoxKitModules || {}
+   window.FoxKitSettings = {
+     discountPrefix: "FX",
+     showWaterMark: null,
+     multipleLanguages: false,
+     primaryLocale: true,
+     combineWithProductDiscounts: true,
+     enableAjaxAtc: true,
+     discountApplyBy: "shopify_functions",
+     foxKitBaseUrl: "foxkit.app",
+     shopDomain: "https:\/\/fashion.minimog.co",
+     baseUrl: _useRootBaseUrl ? "/" : ShopifyRootUrl.endsWith('index.html') ? ShopifyRootUrl : ShopifyRootUrl + '/',
+     currencyCode: "USD",
+    //  moneyFormat: !!window.MinimogTheme ? window.MinimogSettings.money_format : "${{amount}}",
+     moneyWithCurrencyFormat: "${{amount}} USD",
+     template: "index",
+     templateName: "index",
+     optimizePerformance: false,routes: {
+       root: "\/",
+       cart: "\/cart",
+       cart_add_url: '/cart/add',
+       cart_change_url: '/cart/change',
+       cart_update_url: '/cart/update'
+     },
+     dateNow: "2026\/01\/12  0:40:00-0500 (EST)",
+    //  isMinimogTheme: !!window.MinimogTheme,
+     designMode: false,
+     pageType: "index",
+     pageUrl: "\/",
+     selectors: {}
+   };
+
+  FoxKitStrings = {"en":{"date_format":"MM\/dd\/yyyy","discount_summary":"You will get \u003cstrong\u003e{discount_value} OFF\u003c\/strong\u003e on each product","discount_title":"SPECIAL OFFER","free":"FREE","add_to_cart_button":"Add to cart","add_button":"Add","added_button":"Added","bundle_button":"Add selected item(s)","bundle_select":"Select","bundle_selected":"Selected","bundle_total":"Total price","bundle_saved":"Saved","bundle_items_added":"The products in the bundle are added to the cart.","bundle_warning":"Add at least 1 item to build your bundle","bundle_this_item":"This item","qty_discount_title":"{item_count} item(s) get {discount_value} OFF","qty_discount_note":"on each product","prepurchase_title":"Frequently bought with \"{product_title}\"","prepurchase_added":"You just added","incart_title":"Customers also bought with \"{product_title}\"","sizechart_button":"Size chart","field_name":"Enter your name","field_email":"Enter your email","field_birthday":"Date of birth","discount_noti":"* Discount will be calculated and applied at checkout","fox_discount_noti":"* You are entitled to 1 discount offer of \u003cspan\u003e{price}\u003c\/span\u003e (\u003cspan\u003e{discount_title}\u003c\/span\u003e). This offer \u003cb\u003ecan't be combined\u003c\/b\u003e with any other discount you add here!","bis_open":"Notify me when available","bis_heading":"Back in stock alert 📬","bis_desc":"We will send you a notification as soon as this product is available again.","bis_submit":"Notify me","bis_email":"Your email","bis_name":"Your name","bis_phone":"Your phone number","bis_note":"Your note","bis_signup":"Email me with news and offers","bis_thankyou":"Thank you! We'll send you an email when this product is available!","preorder_discount_title":"🎁 Preorder now to get \u003cstrong\u003e{discount_value} OFF\u003c\/strong\u003e","preorder_shipping_note":"🚚 Item will be delivered on or before \u003cstrong\u003e{eta}\u003c\/strong\u003e","preorder_button":"Pre-order","preorder_badge":"Pre-Order","preorder_end_note":"🔥 Preorder will end at \u003cstrong\u003e{end_time}\u003c\/strong\u003e","required_fields":"Please fill all the required fields(*) before Add to cart!","view_cart":"View cart","shipping_label":"Shipping","item_added_to_cart":"{product_title} is added to cart!","email_used":"Email has already been used!","copy_button":"Copy","copied_button":"Copied","locked":false}};
+
+  FoxKitAssets = {
+    sizechart: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/size-chart.js",
+    preorder: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/preorder.js",
+    preorderBadge: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/preorder-badge.js",
+    prePurchase: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/pre-purchase.js",
+    prePurchaseStyle: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/pre-purchase.css",
+    inCart: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/incart.js",
+    inCartStyle: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/incart.css",
+    productCountdown: "https:\/\/cdn.shopify.com\/extensions\/019b8c19-8484-7ce5-89bf-db65367d5a08\/foxkit-extensions-450\/assets\/product-countdown.css"
+  }
+  FoxKitPlugins.popUpLock = false
+  FoxKitPlugins.luckyWheelLock = 
+
+  
+  
+    FoxKitPlugins.Countdown = Object.values({"65e7ccaf5af454c7ac006b45":{"target_products":["gid:\/\/shopify\/Product\/7168246120553"],"time_unit_day":"days","time_unit_hour":"hrs","time_unit_min":"mins","time_unit_sec":"secs","deleted":false,"locked":false,"_id":"65e7ccaf5af454c7ac006b45","active":true,"title":"🔥 Hurry up! Sale ends in:","duration":20,"expires_date":"2024-03-06T01:52:54.847Z","cdt_type":"evergreen","cdt_style":"style-2","applies_to":"specific_products","schedule":false,"total_quantity":100,"sold_from":3,"sold_to":15,"show_flashsale":false,"schedule_time":"2024-03-06T01:53:50.777Z","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T01:53:51.763Z","updatedAt":"2024-03-06T01:53:51.763Z","__v":0},"65e93fa77be33ace6aeeda50":{"target_products":["gid:\/\/shopify\/Product\/7157991735401"],"time_unit_day":"days","time_unit_hour":"hrs","time_unit_min":"mins","time_unit_sec":"secs","deleted":false,"locked":false,"_id":"65e93fa77be33ace6aeeda50","active":true,"title":"🔥 Hurry up! Sale ends in:","duration":20,"expires_date":"2024-03-07T04:16:00.667Z","cdt_type":"evergreen","cdt_style":"style-1","applies_to":"specific_products","schedule":false,"total_quantity":100,"sold_from":3,"sold_to":15,"show_flashsale":false,"schedule_time":"2024-03-07T04:18:06.319Z","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-07T04:16:39.567Z","updatedAt":"2024-03-07T04:18:07.432Z","__v":0}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}))
+    FoxKitPlugins.PreOrder = Object.values({"65e8363df362f9c7a09cfee2":{"discount":{"value":10,"type":"PERCENTAGE"},"applies_to":"","target_products":[],"deleted":false,"locked":false,"shipping_date_choice":"NONE","target_variants":[],"enable_all_variants":true,"inventory_reserve":"ON_SALE","fulfillment_trigger":"ASAP","_id":"65e8363df362f9c7a09cfee2","active":true,"title":"Product: Cotton bucket hat","target_product":"gid:\/\/shopify\/Product\/7167890620521","active_discount":false,"start_time":"2024-03-06T09:23:46.032Z","end_time":"2024-03-06T09:23:46.032Z","eta":"2024-03-06T09:23:46.032Z","set_end_time":false,"show_eta":false,"condition":"always","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T09:24:13.900Z","updatedAt":"2024-03-06T09:24:14.150Z","id":"preorder-1","__v":0,"metafield_gid":"gid:\/\/shopify\/Metafield\/22995331809385"},"65e84694f362f9c7a0a704e8":{"discount":{"value":10,"type":"PERCENTAGE"},"applies_to":"","target_products":[],"deleted":false,"locked":false,"shipping_date_choice":"NONE","target_variants":[],"enable_all_variants":true,"inventory_reserve":"ON_SALE","fulfillment_trigger":"ASAP","_id":"65e84694f362f9c7a0a704e8","active":true,"title":"Product: Luxury Crossbody Bags","target_product":"gid:\/\/shopify\/Product\/7161294848105","active_discount":true,"start_time":"2024-03-06T10:19:42.853Z","end_time":"2024-03-06T10:19:42.853Z","eta":"2024-03-06T10:19:42.853Z","set_end_time":false,"show_eta":false,"condition":"always","shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:33:56.848Z","updatedAt":"2024-03-06T10:59:43.654Z","id":"preorder-2","__v":0,"metafield_gid":"gid:\/\/shopify\/Metafield\/22996684177513"}}).filter(entry => entry.active)
+    FoxKitPlugins.PrePurchase = Object.values({"65e84bd3f362f9c7a0aa63e1":{"discount":{"value":0,"type":"PERCENTAGE"},"active":true,"target_products":["gid:\/\/shopify\/Product\/7161294946409","gid:\/\/shopify\/Product\/7161295700073","gid:\/\/shopify\/Product\/7157991309417"],"recommended_products":["gid:\/\/shopify\/Product\/7161294946409","gid:\/\/shopify\/Product\/7161295700073","gid:\/\/shopify\/Product\/7157991309417"],"deleted":false,"locked":false,"_id":"65e84bd3f362f9c7a0aa63e1","title":"Pre-purchase offer","applies_to":"all_products","recommend_to":"specific_products","recommend_intent":"complementary","active_discount":false,"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:56:19.230Z","updatedAt":"2024-11-06T07:20:53.408Z","id":"prepurchase-1","__v":0,"productHandles":["plastic-bag-ban","polarised-sunglasses","round-neck-sweater"]}}).filter(entry => entry.active)
+    FoxKitPlugins.InCart = Object.values({"65e84a84f362f9c7a0a99045":{"discount":{"value":10,"type":"PERCENTAGE"},"target_products":["gid:\/\/shopify\/Product\/7159271391337","gid:\/\/shopify\/Product\/7159271194729","gid:\/\/shopify\/Product\/7159270473833"],"recommended_products":["gid:\/\/shopify\/Product\/7159271194729","gid:\/\/shopify\/Product\/7159270473833","gid:\/\/shopify\/Product\/7157991309417"],"deleted":false,"locked":false,"_id":"65e84a84f362f9c7a0a99045","active":true,"title":"In cart offers","applies_to":"all_products","recommend_to":"specific_products","recommend_intent":"complementary","active_discount":true,"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:50:44.877Z","updatedAt":"2025-02-17T03:52:27.573Z","id":"incart-1","__v":0,"productHandles":["mini-dress-with-ruffled-straps","multi-cargo-cotton-shorts","round-neck-sweater"]}}).filter(entry => entry.active)
+    FoxKitPlugins.QuantityDiscount = Object.values({"65e84560f362f9c7a0a64921":{"target_products":["gid:\/\/shopify\/Product\/7159271391337","gid:\/\/shopify\/Product\/7166457774185"],"sub_title":"on each product","highlight_label":"","button_label":"Add","default_title":"Buy {quantity} get {discount_value} off","sale_badge":"Save {discount_value}","default_selected":0,"discount_titles":["",""],"deleted":false,"locked":false,"_id":"65e84560f362f9c7a0a64921","active":true,"title":"Volume discount","offer_heading":"Buy more save more!","applies_to":"specific_products","show_variant_selector":false,"layout":"standard","card_radius":4,"hide_submit_button":false,"discounts":[{"min_qty":3,"value":5,"type":"PERCENTAGE","highlighted":true},{"min_qty":5,"value":10,"type":"PERCENTAGE","highlighted":false}],"shop":"simplestjewelry.myshopify.com","createdAt":"2024-03-06T10:28:48.572Z","updatedAt":"2024-03-07T02:49:05.550Z","__v":0}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}))
+    FoxKitPlugins.Bundle = Object.values({"65e842c35af454c7ac43d2c9":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157385756777","gid:\/\/shopify\/Product\/7157380776041","gid:\/\/shopify\/Product\/7157383790697"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":true,"default_selected":true,"deleted":false,"locked":false,"_id":"65e842c35af454c7ac43d2c9","shop":"simplestjewelry.myshopify.com","active":true,"title":"Product bundles layout 1","bundle_heading":"Frequently bought together","button_label":"Add selected item(s)","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157385756777":"1","gid:\/\/shopify\/Product\/7157380776041":"1","gid:\/\/shopify\/Product\/7157383790697":"1"},"design":"design-1","show_target_only":true,"target_product":"gid:\/\/shopify\/Product\/7157380776041","active_discount":true,"createdAt":"2024-03-06T10:17:39.790Z","updatedAt":"2024-03-06T10:23:25.895Z","id":"bundle-1","__v":0,"productHandles":["the-black-pullover","the-charcoal-overshirt","the-cocoa-shirt"]},"65e843f05af454c7ac44ac78":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157383790697","gid:\/\/shopify\/Product\/7157384085609","gid:\/\/shopify\/Product\/7157383725161"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":true,"default_selected":true,"deleted":false,"locked":false,"_id":"65e843f05af454c7ac44ac78","shop":"simplestjewelry.myshopify.com","active":true,"title":"Product bundles layout 2","bundle_heading":"Frequently bought together","button_label":"Add selected item(s)","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157383790697":"1","gid:\/\/shopify\/Product\/7157384085609":"1","gid:\/\/shopify\/Product\/7157383725161":"1"},"design":"design-3","show_target_only":true,"target_product":"gid:\/\/shopify\/Product\/7157383790697","active_discount":true,"createdAt":"2024-03-06T10:22:40.994Z","updatedAt":"2024-03-06T10:22:40.994Z","id":"bundle-2","__v":0,"productHandles":["the-cocoa-shirt","the-heavyweight-overshirt","the-oxford-shirt"]},"6697ea8b12e04d57656ae0aa":{"discount":{"value":10,"type":"PERCENTAGE"},"products":["gid:\/\/shopify\/Product\/7157380907113","gid:\/\/shopify\/Product\/7157381628009"],"image_ratio":"adapt","position":"inside","layout":"layout-1","show_quantity":false,"default_selected":true,"deleted":false,"locked":false,"_id":"6697ea8b12e04d57656ae0aa","shop":"simplestjewelry.myshopify.com","active":true,"title":"Tutorial Video","bundle_heading":"Frequently bought together","button_label":"Add to cart","summary_heading":"Your bundle","skip_cart":false,"products_quantity":{"gid:\/\/shopify\/Product\/7157380907113":"1","gid:\/\/shopify\/Product\/7157381628009":"1"},"design":"design-1","show_target_only":false,"target_product":"gid:\/\/shopify\/Product\/7157381628009","active_discount":true,"createdAt":"2024-07-17T16:00:11.133Z","updatedAt":"2024-07-17T16:00:11.133Z","id":"bundle-3","__v":0,"productHandles":["the-chino-short","the-black-crew"]}}).filter(entry => entry.active).map(entry => ({...(entry || {}), locales: !FoxKitSettings.primaryLocale && entry?.locales?.[Shopify.locale]}));
+    FoxKitPlugins.Menus = Object.values({"65efd86ac1f3374bfc2c8982":{"id":"65efd86ac1f3374bfc2c8982","data":{"orders":{"layout":["f-1710216069HnvUZ","f-1710216069X0Y71","f-171021606995OfQ","f-171021606958GlJ","f-1710216069Gt9nY","f-1710216069Aivj7","f-17102160696maOj","f-1710216069VAZz9","f-1710216069iwg7X","f-1710216069rG8BF","f-1710216069kEyjS","f-1710216069yzrAX","f-1710216069084oS","f-1710216069G7t2L","f-1710216069Mqmrd","f-1710216069uvz9e","f-17102160698LrpX","f-1710216069UVWj0","f-1710216069NXp1X","f-1710216069G8AZj","f-171021606931kr9","f-1710216069qCcqm","f-17102160694HtHs","f-1710216069uOdAR","f-1710216069KChdw","f-1710216069Mi3iU","f-17102160696Mf4r","f-1710216069WhORc","f-1710216069ybFsI","f-1710216069UXWj4","f-1710216069R8qmv","f-1710216069JJG6h","f-1710216069q6JWE","f-1710216069D5dHh","f-1710216069u5PVb","f-1710216069WLoSm","f-171021606998Sci","f-1710216069lIPzv","f-1710216069ZPhez","f-1710216069I4Jwg","f-17102160697LW05","f-1710216069aB6mg","f-1710216069WGKjx","f-1710216069GYWLX","f-1710216069huOpg","f-1710216069YLrJm","f-1710216069LIYGD","f-1710216069ueQd0","f-17102160694GXt4","f-1710216069kJF5Y","f-1710216069J7RXS","f-17102160698PfGU","f-1710216069t5pm6","f-1710216069z2Sup","f-1710216069ZOZQh","f-17102160695sb5X","f-1710216069AYKOO","f-1710216069GI4D8","f-1710216069lPaeM","f-1710216069Fw6A0","f-1710216069kRWf0","f-1710216069ULSSj","f-1710216069SPcqc","f-1710216069W7QCo","f-1710216069A4YT9","f-1710216069agOyZ","f-1710216069QKgxw","f-1710216069VqfRT","f-17102160696VrnH","f-17102160695CODQ","f-1710216069IGO1R","f-1710216069vYODZ","f-1710216069FaTb8","f-1710216069CFnWj","f-171021606913eTB","f-1710216069luzjE","f-17102160694xwCt","f-1710216069y2l3y","f-1710216069n7z9X","f-1710216069sNRRe","f-1710216069Z0YpE","f-1710216069qeXYU","f-1710216069oJKAp","f-1710216069NnQh2","f-1730365722iO4AW","f-1730365779I9Atj","f-1730365833waYJn","f-1730365892ZmeH6"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"0\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"0\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":600,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":24}}},"65efd86ac1f3374bfc2c8983":{"id":"65efd86ac1f3374bfc2c8983","data":{"orders":{"layout":["f-1710216069J1eXs","f-1710216069QDqHu","f-1710216069rU2Tx","f-1710216069vSnwc","f-1710216069MZoVw","f-1710216069pRo8J","f-17102160697xLHH","f-1710216069Mffwd","f-1710216069HEyZT","f-1710216069gl3gS","f-1710216069ajKAs","f-1710216069DcU4K","f-1710216069qzJbX","f-1710216069mWeJr","f-1710216069nscal","f-1710216069H4g4G","f-17102160692wgbu","f-1710216069BiaUC","f-1710216069hIWMb","f-1710216069RiWEO","f-1710216069MqYxO","f-1710216069XrwHD","f-1710216069cRgz2","f-1710216069y6wNp","f-17102160694oNlr","f-1710216069hgB36","f-1710216069dDGJ9","f-1710216069Y5k0F","f-171021606929wQa","f-171021606938wiD","f-1710216069cw4Y9","f-1710216069W78uR"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"2\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"2\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":30}}},"65efd86ac1f3374bfc2c8984":{"id":"65efd86ac1f3374bfc2c8984","data":{"orders":{"layout":["f-1710216069smRVC","f-1710216069q7Wr5","f-1710216069YAFvP","f-17102160690cmzU","f-1710216069wOosx","f-1710216069tLCSt","f-1710216069nRECo","f-1710216069SfNgJ","f-1710216069HSh3k","f-1710216069kjJNt","f-1710216069TA4kU","f-1710216069rnmDW","f-1710216069rUVNA","f-1710216069hdPRm","f-1710216069I5Cx5","f-1710216069SINRv","f-1710216069vbgeH","f-17102160695Zhy3","f-1710216069w2kju"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"1\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"1\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(0,0,0,1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":36}}},"65efd86ac1f3374bfc2c8985":{"id":"65efd86ac1f3374bfc2c8985","data":{"orders":{"layout":["f-1710216069y0QPC","f-1710216069O7JlZ","f-1710216069WwYKB","f-1710216069INhQt","f-1710216069UV7VA","f-1710216069XBcxS","f-1710216069uQHQd","f-1710216069Dh8PW","f-1710216069kjthZ","f-1710216069sDX3W","f-17102160697dquB","f-1710216069VSpVF","f-1710216069bActS","f-17102160690L40L","f-1710216069dogzU","f-1710216069WBeQY","f-1710216069GaiNP"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"4\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"4\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(85,85,85,1)","submenu_text_hover":"rgba(0,0,0,1)","item_space":30}}},"65fa420d5ee6d973b8649bd9":{"id":"65fa420d5ee6d973b8649bd9","data":{"orders":{"layout":["main-menu-item-1","main-menu-item-2","main-menu-item-3","main-menu-item-4","main-menu-item-5","main-menu-item-6","main-menu-item-7"],"main-menu-item-1":["sub-menu-item-1","sub-menu-item-2","sub-menu-item-3","sub-menu-item-4","sub-menu-item-5","sub-menu-item-6","sub-menu-item-7"]},"settings":{"renderMethod":"override","placement":"selector","cssSelector":".m-menu__item[data-index=\"3\"] .m-sub-menu.m-sub-menu--level-1","cssSelectorMobile":".m-menu-mobile__item[data-index=\"3\"] .m-megamenu-mobile.m-megamenu-mobile--level-1 .m-submenu-mobile"},"design":{"layout":"vertical","vertical_menu_width":300,"container_width":"fill","menu_bg":"","menu_text":"rgba(34, 34, 34, 0.6)","menu_text_hover":"rgba(34, 34, 34, 1)","submenu_bg":"rgba(255,255,255,1)","submenu_text":"rgba(34, 34, 34, 0.6)","submenu_text_hover":"rgba(34, 34, 34, 1)","item_space":30}}}});
+    FoxKitPlugins.Menus = FoxKitPlugins.Menus?.map((item) => {
+      if (typeof item === 'string') return JSON.parse(item);
+      return item;
+    });
+    FoxKitPlugins.MenuData = Object.values({"65efd86ac1f3374bfc2c8982":{"id":"65efd86ac1f3374bfc2c8982","data":{"f-1710216069HnvUZ":{"title":"Main home","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"auto","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069X0Y71":{"title":"Boutique","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027137129","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606995OfQ":{"title":"Chateau","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027202665","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606958GlJ":{"title":"Couture","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027169897","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Gt9nY":{"title":"Tailor","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989814377","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Aivj7":{"title":"Mod","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989879913","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696maOj":{"title":"Bold","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989847145","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VAZz9":{"title":"Parade","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027333737","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069iwg7X":{"title":"Luxe","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027268201","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069rG8BF":{"title":"Sartorial","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989683305","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kEyjS":{"title":"Women wear","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027006057","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069yzrAX":{"title":"Local brand","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027071593","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069084oS":{"title":"Sapphire","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027235433","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069G7t2L":{"title":"Grove","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126027104361","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Mqmrd":{"title":"Dapper","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=125989912681","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uvz9e":{"title":"Fast fashion","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615866046","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160698LrpX":{"title":"Glamour","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615800510","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UVWj0":{"title":"Chic","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615767742","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069NXp1X":{"title":"Instyle","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615734974","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069G8AZj":{"title":"Ready to wear","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615833278","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606931kr9":{"title":"Feminine","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616193726","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069qCcqm":{"title":"Vogue","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615636670","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694HtHs":{"title":"Trendy style","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615702206","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uOdAR":{"title":"Elegant mood","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615669438","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069KChdw":{"title":"Modern day","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615898814","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Mi3iU":{"title":"Bra store","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615931582","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696Mf4r":{"title":"Backpack","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615964350","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WhORc":{"title":"Jewelry","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125615997118","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ybFsI":{"title":"Active wear","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616029886","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UXWj4":{"title":"Sneaker","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120304304191","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069R8qmv":{"title":"Watch","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616062654","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069JJG6h":{"title":"Bags","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616128190","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069q6JWE":{"title":"Coachella","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=131618603185","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069D5dHh":{"title":"Keyboard","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121266602048","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069u5PVb":{"title":"Pet Clothes","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121265520704","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WLoSm":{"title":"Smart Light","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121263685696","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606998Sci":{"title":"Halloween","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=131608838321","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069lIPzv":{"title":"Hat","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120306630719","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ZPhez":{"title":"Baby","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125616160958","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069I4Jwg":{"title":"Glasses","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120309776447","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160697LW05":{"title":"Houseware","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120264884288","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069aB6mg":{"title":"Book","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120264917056","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WGKjx":{"title":"Socks","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120328945727","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GYWLX":{"title":"Bedding","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120329764927","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069huOpg":{"title":"Living","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120333467711","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069YLrJm":{"title":"Hand santizer","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120335827007","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069LIYGD":{"title":"Plantie","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120336220223","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ueQd0":{"title":"Coffee","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342249535","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694GXt4":{"title":"Paintme","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120338546751","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kJF5Y":{"title":"Stationery","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120338874431","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069J7RXS":{"title":"Case phone","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342511679","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160698PfGU":{"title":"Electronic","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120342708287","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069t5pm6":{"title":"Juice","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120344674367","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069z2Sup":{"title":"Mirror","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120345067583","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ZOZQh":{"title":"Supplyment","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120346837055","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160695sb5X":{"title":"Barber","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120347263039","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069AYKOO":{"title":"Furniture","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349589567","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GI4D8":{"title":"Skateboard","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349851711","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069lPaeM":{"title":"Pizza","link":{"value":"https:\/\/niches.minimog.co\/?preview_theme_id=120349687871","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Fw6A0":{"title":"Print","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120259510336","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kRWf0":{"title":"Nails polish","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120259575872","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069ULSSj":{"title":"Bathroom","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260591680","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069SPcqc":{"title":"Skincare","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260755520","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069W7QCo":{"title":"Toy","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120260886592","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069A4YT9":{"title":"Beauty","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120262230080","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069agOyZ":{"title":"Drink","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120263540800","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069QKgxw":{"title":"Candles","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=120263737408","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VqfRT":{"title":"Pet","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=126739447985","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160696VrnH":{"title":"Organic","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=126749278385","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160695CODQ":{"title":"Postcard","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127300599985","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069IGO1R":{"title":"Speaker","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127219990705","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069vYODZ":{"title":"Pan","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127702794417","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069FaTb8":{"title":"Paint","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127705284785","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069CFnWj":{"title":"BFCM","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127793365169","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-171021606913eTB":{"title":"Christmas","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127855558833","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069luzjE":{"title":"Gym","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=127864799409","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160694xwCt":{"title":"POD store","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=128081625265","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":true,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069y2l3y":{"title":"Surfboard","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121141493824","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069n7z9X":{"title":"Bike","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121175769152","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069sNRRe":{"title":"Ceramic","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121219547200","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Z0YpE":{"title":"Camping","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121222987840","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069qeXYU":{"title":"Cake","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121224888384","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069oJKAp":{"title":"Soap","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121243140160","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069NnQh2":{"title":"Floral","link":{"value":"https:\/\/skins.minimog.co\/?preview_theme_id=121244549184","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"New","color":"rgba(213, 251, 239, 1)","enable":true,"colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365722iO4AW":{"title":"Xmas-Drink","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?preview_theme_id=129991114857","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365779I9Atj":{"title":"Xmas-Clothing","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?preview_theme_id=130013626473","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365833waYJn":{"title":"Xmas-Skincare","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?\u0026preview_theme_id=129991377001","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1730365892ZmeH6":{"title":"BFCM-Kid","link":{"value":"https:\/\/simplestjewelry.myshopify.com\/?\u0026preview_theme_id=130015887465","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"badge":{"enable":true,"label":"New","color":"rgba(213, 251, 239, 1)","colorText":"rgba(58, 144, 118, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"}}},"65efd86ac1f3374bfc2c8983":{"id":"65efd86ac1f3374bfc2c8983","data":{"f-1710216069J1eXs":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 1 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069QDqHu":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"type":"menu-item"},"f-1710216069rU2Tx":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid mix","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069vSnwc":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider 1 column","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/demo.minimog.co\/products\/denim-jacket?preview_theme_id=125615669438","external":false},"type":"menu-item"},"f-1710216069MZoVw":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/quilted-shopper?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069pRo8J":{"show_on_desktop":true,"show_on_mobile":true,"title":"Slider vertical","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/wool-blend-jacket?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-17102160697xLHH":{"show_on_desktop":true,"show_on_mobile":true,"title":"Sider full-width","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/boxy-denim-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069Mffwd":{"show_on_desktop":true,"show_on_mobile":true,"title":"Gift card","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/store-gift-card?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069HEyZT":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product color swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069gl3gS":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product image swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"type":"menu-item"},"f-1710216069ajKAs":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product dropdown swatch","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/wool-blend-jacket?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-1710216069DcU4K":{"show_on_desktop":true,"show_on_mobile":true,"title":"Lightbox image","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069qzJbX":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product video","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/video-3d-model-product?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069mWeJr":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product 3D, AR models","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/video-3d-model-product?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069nscal":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom field","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/calendar-postcard?preview_theme_id=127300599985","external":false},"type":"menu-item"},"f-1710216069H4g4G":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom description","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160692wgbu":{"show_on_desktop":true,"show_on_mobile":true,"title":"Short description","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069BiaUC":{"show_on_desktop":true,"show_on_mobile":true,"title":"Real-time visitors","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hIWMb":{"show_on_desktop":true,"show_on_mobile":true,"title":"Dynamic checkout button","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069RiWEO":{"show_on_desktop":true,"show_on_mobile":true,"title":"Trust badge","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069MqYxO":{"show_on_desktop":true,"show_on_mobile":true,"title":"Delivery information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069XrwHD":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collapsible tabs information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069cRgz2":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product tabs information","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069y6wNp":{"show_on_desktop":true,"show_on_mobile":true,"title":"Sticky add to cart","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160694oNlr":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product recently viewed","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hgB36":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product recommentdations","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/oversized-denim-shirt-jacket?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069dDGJ9":{"show_on_desktop":true,"show_on_mobile":true,"title":"Product complementary","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-denim-skirt?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069Y5k0F":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 1","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-black?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-171021606929wQa":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 2","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-earth-tone?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-171021606938wiD":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 3","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/wireless-speaker-gold-tone?preview_theme_id=127219990705","external":false},"type":"menu-item"},"f-1710216069cw4Y9":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 4","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/calendar-postcard?preview_theme_id=127300599985","external":false},"type":"menu-item"},"f-1710216069W78uR":{"show_on_desktop":true,"show_on_mobile":true,"title":"Single product layout 5","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/next.minimog.co\/products\/dried-flower-card?preview_theme_id=127300599985","external":false},"type":"menu-item"}}},"65efd86ac1f3374bfc2c8984":{"id":"65efd86ac1f3374bfc2c8984","data":{"f-1710216069smRVC":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter left sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/activewear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069q7Wr5":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter right sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/dresses\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069YAFvP":{"show_on_desktop":true,"show_on_mobile":true,"title":"Canvas sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/casualwear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160690cmzU":{"show_on_desktop":true,"show_on_mobile":true,"title":"Hidden sidebar","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/sweaters-1\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069wOosx":{"show_on_desktop":true,"show_on_mobile":true,"title":"Filter by tags","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/tunics\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069tLCSt":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 2 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/tops-1\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069nRECo":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 3 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/skirts\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069SfNgJ":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 4 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/jackets\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069HSh3k":{"show_on_desktop":true,"show_on_mobile":true,"title":"Grid 5 columns","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/coats\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069kjJNt":{"show_on_desktop":true,"show_on_mobile":true,"title":"List view","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/leggings\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069TA4kU":{"show_on_desktop":true,"show_on_mobile":true,"title":"Pagination page","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/bodysuits\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069rnmDW":{"show_on_desktop":true,"show_on_mobile":true,"title":"Load more button","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/rompers\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069rUVNA":{"show_on_desktop":true,"show_on_mobile":true,"title":"Infinite scrolling","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/blazers\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069hdPRm":{"show_on_desktop":true,"show_on_mobile":true,"title":"Full-width layout","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/bottoms\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069I5Cx5":{"show_on_desktop":true,"show_on_mobile":true,"title":"Custom content","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/formalwear\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069SINRv":{"show_on_desktop":true,"show_on_mobile":true,"title":"Cookies law info","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-1710216069vbgeH":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collections list","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126026973289","external":false},"type":"menu-item"},"f-17102160695Zhy3":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collection list style 2","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126027235433","external":false},"type":"menu-item"},"f-1710216069w2kju":{"show_on_desktop":true,"show_on_mobile":true,"title":"Collection list style 3","submenu":{"columns":5,"container":"full-width","layout":"mega"},"link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections?preview_theme_id=126027333737","external":false},"type":"menu-item"}}},"65efd86ac1f3374bfc2c8985":{"id":"65efd86ac1f3374bfc2c8985","data":{"f-1710216069y0QPC":{"title":"Product bundles layout 1","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-charcoal-overshirt\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069O7JlZ":{"title":"Product bundles layout 2","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-cocoa-shirt\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WwYKB":{"title":"Volume discount","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/linen-blend-waistcoat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069INhQt":{"title":"Pre-purchase offers","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069UV7VA":{"title":"In-cart offers","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069XBcxS":{"title":"Back in stock","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-bag-with-fringing?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069uQHQd":{"title":"Pre-order product","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069Dh8PW":{"title":"Size Chart","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/linen-blend-waistcoat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069kjthZ":{"title":"Variant group images","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/striped-knit-bandeau-crop-top?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069sDX3W":{"title":"Cart countdown","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160697dquB":{"title":"Lucky wheel","link":{"value":"https:\/\/demo.minimog.co\/?preview_theme_id=125609410750\u0026fox_show_lucky_wheel=true","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"badge":{"label":"Hot","color":"rgba(255, 231, 231, 1)","enable":false,"colorText":"rgba(218, 63, 63, 1)"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069VSpVF":{"title":"Popup","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069bActS":{"title":"Free shipping goal","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/cotton-bucket-hat-black-patterned?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-17102160690L40L":{"title":"Sale notification","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/collections\/best-sellers-fashion-2024?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069dogzU":{"title":"Stock countdown","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/the-black-crew?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069WBeQY":{"title":"Countdown timer layout 1","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/denim-jacket-new?preview_theme_id=125989879913","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"f-1710216069GaiNP":{"title":"Countdown timer layout 2","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/products\/long-soft-coat?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"columns":5,"container":"full-width","layout":"mega"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"}}},"65fa420d5ee6d973b8649bd9":{"id":"65fa420d5ee6d973b8649bd9","data":{"main-menu-item-1":{"title":"Blog","link":{"value":"","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"dropdown","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-2":{"title":"About us","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/about-us?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-3":{"title":"Contact us","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/contact-us?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-4":{"title":"FAQs","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/faqs?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-5":{"title":"Find a store","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/pages\/store-locator?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-6":{"title":"My account","link":{"value":"https:\/\/minimog-fashion.myshopify.com\/account?preview_theme_id=126026973289","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"main-menu-item-7":{"title":"Age verifier pop-up","link":{"value":"https:\/\/next.minimog.co\/?preview_theme_id=132173496497","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"submenu":{"layout":"mega","container":"full-width","columns":"5"},"show_on_desktop":true,"show_on_mobile":true,"type":"menu-item"},"sub-menu-item-1":{"title":"Grid layout","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125609410750","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-2":{"title":"List view","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615636670","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-3":{"title":"Blog with left sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615472830","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-4":{"title":"Blog with right sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match?preview_theme_id=125615603902","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-5":{"title":"Single post style 1","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125609410750","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-6":{"title":"Single post style 2","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125615603902","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"},"sub-menu-item-7":{"title":"Single post with sidebar","link":{"value":"https:\/\/demo.minimog.co\/blogs\/mix-and-match\/10-picnic-basket-bags-on-sale-to-carry-around-all-summer?preview_theme_id=125615472830","external":false},"icon":{"html":"","url":"","size":24,"color":"#000000"},"show_on_desktop":true,"show_on_mobile":true,"type":"submenu-item"}}}});
+    FoxKitPlugins.MenuData = FoxKitPlugins.MenuData?.map((item) => {
+      if (typeof item === 'string') return JSON.parse(item);
+      return item;
+    });
+
+    
+
+  
+
+  
+  FoxKitPlugins.StockCountdown = {"target_collections":[],"target_products":[{"value":"gid:\/\/shopify\/Product\/7168246120553","label":"Denim Jacket","handle":"denim-jacket-new","featuredImage":{"originalSrc":"https:\/\/cdn.shopify.com\/s\/files\/1\/2348\/0105\/products\/35h.jpg?v=1709689441"},"variants":{"edges":[{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930400361","title":"M \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930433129","title":"M \/ Black","price":"19.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930465897","title":"M \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930498665","title":"L \/ Blue","price":"29.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930531433","title":"L \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930564201","title":"L \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930596969","title":"XL \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930629737","title":"XL \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930662505","title":"XL \/ Pink","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930695273","title":"XXL \/ Blue","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930728041","title":"XXL \/ Black","price":"39.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41132930760809","title":"XXL \/ Pink","price":"39.00"}}]},"hasOnlyDefaultVariant":false},{"value":"gid:\/\/shopify\/Product\/7157381628009","label":"The Black Crew","handle":"the-black-crew","featuredImage":{"originalSrc":"https:\/\/cdn.shopify.com\/s\/files\/1\/2348\/0105\/products\/47871702.webp?v=1708332569"},"variants":{"edges":[{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41094012371049","title":"Black","price":"50.00"}},{"node":{"id":"gid:\/\/shopify\/ProductVariant\/41094012403817","title":"White","price":"50.00"}}]},"hasOnlyDefaultVariant":false}],"deleted":false,"_id":"65e84ea25af454c7ac4b7fa1","shop":"simplestjewelry.myshopify.com","active":true,"applies_to":"specific_products","countdown_type":"use_custom_range","from":5,"message":"Only {{stock_number}} item(s) left in stock!","to":10,"productHandles":[]};
+  if(FoxKitPlugins.StockCountdown) FoxKitPlugins.StockCountdown.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.StockCountdown?.locales?.[Shopify.locale];
+
+  
+    FoxKitPlugins.SalesPop = {"target_products":["gid:\/\/shopify\/Product\/7157992882281","gid:\/\/shopify\/Product\/7157992783977","gid:\/\/shopify\/Product\/7158002679913","gid:\/\/shopify\/Product\/7161798426729","gid:\/\/shopify\/Product\/7161298616425","gid:\/\/shopify\/Product\/7159271653481","gid:\/\/shopify\/Product\/7161293996137","gid:\/\/shopify\/Product\/7157381628009","gid:\/\/shopify\/Product\/7157382971497","gid:\/\/shopify\/Product\/7157379956841"],"deleted":false,"auto_sync_order":true,"orders":[{"orderName":"#1032","created_at":"2025-12-27T18:38:39Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"cotton-cargo-bermuda-shorts","productId":"7159271030889"},{"orderName":"#1031","created_at":"2025-12-17T15:21:38Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"baby-girls-sweatshirts","productId":"7424096469097"},{"orderName":"#1030","created_at":"2025-11-27T07:48:32Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"strappy-crop-top","productId":"7159272407145"},{"orderName":"#1029","created_at":"2025-10-31T08:02:21Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1028","created_at":"2025-10-29T19:12:43Z","name":"jo@gmail.com Jo","location":"New York, New York, United States","country":"United States","city":"New York","province":"New York","firstName":"jo@gmail.com","lastName":"Jo","productHandle":"long-denim-skirt","productId":"7159272439913"},{"orderName":"#1027","created_at":"2025-09-11T05:08:02Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1026","created_at":"2025-09-07T18:20:37Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1025","created_at":"2025-09-02T03:59:52Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"printed-tank-top","productId":"7159270801513"},{"orderName":"#1024","created_at":"2025-09-01T06:09:00Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"cateye-sunglasses","productId":"7159272472681"},{"orderName":"#1023","created_at":"2025-08-16T12:45:40Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"multi-cargo-cotton-shorts","productId":"7159270473833"},{"orderName":"#1022","created_at":"2025-07-29T03:27:25Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"linen-blend-waistcoat","productId":"7159271391337"},{"orderName":"#1021","created_at":"2025-07-03T20:20:06Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-cocoa-shirt","productId":"7157383790697"},{"orderName":"#1020","created_at":"2025-06-10T09:10:07Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-utility-backpack","productId":"7157379793001"},{"orderName":"#1019","created_at":"2025-05-27T01:28:48Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1018","created_at":"2025-05-27T01:25:59Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1017","created_at":"2025-05-26T14:10:24Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"the-charcoal-overshirt","productId":"7157380776041"},{"orderName":"#1016","created_at":"2025-05-20T02:10:56Z","name":"Dung Pham","location":"Ha Noi, Vietnam","country":"Vietnam","city":"Ha Noi","province":null,"firstName":"Dung","lastName":"Pham","productHandle":"store-gift-card","productId":"7168347308137"},{"orderName":"#1015","created_at":"2025-05-16T07:02:18Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"scuba-pencil-skirt","productId":"7158015983721"},{"orderName":"#1014","created_at":"2025-05-07T02:56:58Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1013","created_at":"2025-05-05T11:57:38Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"home-deer-slipper","productId":"7424096632937"},{"orderName":"#1012","created_at":"2025-05-05T11:55:54Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"black-boots","productId":"7161295863913"},{"orderName":"#1011","created_at":"2025-04-27T08:51:36Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"sweater-with-lights-1","productId":"7424096829545"},{"orderName":"#1010","created_at":"2025-04-24T18:09:42Z","name":"Card Holder Name","location":"Mountain View, California, United States","country":"United States","city":"Mountain View","province":"California","firstName":"Card","lastName":"Holder Name","productHandle":"multi-cargo-cotton-shorts","productId":"7159270473833"},{"orderName":"#1009","created_at":"2024-12-26T06:27:47Z","name":"John Doe","location":"Springfield, California, United States","country":"United States","city":"Springfield","province":"California","firstName":"John","lastName":"Doe","productHandle":"vanilla-flavored","productId":"7423106646121"},{"orderName":"#1008","created_at":"2024-12-26T06:25:36Z","name":"John Doe","location":"Springfield, California, United States","country":"United States","city":"Springfield","province":"California","firstName":"John","lastName":"Doe","productHandle":"the-transit-backpack","productId":"7157379694697"},{"orderName":"#1007","created_at":"2024-10-21T06:01:31Z","name":"Dari Doc","location":"Apopka, Florida, United States","country":"United States","city":"Apopka","province":"Florida","firstName":"Dari","lastName":"Doc","productHandle":"plastic-bag-ban","productId":"7161294946409"},{"orderName":"#1006","created_at":"2024-10-21T05:13:16Z","name":"Dari Doc","location":"Apopka, Florida, United States","country":"United States","city":"Apopka","province":"Florida","firstName":"Dari","lastName":"Doc","productHandle":"printed-tank-top","productId":"7159270801513"},{"orderName":"#1005","created_at":"2024-10-13T15:06:20Z","name":"dasdas dasssad","location":"dqweqw, Illinois, United States","country":"United States","city":"dqweqw","province":"Illinois","firstName":"dasdas","lastName":"dasssad","productHandle":"polarised-sunglasses","productId":"7161295700073"},{"orderName":"#1004","created_at":"2024-10-13T15:00:51Z","name":"rwefsdff sdfsdfdsf","location":"ewqewqe, Illinois, United States","country":"United States","city":"ewqewqe","province":"Illinois","firstName":"rwefsdff","lastName":"sdfsdfdsf","productHandle":"mini-dress-with-ruffled-straps","productId":"7159271194729"},{"orderName":"#1003","created_at":"2024-05-24T08:29:16Z","name":"kiaqetkwyytabjatmd cazlgcom","location":"Fort Worth, Texas, United States","country":"United States","city":"Fort Worth","province":"Texas","firstName":"kiaqetkwyytabjatmd","lastName":"cazlgcom","productHandle":"plastic-bag-ban","productId":"7161294946409"}],"priority_products":[],"_id":"65e84e2af362f9c7a0ac1226","shop":"simplestjewelry.myshopify.com","active":true,"data_source":"real","delay_show":5,"delay_time":"10-15","display_time":"5","last_sync_at":"2025-12-27T18:38:42.871Z","locations":"Morgantown United States, Kuttu Federated States of Micronesia, Wuhu China, East Quincy United States, Raumbach Germany, Wuyang China, Tondela Portugal, N'Djamena Chad, Yanbei China, Quangang China, Le Pallet France, Servon-sur-Vilaine France, Tumut Australia, Goodman United States, Keluke China, Rauchenwarth Austria, Harran Turkey","max_show":20,"names":"Enrique West, Damien Braun, Ellie Osborne, Cierra Vega, Alden Cantrell, Kierra Gentry, Pierre Cox, Thomas Crane","position":"bottom-left","show_on_mobile":true,"target_to":"product","time":"{{time}} ago - {{location}}","title":"{{name}} has purchased!","max_orders":30,"productHandles":["relaxed-fit-masculine","short-fitted","short-sleeve-t-shirt","short-sleeve-white","cotton-t-shirt-dress-dark-taupe","sleeveless-ribbed-t-shirt","straw-shopeer-bag","the-black-crew","the-black-hoodie","the-black-messenger"]};
+    if(FoxKitPlugins.SalesPop) FoxKitPlugins.SalesPop.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.SalesPop?.locales?.[Shopify.locale]
+  
+
+  
+    FoxKitPlugins.CartCountdown = {"deleted":false,"_id":"65e84eaef362f9c7a0ac63c4","shop":"simplestjewelry.myshopify.com","active":true,"duration":5,"message":"These products are limited, checkout within {{timer}}","message_out":"You're out of time! Checkout now to avoid losing your order!","mins_label":"m","repeat":true,"secs_label":"s","show_on_drawer":true,"productHandles":[]};
+    if(FoxKitPlugins.CartCountdown) FoxKitPlugins.CartCountdown.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.CartCountdown?.locales?.[Shopify.locale]
+  
+  
+    FoxKitPlugins.CartGoal = {"discount":{"type":"FREE_SHIPPING","value":0},"disable_foxkit_discount":true,"deleted":false,"_id":"65e84dd5f362f9c7a0abe03a","shop":"simplestjewelry.myshopify.com","active":true,"goal_amount":300,"message":"Buy {{variable}} more to enjoy \u003cstrong\u003eFREE Shipping\u003c\/strong\u003e","message_reached":"Congrats! You are eligible for \u003cstrong\u003eFREE Shipping\u003c\/strong\u003e","productHandles":[]};
+    if(FoxKitPlugins.CartGoal) FoxKitPlugins.CartGoal.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.CartGoal?.locales?.[Shopify.locale];
+  
+</script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/vendor.js' defer='defer' fetchpriority='high'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.js' defer='defer' fetchpriority='high'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/global.js' defer='defer' fetchpriority='low'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/slider-component.js' fetchpriority='low' defer='defer'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/incart-upsell.js' fetchpriority='low' defer='defer'></script>
+<script>
+    FoxKitPlugins.IncartSettings = {"active":true,"deleted":false,"_id":"6729e6ae8b054ca331920f26","shop":"simplestjewelry.myshopify.com","plugin":"InCart","offer_heading":"Customers also bought with \"{product_title}\"","image_ratio":"adapt","card_style":"style-2","slider_control":true,"button_label":"Add","btn_style":"text","productHandles":[]};
+    if(FoxKitPlugins.IncartSettings) FoxKitPlugins.IncartSettings.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.IncartSettings?.locales?.[Shopify.locale]
+  </script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/mega-menu.js' fetchpriority='high' defer='defer'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cartgoal.js' fetchpriority='low' defer='defer'></script>
+<script>
+    FoxKitPlugins.PreOrderSettings = null;
+    if(FoxKitPlugins.PreOrderSettings) FoxKitPlugins.PreOrderSettings.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.PreOrderSettings?.locales?.[Shopify.locale]
+  </script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/sales-pop.js' fetchpriority='low' defer='defer'></script>
+<script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cart-countdown.js' fetchpriority='low' defer='defer'></script>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TQD9RJFT');</script>
+<script>(function(){if ("sendBeacon" in navigator && "performance" in window) {try {var session_token_from_headers = performance.getEntriesByType('navigation')[0].serverTiming.find(x => x.name == '_s').description;} catch {var session_token_from_headers = undefined;}var session_cookie_matches = document.cookie.match(/_shopify_s=([^;]*)/);var session_token_from_cookie = session_cookie_matches && session_cookie_matches.length === 2 ? session_cookie_matches[1] : "";var session_token = session_token_from_headers || session_token_from_cookie || "";function handle_abandonment_event(e) {var entries = performance.getEntries().filter(function(entry) {return /monorail-edge.shopifysvc.com/.test(entry.name);});if (!window.abandonment_tracked && entries.length === 0) {window.abandonment_tracked = true;var currentMs = Date.now();var navigation_start = performance.timing.navigationStart;var payload = {shop_id: 23480105,url: window.location.href,navigation_start,duration: currentMs - navigation_start,session_token,page_type: "index"};window.navigator.sendBeacon("https://monorail-edge.shopifysvc.com/v1/produce", JSON.stringify({schema_id: "online_store_buyer_site_abandonment/1.1",payload: payload,metadata: {event_created_at_ms: currentMs,event_sent_at_ms: currentMs}}));}}window.addEventListener('pagehide', handle_abandonment_event);}}());</script>
+<script id="web-pixels-manager-setup">(function e(e,d,r,n,o){if(void 0===o&&(o={}),!Boolean(null===(a=null===(i=window.Shopify)||void 0===i?void 0:i.analytics)||void 0===a?void 0:a.replayQueue)){var i,a;window.Shopify=window.Shopify||{};var t=window.Shopify;t.analytics=t.analytics||{};var s=t.analytics;s.replayQueue=[],s.publish=function(e,d,r){return s.replayQueue.push([e,d,r]),!0};try{self.performance.mark("wpm:start")}catch(e){}var l=function(){var e={modern:/Edge?\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Firefox\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Chrom(ium|e)\/(9{2}|\d{3,})\.\d+(\.\d+|)|(Maci|X1{2}).+ Version\/(15\.\d+|(1[6-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(9{2}|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(15[._]\d+|(1[6-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|SamsungBrowser\/([2-9]\d|\d{3,})\.\d+/,legacy:/Edge?\/(1[6-9]|[2-9]\d|\d{3,})\.\d+(\.\d+|)|Firefox\/(5[4-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)|Chrom(ium|e)\/(5[1-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)([\d.]+$|.*Safari\/(?![\d.]+ Edge\/[\d.]+$))|(Maci|X1{2}).+ Version\/(10\.\d+|(1[1-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(3[89]|[4-9]\d|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(10[._]\d+|(1[1-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Mobile Safari.+OPR\/([89]\d|\d{3,})\.\d+\.\d+|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?(15\.([5-9]|\d{2,})|(1[6-9]|[2-9]\d|\d{3,})\.\d+)\.\d+|SamsungBrowser\/(5\.\d+|([6-9]|\d{2,})\.\d+)|Android.+MQ{2}Browser\/(14(\.(9|\d{2,})|)|(1[5-9]|[2-9]\d|\d{3,})(\.\d+|))(\.\d+|)|K[Aa][Ii]OS\/(3\.\d+|([4-9]|\d{2,})\.\d+)(\.\d+|)/},d=e.modern,r=e.legacy,n=navigator.userAgent;return n.match(d)?"modern":n.match(r)?"legacy":"unknown"}(),u="modern"===l?"modern":"legacy",c=(null!=n?n:{modern:"",legacy:""})[u],f=function(e){return[e.baseUrl,"/wpm","/b",e.hashVersion,"modern"===e.buildTarget?"m":"l",".js"].join("")}({baseUrl:d,hashVersion:r,buildTarget:u}),m=function(e){var d=e.version,r=e.bundleTarget,n=e.surface,o=e.pageUrl,i=e.monorailEndpoint;return{emit:function(e){var a=e.status,t=e.errorMsg,s=(new Date).getTime(),l=JSON.stringify({metadata:{event_sent_at_ms:s},events:[{schema_id:"web_pixels_manager_load/3.1",payload:{version:d,bundle_target:r,page_url:o,status:a,surface:n,error_msg:t},metadata:{event_created_at_ms:s}}]});if(!i)return console&&console.warn&&console.warn("[Web Pixels Manager] No Monorail endpoint provided, skipping logging."),!1;try{return self.navigator.sendBeacon.bind(self.navigator)(i,l)}catch(e){}var u=new XMLHttpRequest;try{return u.open("POST.html",i,!0),u.setRequestHeader("Content-Type","text/plain"),u.send(l),!0}catch(e){return console&&console.warn&&console.warn("[Web Pixels Manager] Got an unhandled error while logging to Monorail."),!1}}}}({version:r,bundleTarget:l,surface:e.surface,pageUrl:self.location.href,monorailEndpoint:e.monorailEndpoint});try{o.browserTarget=l,function(e){var d=e.src,r=e.async,n=void 0===r||r,o=e.onload,i=e.onerror,a=e.sri,t=e.scriptDataAttributes,s=void 0===t?{}:t,l=document.createElement("script"),u=document.querySelector("head"),c=document.querySelector("body");if(l.async=n,l.src=d,a&&(l.integrity=a,l.crossOrigin="anonymous"),s)for(var f in s)if(Object.prototype.hasOwnProperty.call(s,f))try{l.dataset[f]=s[f]}catch(e){}if(o&&l.addEventListener("load",o),i&&l.addEventListener("error",i),u)u.appendChild(l);else{if(!c)throw new Error("Did not find a head or body element to append the script");c.appendChild(l)}}({src:f,async:!0,onload:function(){if(!function(){var e,d;return Boolean(null===(d=null===(e=window.Shopify)||void 0===e?void 0:e.analytics)||void 0===d?void 0:d.initialized)}()){var d=window.webPixelsManager.init(e)||void 0;if(d){var r=window.Shopify.analytics;r.replayQueue.forEach((function(e){var r=e[0],n=e[1],o=e[2];d.publishCustomEvent(r,n,o)})),r.replayQueue=[],r.publish=d.publishCustomEvent,r.visitor=d.visitor,r.initialized=!0}}},onerror:function(){return m.emit({status:"failed",errorMsg:"".concat(f," has failed to load")})},sri:function(e){var d=/^sha384-[A-Za-z0-9+/=]+$/;return"string"==typeof e&&d.test(e)}(c)?c:"",scriptDataAttributes:o}),m.emit({status:"loading"})}catch(e){m.emit({status:"failed",errorMsg:(null==e?void 0:e.message)||"Unknown error"})}}})({shopId: 23480105,storefrontBaseUrl: "https://fashion.minimog.co",extensionsBaseUrl: "https://extensions.shopifycdn.com/cdn/shopifycloud/web-pixels-manager",monorailEndpoint: "https://monorail-edge.shopifysvc.com/unstable/produce_batch",surface: "storefront-renderer",enabledBetaFlags: ["2dca8a86","a0d5f9d2"],webPixelsConfigList: [{"id":"33718377","configuration":"{\"accountID\":\"82f25811-b8d7-463e-980a-687c6e4ebc88\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"d0369370d97f2cca6d5c273406637796","type":"APP","apiClientId":5433881,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"31326313","configuration":"{\"accountID\":\"2de2ed03-0af8-4fa2-a602-a56f522d5573\",\"configs\":\"foxify,420dde02-66e0-4e84-a285-abcd1bbc3790,https:\/\/tracking.foxecom.app\/track\/batch\",\"appType\":\"production\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"22c5c1aa7eb30e90f9586cff580af32a","type":"APP","apiClientId":12239405057,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"shopify-app-pixel","configuration":"{}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"APP","privacyPurposes":["ANALYTICS","MARKETING"]},{"id":"shopify-custom-pixel","eventPayloadVersion":"v1","runtimeContext":"LAX","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"CUSTOM","privacyPurposes":["ANALYTICS","MARKETING"]}],isMerchantRequest: false,initData: {"shop":{"name":"SMal Couture","paymentSettings":{"currencyCode":"USD"},"myshopifyDomain":"simplestjewelry.myshopify.com","countryCode":"US","storefrontUrl":"https:\/\/fashion.minimog.co"},"customer":null,"cart":null,"checkout":null,"productVariants":[],"purchasingCompany":null},},"cdn.html","7cecd0b6w90c54c6cpe92089d5m57a67346",{"modern":"","legacy":""},{"shopId":"23480105","storefrontBaseUrl":"https:\/\/fashion.minimog.co","extensionBaseUrl":"https:\/\/extensions.shopifycdn.com\/cdn\/shopifycloud\/web-pixels-manager","surface":"storefront-renderer","enabledBetaFlags":"[\"2dca8a86\", \"a0d5f9d2\"]","isMerchantRequest":"false","hashVersion":"7cecd0b6w90c54c6cpe92089d5m57a67346","publish":"custom","events":"[[\"page_viewed\",{}]]"});</script>
+<script>
+  window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+  window.ShopifyAnalytics.meta.currency = 'USD';
+  var meta = {"page":{"pageType":"home","requestId":"00e806e2-913f-49dd-b8c6-e988850536f4-1768196408"}};
+  for (var attr in meta) {
+    window.ShopifyAnalytics.meta[attr] = meta[attr];
+  }
+</script>
+<script class="analytics">
+  (function () {
+    var customDocumentWrite = function(content) {
+      var jquery = null;
+
+      if (window.jQuery) {
+        jquery = window.jQuery;
+      } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+      }
+
+      if (jquery) {
+        jquery('body').append(content);
+      }
+    };
+
+    var hasLoggedConversion = function(token) {
+      if (token) {
+        return document.cookie.indexOf('loggedConversion=' + token) !== -1;
+      }
+      return false;
+    }
+
+    var setCookieIfConversion = function(token) {
+      if (token) {
+        var twoMonthsFromNow = new Date(Date.now());
+        twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+
+        document.cookie = 'loggedConversion=' + token + '; expires=' + twoMonthsFromNow;
+      }
+    }
+
+    window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+    var trekkie = window.ShopifyAnalytics.lib = window.trekkie = window.trekkie || [];
+    if (trekkie.integrations) {
+      return;
+    }
+    trekkie.methods = [
+      'identify',
+      'page',
+      'ready',
+      'track',
+      'trackForm',
+      'trackLink'
+    ];
+    trekkie.factory = function(method) {
+      return function() {
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(method);
+        trekkie.push(args);
+        return trekkie;
+      };
+    };
+    for (var i = 0; i < trekkie.methods.length; i++) {
+      var key = trekkie.methods[i];
+      trekkie[key] = trekkie.factory(key);
+    }
+    trekkie.load = function(config) {
+      trekkie.config = config || {};
+      trekkie.config.initialDocumentCookie = document.cookie;
+      var first = document.getElementsByTagName('script')[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.onerror = function(e) {
+        var scriptFallback = document.createElement('script');
+        scriptFallback.type = 'text/javascript';
+        scriptFallback.onerror = function(error) {
+                var Monorail = {
+      produce: function produce(monorailDomain, schemaId, payload) {
+        var currentMs = new Date().getTime();
+        var event = {
+          schema_id: schemaId,
+          payload: payload,
+          metadata: {
+            event_created_at_ms: currentMs,
+            event_sent_at_ms: currentMs
+          }
+        };
+        return Monorail.sendRequest("https://" + monorailDomain + "/v1/produce", JSON.stringify(event));
+      },
+      sendRequest: function sendRequest(endpointUrl, payload) {
+        // Try the sendBeacon API
+        if (window && window.navigator && typeof window.navigator.sendBeacon === 'function' && typeof window.Blob === 'function' && !Monorail.isIos12()) {
+          var blobData = new window.Blob([payload], {
+            type: 'text/plain'
+          });
+
+          if (window.navigator.sendBeacon(endpointUrl, blobData)) {
+            return true;
+          } // sendBeacon was not successful
+
+        } // XHR beacon
+
+        var xhr = new XMLHttpRequest();
+
+        try {
+          xhr.open('POST.html', endpointUrl);
+          xhr.setRequestHeader('Content-Type', 'text/plain');
+          xhr.send(payload);
+        } catch (e) {
+          console.log(e);
+        }
+
+        return false;
+      },
+      isIos12: function isIos12() {
+        return window.navigator.userAgent.lastIndexOf('iPhone; CPU iPhone OS 12_') !== -1 || window.navigator.userAgent.lastIndexOf('iPad; CPU OS 12_') !== -1;
+      }
+    };
+    Monorail.produce('monorail-edge.shopifysvc.com',
+      'trekkie_storefront_load_errors/1.1',
+      {shop_id: 23480105,
+      theme_id: 126026973289,
+      app_name: "storefront",
+      context_url: window.location.href,
+      source_url: "//fashion.minimog.co/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js"});
+
+        };
+        scriptFallback.async = true;
+        scriptFallback.src = '/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js';
+        first.parentNode.insertBefore(scriptFallback, first);
+      };
+      script.async = true;
+      script.src = '/cdn/s/trekkie.storefront.05c509f133afcfb9f2a8aef7ef881fd109f9b92e.min.js';
+      first.parentNode.insertBefore(script, first);
+    };
+    trekkie.load(
+      {"Trekkie":{"appName":"storefront","development":false,"defaultAttributes":{"shopId":23480105,"isMerchantRequest":null,"themeId":126026973289,"themeCityHash":"3595513633792165589","contentLanguage":"en","currency":"USD","eventMetadataId":"920a4484-c5a2-4013-a1fc-dd39eabb9f31"},"isServerSideCookieWritingEnabled":true,"monorailRegion":"shop_domain","enabledBetaFlags":["65f19447"]},"Session Attribution":{},"S2S":{"facebookCapiEnabled":false,"source":"trekkie-storefront-renderer","apiClientId":580111}}
+    );
+
+    var loaded = false;
+    trekkie.ready(function() {
+      if (loaded) return;
+      loaded = true;
+
+      window.ShopifyAnalytics.lib = window.trekkie;
+
+      var originalDocumentWrite = document.write;
+      document.write = customDocumentWrite;
+      try { window.ShopifyAnalytics.merchantGoogleAnalytics.call(this); } catch(error) {};
+      document.write = originalDocumentWrite;
+
+      window.ShopifyAnalytics.lib.page(null,{"pageType":"home","requestId":"00e806e2-913f-49dd-b8c6-e988850536f4-1768196408","shopifyEmitted":true});
+
+      var match = window.location.pathname.match(/checkouts\/(.+)\/(thank_you|post_purchase)/)
+      var token = match? match[1]: undefined;
+      if (!hasLoggedConversion(token)) {
+        setCookieIfConversion(token);
+        
+      }
+    });
+
+
+        /* Disabled for localhost - causes Failed to fetch
+        var eventsListenerScript = document.createElement('script');
+        eventsListenerScript.async = true;
+        eventsListenerScript.src = "/cdn/shopifycloud/storefront/assets/shop_events_listener-3da45d37.js";
+        document.getElementsByTagName('head')[0].appendChild(eventsListenerScript);
+        */
+
+})();</script>
+<!-- Disabled for localhost - perf-kit causes Failed to fetch
+<script
+  defer
+  src="/cdn/shopifycloud/perf-kit/shopify-perf-kit-3.0.3.min.js"
+  data-application="storefront-renderer"
+  data-shop-id="23480105"
+  data-render-region="gcp-asia-southeast1"
+  data-page-type="index"
+  data-theme-instance-id="126026973289"
+  data-theme-name="Minimog - OS 2.0"
+  data-theme-version="5.6.0"
+  data-monorail-region="shop_domain"
+  data-resource-timing-sampling-rate="10"
+  data-shs="true"
+  data-shs-beacon="true"
+  data-shs-export-with-fetch="true"
+  data-shs-logs-sample-rate="1"
+  data-shs-beacon-endpoint="https://fashion.minimog.co/api/collect"
+></script>
+-->
+<script src="/cdn/shop/t/10/assets/mega-menua290.js?v=171931932604055704821726281364" defer="defer"></script>
+<!-- Loaded after React renders (see src/App.js) -->
+<!-- <script src="/cdn/shop/t/10/assets/header97d1.js?v=139348793745598728721720077267" defer="defer"></script> -->
+<script src="/cdn/shop/t/10/assets/localization-form8ad6.js?v=78680935164192769481720077264" defer="defer"></script>
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "SMal Couture",
+    
+      
+      "logo": "https:\/\/fashion.minimog.co\/cdn\/shop\/files\/logo_a3f90005-86fb-4996-8c21-b46c5011524e.png?v=1709089146\u0026width=512",
+    
+    "sameAs": [
+      "https:\/\/twitter.com\/",
+      "zh.html\/\/facebook.com\/",
+      "zh.html\/\/www.pinterest.com\/",
+      "zh.html\/\/instagram.com\/",
+      "",
+      "zh.html\/\/www.snapchat.com\/",
+      "zh.html\/\/www.youtube.com\/",
+      ""
+    ],
+    "url": "https:\/\/fashion.minimog.co"
+  }
+</script>
+
+
+<style data-shopify>
+  :root {
+    --logo-width-desktop: 145px;
+    --logo-width-mobile: 110px;
+    --logo-width-sticky: 145px;
+    --logo-height-sticky: 43.046875px;
+    --header-transparent-text-color: 255, 255, 255;
+  }
+</style>
+<script>
+  // Set header height
+  var _mh = document.querySelector('header.m-header__mobile');
+  var _dh = document.querySelector('header.m-header__desktop');
+
+  function _shh() {
+    if (!_mh || !_dh) {
+      _mh = document.querySelector('header.m-header__mobile');
+      _dh = document.querySelector('header.m-header__desktop');
+    }
+    // Header
+    var _hd = window.innerWidth < 1024 ? _mh : _dh;
+    if (_hd) {
+      document.documentElement.style.setProperty('--m-header-height', _hd.offsetHeight + 'px');
+      window.MinimogSettings.headerHeight = _hd.offsetHeight;
+    }
+  }
+  // setTopbarHeight
+  function _stbh() {
+    // Topbar
+    var _tb = document.querySelector('.m-topbar');
+    if (_tb) {
+      document.documentElement.style.setProperty('--m-topbar-height', _tb.offsetHeight + 'px');
+      window.MinimogSettings.topbarHeight = _tb.offsetHeight;
+    }
+  }
+
+  // setAnnouncementbarHeight
+  function _sabh() {
+    var _ab = document.querySelector('m-announcement-bar');
+    if (_ab) {
+      document.documentElement.style.setProperty('--m-announcement-height', _ab.offsetHeight + 'px');
+      window.MinimogSettings.topbarHeight = _ab.offsetHeight;
+    }
+  }
+
+  // Calc all height
+  function _calcHeights() {
+    _stbh();
+    _shh();
+    _sabh();
+  }
+  _calcHeights();
+  document.addEventListener('matchTablet', () => {
+    _calcHeights();
+  });
+  document.addEventListener('unmatchTablet', () => {
+    _calcHeights();
+  });
+
+  if (Shopify.designMode) {
+    document.addEventListener('shopify:section:load', function (event) {
+      const header = document.querySelector('m-header');
+      if (typeof Megamenu !== 'undefined' && header) {
+        const megaMenu = new Megamenu(header);
+      }
+    });
+  }
+</script>
+<link href="/cdn/shop/t/10/assets/slideshowbfb0.css?v=45729299094500379561720077268" rel="stylesheet" type="text/css" media="all" />
+<script src="/cdn/shop/t/10/assets/slideshowf9ec.js?v=86327022826848000481720077216" defer="defer"></script>
+
+<style> #shopify-section-sections--15265868120169__annoucement .m-announcement-bar__container {--container-width: 600px;} </style>
+<script>
+      var announcementClose = document.querySelector('.m-announcement-bar__close');
+      if (announcementClose) {
+        announcementClose.addEventListener('click', function () {
+          var bar = document.querySelector('.m-announcement-bar');
+          if (bar) bar.remove();
+          document.documentElement.style.setProperty('--m-announcement-height', '0px');
+        });
+      }
+    </script>
+  
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": "SMal Couture",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https:\/\/fashion.minimog.co\/zh\/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "url": "https:\/\/fashion.minimog.co"
+    }
+  </script>
+
+<script defer src="/static/js/bundle.js"></script></head>
+<body
+    id="m-theme"
+    class="template-index  m-gradient m-color-default m:overflow-hidden"
+    
+  >
+  <script>
+    // Stub for Shopify/web pixels so theme scripts don't throw "undefined is not an object (evaluating 'window.webPixelsManager.init')"
+    window.webPixelsManager = window.webPixelsManager || { init: function() {} };
+  </script>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <!-- kept SEO scripts -->
+  <script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "rbvtr",
+    
+      
+      "logo": "https:\/\/fashion.minimog.co\/cdn\/shop\/files\/logo_a3f90005-86fb-4996-8c21-b46c5011524e.png?v=1709089146\u0026width=512",
+    
+    "sameAs": [
+      "https:\/\/twitter.com\/",
+      "index.html\/\/facebook.com\/",
+      "index.html\/\/www.pinterest.com\/",
+      "index.html\/\/instagram.com\/",
+      "",
+      "index.html\/\/www.snapchat.com\/",
+      "index.html\/\/www.youtube.com\/",
+      ""
+    ],
+    "url": "https:\/\/fashion.minimog.co"
+  }
+</script><script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": "SMal Couture",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https:\/\/fashion.minimog.co\/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "url": "https:\/\/fashion.minimog.co"
+    }
+  </script>
+</body>
+</html>

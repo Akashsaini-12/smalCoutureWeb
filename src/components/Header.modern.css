@@ -1,0 +1,227 @@
+/* Modern header skin — scoped under .header-modern; behavior unchanged */
+
+.header-modern {
+  --hdr-modern-radius: 12px;
+  --hdr-modern-icon-size: 42px;
+  --hdr-modern-muted: rgba(var(--color-foreground), 0.55);
+}
+
+/* ── Bar (mobile + desktop) ───────────────────────────────────────── */
+.header-modern > .m-header__mobile,
+.header-modern > .m-header__desktop {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+.header-modern > .m-header__mobile {
+  min-height: 56px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.header-modern .m-header__mobile-right {
+  gap: 2px;
+  align-items: center;
+}
+
+.header-modern .m-header__inner {
+  min-height: 72px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/* Primary nav — clearer hover, calmer type */
+.header-modern .m-menu__link--main {
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.header-modern .m-menu__item--parent:hover .m-menu__link--main,
+.header-modern .m-menu__item--active .m-menu__link--main {
+  background-color: rgba(var(--color-foreground), 0.05);
+}
+
+.header-modern .m-menu__arrow svg {
+  opacity: 0.65;
+}
+
+/* Icon actions — pill hover, consistent targets */
+.header-modern .m-header__account,
+.header-modern .m-header__wishlist,
+.header-modern .m-header__orders,
+.header-modern .m-cart-icon-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--hdr-modern-icon-size);
+  min-height: var(--hdr-modern-icon-size);
+  margin: 0 2px;
+  padding: 0 !important;
+  border-radius: var(--hdr-modern-radius);
+  border: none;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  transition: background-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+.header-modern .m-header__account:hover,
+.header-modern .m-header__wishlist:hover,
+.header-modern .m-header__orders:hover,
+.header-modern .m-cart-icon-bubble:hover {
+  background-color: rgba(var(--color-foreground), 0.07);
+}
+
+.header-modern .m-header__account:active,
+.header-modern .m-header__wishlist:active,
+.header-modern .m-header__orders:active,
+.header-modern .m-cart-icon-bubble:active {
+  transform: scale(0.96);
+}
+
+.header-modern .m-svg-icon--medium {
+  width: 22px;
+  height: 22px;
+}
+
+/* Hamburger — subtle hover */
+.header-modern .m-hamburger-box {
+  border-radius: var(--hdr-modern-radius);
+  transition: background-color 0.2s ease;
+}
+
+.header-modern .m-hamburger-box:hover {
+  background-color: rgba(var(--color-foreground), 0.06);
+}
+
+/* Logo breathing room */
+.header-modern .m-header-logo--compact-mobile,
+.header-modern .m-header-logo--compact-deskto {
+  object-fit: contain;
+}
+
+.header-modern .m-logo--mobile .m-header-logo--compact-mobile {
+  max-height: 44px;
+  width: auto;
+}
+
+.header-modern .m-header__center .m-header-logo--compact-deskto {
+  max-height: 48px;
+  width: auto;
+}
+
+/* Mega dropdown panel */
+.header-modern .m-mega-menu {
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.12);
+}
+
+.header-modern .m-mega-menu__inner {
+  padding-top: 8px;
+  padding-bottom: 28px;
+}
+
+/* Mobile drawer */
+.header-modern .m-menu-drawer.open .m-menu-drawer__backdrop {
+  background-color: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.header-modern .m-menu-drawer__wrapper {
+  max-width: min(420px, 100%);
+  border-radius: 0 20px 20px 0;
+  box-shadow: 8px 0 40px rgba(0, 0, 0, 0.08);
+}
+
+.header-modern .m-menu-drawer__content {
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.header-modern .m-menu-mobile__item > a {
+  padding: 14px 20px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: 0;
+}
+
+.header-modern .m-menu-mobile__link span {
+  transition: color 0.15s ease;
+}
+
+.header-modern .m-menu-mobile__item > a:hover span {
+  color: rgb(var(--color-foreground));
+}
+
+.header-modern .m-menu-mobile__toggle-button {
+  border-radius: 10px;
+  margin-right: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.header-modern .m-menu-mobile__toggle-button:hover {
+  background-color: rgba(var(--color-foreground), 0.06);
+}
+
+.header-modern .m-menu-mobile__back-button {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 16px;
+  padding: 18px 0;
+  border-radius: 0;
+}
+
+.header-modern .m-menu-customer {
+  border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.header-modern .m-menu-customer__label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hdr-modern-muted);
+  margin-bottom: 4px;
+}
+
+.header-modern .m-menu-customer .m-button {
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.header-modern .m-menu-customer .m-button:active {
+  transform: scale(0.98);
+}
+
+/* Cart count bubble */
+.header-modern m-cart-count.m-cart-count-bubble {
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgb(var(--color-background));
+}
+
+/* Profile avatar trigger (desktop) */
+.header-modern-profile-trigger {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.header-modern-profile-trigger:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.header-modern-profile-trigger:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline-offset: 2px;
+}

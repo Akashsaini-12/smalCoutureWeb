@@ -1,0 +1,1979 @@
+
+<collection-filters-form class="m-collection-filters-form m-filter--widget">
+  <form id="CollectionFiltersForm"><div class="m:hidden" data-form-sorting><select name="sort_by" aria-describedby="a11y-refresh-page-message"><option
+              value="manual"
+              
+              data-index="0"
+            >
+              Featured
+            </option><option
+              value="best-selling"
+              
+                selected="selected"
+              
+              data-index="1"
+            >
+              Best selling
+            </option><option
+              value="title-ascending"
+              
+              data-index="2"
+            >
+              Alphabetically, A-Z
+            </option><option
+              value="title-descending"
+              
+              data-index="3"
+            >
+              Alphabetically, Z-A
+            </option><option
+              value="price-ascending"
+              
+              data-index="4"
+            >
+              Price, low to high
+            </option><option
+              value="price-descending"
+              
+              data-index="5"
+            >
+              Price, high to low
+            </option><option
+              value="created-ascending"
+              
+              data-index="6"
+            >
+              Date, old to new
+            </option><option
+              value="created-descending"
+              
+              data-index="7"
+            >
+              Date, new to old
+            </option></select>
+      </div>
+
+      
+          <div class="m-filter--widget m-accordion--item open" data-index="1">
+            <div class="m-filter--widget-title h5 m-accordion--item-button ">
+              <span>Availability</span>
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="m-filter--widget-content m-accordion--item-content" style="opacity: 1;">
+              <ul
+                class="m-facets m-filter--scroll-content m-scrollbar--vertical"
+                role="list"
+                style="--max-height: 300px;"
+              ><li class="m-facet--item">
+                      <label
+                        for="Filter-Availability-1"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.availability"
+                          value="1"
+                          id="Filter-Availability-1"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">In stock</span><span class="m-facet--product-count">(204)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Availability-2"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.availability"
+                          value="0"
+                          id="Filter-Availability-2"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Out of stock</span><span class="m-facet--product-count">(26)</span></label>
+                    </li></ul>
+            </div>
+          </div>
+        
+
+
+      
+          <div class="m-filter--widget m-accordion--item " data-index="2">
+            <div class="m-filter--widget-title h5 m-accordion--item-button ">
+              <span>Product type</span>
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="m-filter--widget-content m-accordion--item-content" >
+              <ul
+                class="m-facets m-filter--scroll-content m-scrollbar--vertical"
+                role="list"
+                style="--max-height: 300px;"
+              ><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-1"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Accessories &amp; Bags"
+                          id="Filter-Product type-1"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Accessories &amp; Bags</span><span class="m-facet--product-count">(8)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-2"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Outwear"
+                          id="Filter-Product type-2"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Outwear</span><span class="m-facet--product-count">(7)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-3"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Pants"
+                          id="Filter-Product type-3"
+                         / 
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Pants</span><span class="m-facet--product-count">(7)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-4"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Polo"
+                          id="Filter-Product type-4"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Polo</span><span class="m-facet--product-count">(4)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-5"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Shirts"
+                          id="Filter-Product type-5"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Shirts</span><span class="m-facet--product-count">(11)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-6"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Shoes"
+                          id="Filter-Product type-6"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Shoes</span><span class="m-facet--product-count">(3)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-7"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Shorts"
+                          id="Filter-Product type-7"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Shorts</span><span class="m-facet--product-count">(8)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-8"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Sweaters"
+                          id="Filter-Product type-8"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Sweaters</span><span class="m-facet--product-count">(4)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-9"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="T-Shirts"
+                          id="Filter-Product type-9"
+                        /  
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">T-Shirts</span><span class="m-facet--product-count">(10)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Product type-10"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.product_type"
+                          value="Video"
+                          id="Filter-Product type-10"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Video</span><span class="m-facet--product-count">(1)</span></label>
+                    </li></ul>
+            </div>
+          </div>
+        
+
+
+      
+<div class="m-filter--widget m-accordion--item open" data-index="3">
+            <div class="m-filter--widget-title h5 m-accordion--item-button">
+              Price
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            {/* <div class="m-filter--widget-content m-accordion--item-content" style="opacity: 1;">
+              <price-range
+                class="m-facets-price"
+                style="--from: 0.0%; --to: 100.0%;"
+              >
+                <div class="m-facets-price--ranges">
+                  <input
+                    class="m-facets-price--range m-facets-price--range-min"
+                    type="range"
+                    min="0"
+                    max="350"
+                    step="1"
+                    value="0"
+                  >
+                  <input
+                    class="m-facets-price--range m-facets-price--range-max"
+                    type="range"
+                    min="0"
+                    max="350"
+                    step="1"
+                    value="350"
+                  >
+                </div>
+                <div class="m-facets-price--input">
+                  <div class="m-facets-price--field">
+                    <span class="m:visually-hidden">From</span>
+                    <span class="m-facets-price--field-currency">$</span>
+                    <input
+                      class="form-field form-field--input m:text-right"
+                      type="number"
+                      inputmode="numeric"
+                      name="filter.v.price.gte"
+                      autocomplete="off"
+                      placeholder="0"
+                      min="0"
+                      max="350"
+                   step="1"
+                      /
+                    >
+                  </div>
+                  <span class="m-facets-price--to">To</span>
+                  <div class="m-facets-price--field">
+                    <span class="m:visually-hidden">To</span>
+                    <span class="m-facets-price--field-currency">$</span>
+                    <input
+                      class="form-field form-field--input m:text-right"
+                      type="number"
+                      inputmode="numeric"
+                      name="filter.v.price.lte"
+                      autocomplete="off"
+                      placeholder="350"
+                      min="0"
+                      max="350"
+                      step="1"
+                      /
+                    >
+                  </div>
+                </div>
+              </price-range>
+            </div> */}
+          </div>
+      
+
+
+      
+          <div class="m-filter--widget m-accordion--item open" data-index="4">
+            <div class="m-filter--widget-title h5 m-accordion--item-button ">
+              <span>Color</span>
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="m-filter--widget-content m-accordion--item-content" style="opacity: 1;">
+              <ul
+                class="m-facets m-filter--scroll-content m-scrollbar--vertical m-filter--swatches m-filter--swatches-list"
+                role="list"
+                style="--max-height: 300px;"
+              >
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-1"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Beige"
+                            class="m:visually-hidden"
+                            id="Filter-Color-1"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #ebe6db; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Beige</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Beige<span class="m-facet--product-count">(6)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-2"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Black"
+                            class="m:visually-hidden"
+                            id="Filter-Color-2"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #000000; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Black</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Black<span class="m-facet--product-count">(50)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-3"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Blue"
+                            class="m:visually-hidden"
+                            id="Filter-Color-3"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #8db4d2; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Blue</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Blue<span class="m-facet--product-count">(8)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-4"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Brown"
+                            class="m:visually-hidden"
+                            id="Filter-Color-4"
+                            
+                         /   
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #836953; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Brown</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Brown<span class="m-facet--product-count">(21)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-5"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Charcoal"
+                            class="m:visually-hidden"
+                            id="Filter-Color-5"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #8b8b8b; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Charcoal</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Charcoal<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-6"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Coca"
+                            class="m:visually-hidden"
+                            id="Filter-Color-6"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #c7babd; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Coca</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Coca<span class="m-facet--product-count">(3)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-7"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Cream"
+                            class="m:visually-hidden"
+                            id="Filter-Color-7"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #f1f2e2; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Cream</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Cream<span class="m-facet--product-count">(11)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-8"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Dark Blue"
+                            class="m:visually-hidden"
+                            id="Filter-Color-8"
+                           / 
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #063e66; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Dark Blue</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Dark Blue<span class="m-facet--product-count">(6)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-9"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Dark Grey"
+                            class="m:visually-hidden"
+                            id="Filter-Color-9"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #aca69f; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Dark Grey</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Dark Grey<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-10"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Floral"
+                            class="m:visually-hidden"
+                            id="Filter-Color-10"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: floral; background-image: url(../cdn/shop/t/10/assets/filter_color3db90.html?17046); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Floral</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Floral<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-11"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Gingham"
+                            class="m:visually-hidden"
+                            id="Filter-Color-11"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: gingham; background-image: url(../cdn/shop/t/10/assets/filter_color150be.png?v=147458027895443808701708482571); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Gingham</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Gingham<span class="m-facet--product-count">(2)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-12"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Gold"
+                            class="m:visually-hidden"
+                            id="Filter-Color-12"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: gold; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Gold</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Gold<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-13"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Green"
+                            class="m:visually-hidden"
+                            id="Filter-Color-13"
+                         /   
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #c1e1c1; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Green</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Green<span class="m-facet--product-count">(3)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-14"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Grey"
+                            class="m:visually-hidden"
+                            id="Filter-Color-14"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #e0e0e0; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Grey</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Grey<span class="m-facet--product-count">(21)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-15"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Blue"
+                            class="m:visually-hidden"
+                            id="Filter-Color-15"
+                          /  
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #3c3c3c; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Blue</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Blue<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-16"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Cashew"
+                            class="m:visually-hidden"
+                            id="Filter-Color-16"
+                          /  
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #bdb59f; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Cashew</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Cashew<span class="m-facet--product-count">(3)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-17"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Charcoal"
+                            class="m:visually-hidden"
+                            id="Filter-Color-17"
+                          /  
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #8b8b8b; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Charcoal</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Charcoal<span class="m-facet--product-count">(2)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-18"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Green"
+                            class="m:visually-hidden"
+                            id="Filter-Color-18"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #534d36; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Green</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Green<span class="m-facet--product-count">(5)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-19"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Grey"
+                            class="m:visually-hidden"
+                            id="Filter-Color-19"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #555c62; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Grey</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Grey<span class="m-facet--product-count">(4)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-20"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Heathered Oat"
+                            class="m:visually-hidden"
+                            id="Filter-Color-20"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #d3c1aa; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Heathered Oat</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Heathered Oat<span class="m-facet--product-count">(4)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-21"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="heathered oat"
+                            class="m:visually-hidden"
+                            id="Filter-Color-21"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #d3c1aa; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">heathered oat</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">heathered oat<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-22"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Jean Blue"
+                            class="m:visually-hidden"
+                            id="Filter-Color-22"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #515d6d; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Jean Blue</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Jean Blue<span class="m-facet--product-count">(3)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-23"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Kalamata"
+                            class="m:visually-hidden"
+                            id="Filter-Color-23"
+                           / 
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #808487; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Kalamata</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Kalamata<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-24"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Lead"
+                            class="m:visually-hidden"
+                            id="Filter-Color-24"
+                            
+                          /  
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #6c6b6c; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Lead</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Lead<span class="m-facet--product-count">(2)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-25"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Light Blue"
+                            class="m:visually-hidden"
+                            id="Filter-Color-25"
+                            
+                         /   
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #b1c5d4; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Light Blue</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Light Blue<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-26"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Light Brown"
+                            class="m:visually-hidden"
+                            id="Filter-Color-26"
+                        /    
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #b5651d; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Light Brown</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Light Brown<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-27"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Light Pink"
+                            class="m:visually-hidden"
+                            id="Filter-Color-27"
+                           / 
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #fbcfcd; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Light Pink</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Light Pink<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-28"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Light Purple"
+                            class="m:visually-hidden"
+                            id="Filter-Color-28"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #c6aec7; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Light Purple</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Light Purple<span class="m-facet--product-count">(3)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-29"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Mint"
+                            class="m:visually-hidden"
+                            id="Filter-Color-29"
+                           / 
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #bedce3; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Mint</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Mint<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-30"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Navy"
+                            class="m:visually-hidden"
+                            id="Filter-Color-30"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #484d5b; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Navy</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Navy<span class="m-facet--product-count">(9)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-31"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Pale Grey"
+                            class="m:visually-hidden"
+                            id="Filter-Color-31"
+                           / 
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #878785; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Pale Grey</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Pale Grey<span class="m-facet--product-count">(2)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-32"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Pelican"
+                            class="m:visually-hidden"
+                            id="Filter-Color-32"
+                            
+                         /   
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #e1d6c5; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Pelican</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Pelican<span class="m-facet--product-count">(5)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-33"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Pink"
+                            class="m:visually-hidden"
+                            id="Filter-Color-33"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #ffd1dc; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Pink</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Pink<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-34"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Rose Gold"
+                            class="m:visually-hidden"
+                            id="Filter-Color-34"
+                            
+                          /  
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #ecc5c0; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Rose Gold</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Rose Gold<span class="m-facet--product-count">(2)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-35"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Rosy Brown"
+                            class="m:visually-hidden"
+                            id="Filter-Color-35"
+                         /   
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #c4a287; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Rosy Brown</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Rosy Brown<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-36"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Sand"
+                            class="m:visually-hidden"
+                            id="Filter-Color-36"
+                            
+                          /  
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #f2d2a9; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Sand</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Sand<span class="m-facet--product-count">(5)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-37"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Silver"
+                            class="m:visually-hidden"
+                            id="Filter-Color-37"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #eeeeef; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Silver</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Silver<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-38"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Slate Grey"
+                            class="m:visually-hidden"
+                            id="Filter-Color-38"
+                         /   
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #484d5b; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Slate Grey</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Slate Grey<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-39"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Tan"
+                            class="m:visually-hidden"
+                            id="Filter-Color-39"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #e9d1bf; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Tan</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Tan<span class="m-facet--product-count">(4)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-40"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Toasted Coconut"
+                            class="m:visually-hidden"
+                            id="Filter-Color-40"
+                            
+                            /
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #9c7b58; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Toasted Coconut</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Toasted Coconut<span class="m-facet--product-count">(4)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-41"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="White"
+                            class="m:visually-hidden"
+                            id="Filter-Color-41"
+                            /
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #ffffff; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">White</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">White<span class="m-facet--product-count">(29)</span></span
+                            >
+                          
+                        </label></li>
+                    <li class="m-facet--item m-facet--color"><label
+                          for="Filter-Color-42"
+                          class=""
+                        >
+                          <input
+                            type="checkbox"
+                            name="filter.v.option.color"
+                            value="Yellow"
+                            class="m:visually-hidden"
+                            id="Filter-Color-42"
+                         /   
+                            
+                          >
+                          <span
+                            class="m-facet--color-label m-bg-lazy"
+                            style="background-color: #fdda76; background-image: url(); background-size: cover;"
+                          >
+                            <span class="m:visually-hidden">Yellow</span>
+                          </span>
+                          
+                            <span class="m-facet--color-name">Yellow<span class="m-facet--product-count">(1)</span></span
+                            >
+                          
+                        </label></li></ul>
+            </div>
+          </div>
+        
+
+
+      
+          <div class="m-filter--widget m-accordion--item " data-index="5">
+            <div class="m-filter--widget-title h5 m-accordion--item-button ">
+              <span>Size</span>
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="m-filter--widget-content m-accordion--item-content" >
+              <ul
+                class="m-facets m-filter--scroll-content m-scrollbar--vertical"
+                role="list"
+                style="--max-height: 300px;"
+              ><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-1"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="S"
+                          id="Filter-Size-1"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">S</span><span class="m-facet--product-count">(11)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-2"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="Small"
+                          id="Filter-Size-2"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Small</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-3"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="M"
+                          id="Filter-Size-3"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">M</span><span class="m-facet--product-count">(12)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-4"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="Medium"
+                          id="Filter-Size-4"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Medium</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-5"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="L"
+                          id="Filter-Size-5"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">L</span><span class="m-facet--product-count">(12)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-6"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="Large"
+                          id="Filter-Size-6"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Large</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-7"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="XL"
+                          id="Filter-Size-7"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">XL</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-8"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="XXL"
+                          id="Filter-Size-8"
+                         / 
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">XXL</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-9"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="35"
+                          id="Filter-Size-9"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">35</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-10"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="36"
+                          id="Filter-Size-10"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">36</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-11"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="37"
+                          id="Filter-Size-11"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">37</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-12"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="38"
+                          id="Filter-Size-12"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">38</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-13"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="39"
+                          id="Filter-Size-13"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">39</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-14"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="40"
+                          id="Filter-Size-14"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">40</span><span class="m-facet--product-count">(2)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-15"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="41"
+                          id="Filter-Size-15"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">41</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Size-16"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.v.option.size"
+                          value="X"
+                          id="Filter-Size-16"
+                         / 
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">X</span><span class="m-facet--product-count">(1)</span></label>
+                    </li></ul>
+            </div>
+          </div>
+        
+
+
+      
+          <div class="m-filter--widget m-accordion--item " data-index="6">
+            <div class="m-filter--widget-title h5 m-accordion--item-button ">
+              <span>Brand</span>
+              <span class="m-accordion--item-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5306 6.53073L8.5306 11.5307C8.46092 11.6007 8.37813 11.6561 8.28696 11.694C8.1958 11.7318 8.09806 11.7513 7.99935 11.7513C7.90064 11.7513 7.8029 11.7318 7.71173 11.694C7.62057 11.6561 7.53778 11.6007 7.4681 11.5307L2.4681 6.53073C2.3272 6.38984 2.24805 6.19874 2.24805 5.99948C2.24805 5.80023 2.3272 5.60913 2.4681 5.46823C2.60899 5.32734 2.80009 5.24818 2.99935 5.24818C3.19861 5.24818 3.3897 5.32734 3.5306 5.46823L7.99997 9.93761L12.4693 5.46761C12.6102 5.32671 12.8013 5.24756 13.0006 5.24756C13.1999 5.24756 13.391 5.32671 13.5318 5.46761C13.6727 5.60851 13.7519 5.7996 13.7519 5.99886C13.7519 6.19812 13.6727 6.38921 13.5318 6.53011L13.5306 6.53073Z" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="m-filter--widget-content m-accordion--item-content" >
+              <ul
+                class="m-facets m-filter--scroll-content m-scrollbar--vertical"
+                role="list"
+                style="--max-height: 300px;"
+              ><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-1"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Bags"
+                          id="Filter-Brand-1"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Bags</span><span class="m-facet--product-count">(33)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-2"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Foxecom"
+                          id="Filter-Brand-2"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Foxecom</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-3"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Minimog"
+                          id="Filter-Brand-3"
+                        /  
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Minimog</span><span class="m-facet--product-count">(7)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-4"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Minimog Fashion Store"
+                          id="Filter-Brand-4"
+                         / 
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Minimog Fashion Store</span><span class="m-facet--product-count">(49)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-5"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Minimog NEXT demo"
+                          id="Filter-Brand-5"
+                          
+                         / 
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Minimog NEXT demo</span><span class="m-facet--product-count">(59)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-6"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Outwears"
+                          id="Filter-Brand-6"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Outwears</span><span class="m-facet--product-count">(5)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-7"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Pants"
+                          id="Filter-Brand-7"
+                          
+                          /
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Pants</span><span class="m-facet--product-count">(11)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-8"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Shoes"
+                          id="Filter-Brand-8"
+                          
+                         / 
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Shoes</span><span class="m-facet--product-count">(9)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-9"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Shorts"
+                          id="Filter-Brand-9"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Shorts</span><span class="m-facet--product-count">(1)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-10"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Sunglasses"
+                          id="Filter-Brand-10"
+                        /  
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Sunglasses</span><span class="m-facet--product-count">(5)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-11"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Sweaters"
+                          id="Filter-Brand-11"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Sweaters</span><span class="m-facet--product-count">(11)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-12"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Tops"
+                          id="Filter-Brand-12"
+                          /
+                          
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Tops</span><span class="m-facet--product-count">(13)</span></label>
+                    </li><li class="m-facet--item">
+                      <label
+                        for="Filter-Brand-13"
+                        class="m-facet--checkbox"
+                      >
+                        <input
+                          type="checkbox"
+                          name="filter.p.vendor"
+                          value="Women Shorts"
+                          id="Filter-Brand-13"
+                          
+                         / 
+                        >
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="0.5" y="0.5" width="17" height="17" stroke="currentColor"/>
+                          <path d="M4.875 9.75L7.5 12.375L13.5 6.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="m-facet--label">Women Shorts</span><span class="m-facet--product-count">(9)</span></label>
+                    </li></ul>
+            </div>
+          </div>
+        
+</form>
+</collection-filters-form>
