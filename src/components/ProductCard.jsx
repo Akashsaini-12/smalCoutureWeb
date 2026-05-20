@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IMAGE_SIZES } from "../data/productsData";
 import { addToCartMongo } from "../redux/actions";
 import { getUserId } from "../utils/userId";
+import { ensureHttpsUrl, productImageSrc } from "../utils/ensureHttpsUrl";
 
 const SpinnerIcon = () => (
   <svg className="animate-spin m-svg-icon--medium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
@@ -78,10 +79,15 @@ function ProductCard({
   let displayHover = hoverImage;
 
   if (activeVariant && Array.isArray(activeVariant.images) && activeVariant.images.length) {
-    const img0 = activeVariant.images[0];
-    const img1 = activeVariant.images[1] || img0;
+    const img0 = ensureHttpsUrl(activeVariant.images[0]);
+    const img1 = ensureHttpsUrl(activeVariant.images[1] || img0);
     displayMain = { src: img0, srcSet: img0 };
     displayHover = { src: img1, srcSet: img1 };
+  } else if (displayMain?.src) {
+    displayMain = { ...displayMain, src: ensureHttpsUrl(displayMain.src), srcSet: ensureHttpsUrl(displayMain.srcSet || displayMain.src) };
+    if (displayHover?.src) {
+      displayHover = { ...displayHover, src: ensureHttpsUrl(displayHover.src), srcSet: ensureHttpsUrl(displayHover.srcSet || displayHover.src) };
+    }
   }
 
   const isAddToCart = atcLabel === "Add to cart";
@@ -122,11 +128,6 @@ function ProductCard({
             .replace(/[^\d.]/g, ""),
         );
         const safeName = String(product?.title || product?.name || "").trim() || "Product";
-        const mainSrc =
-          typeof product?.mainImage === "string"
-            ? product.mainImage
-            : product?.mainImage?.src || "";
-
         await addToCartMongo({
           userId,
           productId: pid,
@@ -137,7 +138,7 @@ function ProductCard({
           color: product?.color ?? null,
           size: product?.size ?? null,
           quantity: 1,
-          image: mainSrc || product?.imageSrc || product?.image || "",
+          image: productImageSrc(product),
         });
       } catch {
         // ignore: local drawer still updates via onAddToCart below

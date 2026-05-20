@@ -25,6 +25,7 @@ import {
   CANONICAL_INTERNAL_FREE_SIZE_LABEL,
   isInternalFreeSizeLabel,
 } from "../../utils/internalFreeSize";
+import { ensureHttpsUrl, ensureHttpsUrls } from "../../utils/ensureHttpsUrl";
 
 function parseSizeGuideFromProduct(p) {
   const sg = p?.sizeGuide;
@@ -321,7 +322,7 @@ export default function CatalogProductAdminSection({
                 : "",
               colorCode: normalizeHexInput(v?.colorCode) || "",
               sizes: sizesForForm,
-              images: Array.isArray(v?.images) ? v.images : [],
+              images: ensureHttpsUrls(v?.images),
               imageFiles: [],
               stockAll: stockAllVal,
               colorAuto: false,
@@ -357,7 +358,8 @@ export default function CatalogProductAdminSection({
         numReviews: p?.numReviews != null ? Number(p.numReviews) : 0,
         isFeatured: Boolean(p?.isFeatured),
         status: p?.status ?? "active",
-        sizeChartImage: p?.sizeChartImage != null ? String(p.sizeChartImage) : "",
+        sizeChartImage:
+          p?.sizeChartImage != null ? ensureHttpsUrl(String(p.sizeChartImage)) : "",
         sizeChartTitle: p?.sizeChartTitle != null ? String(p.sizeChartTitle) : "",
         sizeGuide: parseSizeGuideFromProduct(p),
         sizeGuideInputUnit: "cm",
@@ -610,7 +612,7 @@ export default function CatalogProductAdminSection({
               ? await uploadImagesToCloudinary(v.imageFiles)
               : [];
 
-          const images = [...(v.images || []), ...uploaded];
+          const images = ensureHttpsUrls([...(v.images || []), ...uploaded]);
           if (!images.length) {
             throw new Error("Each variant requires at least one image");
           }
@@ -708,7 +710,9 @@ export default function CatalogProductAdminSection({
         }),
       );
 
-      const sizeChartImage = String(form.sizeChartImage || "").trim();
+      const sizeChartImage = ensureHttpsUrl(
+        String(form.sizeChartImage || "").trim(),
+      );
 
       const mcRaw = Array.isArray(form.sizeGuide?.measureColumns)
         ? form.sizeGuide.measureColumns
@@ -1725,13 +1729,17 @@ export default function CatalogProductAdminSection({
                       if (!v.imageFiles || v.imageFiles.length === 0) return;
                       setUploadingVariantIndex(idx);
                       const uploaded = await uploadImagesToCloudinary(v.imageFiles);
+                      const httpsUploaded = ensureHttpsUrls(uploaded);
                       setForm((prev) => ({
                         ...prev,
                         variants: prev.variants.map((v2, i2) =>
                           i2 === idx
                             ? {
                                 ...v2,
-                                images: [...(v2.images || []), ...uploaded],
+                                images: ensureHttpsUrls([
+                                  ...(v2.images || []),
+                                  ...httpsUploaded,
+                                ]),
                                 imageFiles: [],
                               }
                             : v2,

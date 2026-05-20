@@ -8,6 +8,7 @@ import {
   updateShopCategory,
   deleteShopCategory,
 } from "../../redux/actions";
+import { ensureHttpsUrl } from "../../utils/ensureHttpsUrl";
 
 const isRootCategory = (c) =>
   c == null || c.parentId == null || c.parentId === undefined;
@@ -237,7 +238,7 @@ function CategoriesAdminSection() {
       await saveCategories({
         title: categoryForm.title,
         count: categoryForm.count,
-        image: imageUrl || "",
+        image: ensureHttpsUrl(imageUrl || ""),
         ...(categoryForm.parentId
           ? { parentId: Number(categoryForm.parentId) }
           : {}),
@@ -306,7 +307,7 @@ function CategoriesAdminSection() {
       await updateShopCategory({
         id: editForm.id,
         title: editForm.title,
-        image: imageUrl || "",
+        image: ensureHttpsUrl(imageUrl || ""),
         sortOrder: editForm.sortOrder,
         ...(!hasChildren
           ? {

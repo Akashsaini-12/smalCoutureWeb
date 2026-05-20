@@ -6,11 +6,12 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { useSelector } from "react-redux";
+import { ensureHttpsUrl } from "../../utils/ensureHttpsUrl";
 
 /* ── Cloudinary helper — unchanged ── */
 function buildSliderResponsiveImage(url) {
   if (!url || typeof url !== "string") return { src: url, srcSet: url };
-  const trimmed = url.trim();
+  const trimmed = ensureHttpsUrl(url);
   const m = trimmed.match(
     /^(https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)([^?]+)(\?.*)?$/i,
   );
@@ -702,7 +703,10 @@ function Slider() {
             }}
           >
             {slides.map((slide, slideIndex) => {
-              const imageUrl = slide.images;
+              const imageUrl =
+                typeof slide.images === "string"
+                  ? ensureHttpsUrl(slide.images)
+                  : ensureHttpsUrl(slide.images?.desktop?.src || slide.image || "");
               const { src, srcSet } = buildSliderResponsiveImage(imageUrl);
               const mappedSlide = {
                 ...slide,

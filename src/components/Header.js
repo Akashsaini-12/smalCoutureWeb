@@ -6,6 +6,7 @@ import { logoutThunk, fetchNavMenu, fetchCartMongo, fetchShopCategories } from '
 import { getUserId } from '../utils/userId'
 import logo from '../assets/ba-removebg-preview.png'
 import { fetchSiteLogoPublic } from '../redux/actions'
+import { imgSrc } from '../utils/ensureHttpsUrl'
 
 function useMediaQuery(query) {
   const getMatches = () =>
@@ -816,7 +817,7 @@ const Header = () => {
   const dropdownRef = useRef(null)
   const userId      = getUserId()
   const initials    = u => `${(u?.firstName?.[0] || 'U').toUpperCase()}${(u?.lastName?.[0] || '').toUpperCase()}`
-  const avatarUrl = String(user?.avatarUrl || "").trim()
+  const avatarUrl = imgSrc(String(user?.avatarUrl || "").trim())
 
   useEffect(() => { dispatch(fetchNavMenu()) }, [dispatch])
 
@@ -838,7 +839,7 @@ const Header = () => {
     return () => { mounted = false }
   }, [])
 
-  const logoSrc = siteLogoUrl || logo
+  const logoSrc = siteLogoUrl ? imgSrc(siteLogoUrl) : logo
 
   const navItemsWithHome = useMemo(() => {
     const list = Array.isArray(navItems) ? navItems : []

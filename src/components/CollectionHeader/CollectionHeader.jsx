@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCollectionHeaderSlides } from "../../redux/actions";
+import { imgSrc } from "../../utils/ensureHttpsUrl";
 
 const SECTION_ID = "template--15265873330281__collection-header";
 const STYLESHEET_HREF =
@@ -150,7 +151,7 @@ const CollectionHeader = () => {
                   <SwiperSlide key={String(slide.id ?? idx)}>
                     <div className="m-collection-page-header__background m-image">
                       <img
-                        src={slide.imageUrl}
+                        src={imgSrc(slide.imageUrl)}
                         alt="collection-banner-image"
                         width={2840}
                         height={560}

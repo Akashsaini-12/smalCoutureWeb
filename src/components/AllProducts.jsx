@@ -13,6 +13,7 @@ import {
   fetchFilterPromoPublic,
 } from "../redux/actions";
 import { useLocation, useNavigate } from "react-router-dom";
+import { imgSrc } from "../utils/ensureHttpsUrl";
 import { getUserId } from "../utils/userId";
 import { isInternalFreeSizeLabel } from "../utils/internalFreeSize";
 
@@ -1242,7 +1243,7 @@ const AllProducts = ({ addToCart }) => {
                           {filterPromo?.imageUrl ? (
                             <img
                               className="collection-react-filter-promo__img"
-                              src={filterPromo.imageUrl}
+                              src={imgSrc(filterPromo.imageUrl)}
                               alt={filterPromo?.imageAlt || "Promotion"}
                               loading="lazy"
                               fetchpriority="low"
@@ -1331,7 +1332,7 @@ const AllProducts = ({ addToCart }) => {
                           <img
                             alt={filterPromo?.imageAlt || "Promotion"}
                             className="collection-react-filter-promo__img"
-                            src={filterPromo?.imageUrl || "https://cdn.shopify.com/s/files/1/0549/0477/1225/files/2_66b05eb1-c1a4-4af8-9b6e-01f90c779e40.png?v=1745148482"}
+                            src={imgSrc(filterPromo?.imageUrl) || "https://cdn.shopify.com/s/files/1/0549/0477/1225/files/2_66b05eb1-c1a4-4af8-9b6e-01f90c779e40.png?v=1745148482"}
                           />
                         </div>
                         <div className="collection-react-filter-promo__body">

@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTestimonials } from "../redux/actions";
+import { ensureHttpsUrl } from "../utils/ensureHttpsUrl";
 
 function resolveImgSrc(url) {
   const s = String(url || "").trim();
   if (!s) return "";
-  // Handle relative CDN paths like "/cdn/..."
-  if (s.startsWith("/") && typeof window !== "undefined") return `${window.location.origin}${s}`;
-  return s;
+  if (s.startsWith("/") && typeof window !== "undefined") {
+    return `${window.location.origin}${s}`;
+  }
+  return ensureHttpsUrl(s);
 }
 
 const HappyCustomers = () => {

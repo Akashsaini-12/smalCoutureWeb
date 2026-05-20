@@ -8,6 +8,7 @@ import React, {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchShopCategories } from "../redux/actions";
+import { imgSrc } from "../utils/ensureHttpsUrl";
 
 const ALL_PRODUCTS_PATH = "/AllProducts";
 const MOBILE_CARD_W = "calc(72vw - 24px)";
@@ -820,7 +821,7 @@ const DesktopCard = ({ category, href, index }) => (
     <Link to={href} aria-label={category.ariaLabel ?? category.title} className="sbc-card__img-wrap">
       <img
         alt={category.title}
-        src={category.image}
+        src={imgSrc(category.image)}
         width={906}
         height={1269}
         loading="lazy"

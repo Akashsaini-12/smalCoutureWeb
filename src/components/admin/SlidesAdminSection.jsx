@@ -8,6 +8,7 @@ import {
   deleteSliderSlide,
   uploadImageToCloudinary,
 } from "../../redux/actions";
+import { ensureHttpsUrl } from "../../utils/ensureHttpsUrl";
 
 const SLIDES_API_BASE =
   process.env.REACT_APP_API_BASE_URL ||
@@ -157,15 +158,13 @@ function SlidesAdminSection() {
     ];
   }, [sortedCategoryRows, editSlideForm.categoryId]);
 
-  // Helper: normalise image URL from different backend shapes
+  // Helper: normalise image URL from different backend shapes (always https)
   const getSlideImage = (slide) => {
-    // New API: `images` is a direct URL string
-    if (typeof slide.images === "string" && slide.images) return slide.images;
-    // Older shape: images.desktop.src
-    if (slide.images?.desktop?.src) return slide.images.desktop.src;
-    // Fallbacks
-    if (slide.image) return slide.image;
-    return "";
+    let raw = "";
+    if (typeof slide.images === "string" && slide.images) raw = slide.images;
+    else if (slide.images?.desktop?.src) raw = slide.images.desktop.src;
+    else if (slide.image) raw = slide.image;
+    return ensureHttpsUrl(raw);
   };
 
   useEffect(() => {
@@ -200,11 +199,13 @@ function SlidesAdminSection() {
       // If a file was chosen, upload it now (on submit)
       if (imageFile) {
         imageUrl = await uploadImageToCloudinary(imageFile);
+      } else if (imageUrl && !imageUrl.startsWith("blob:")) {
+        imageUrl = ensureHttpsUrl(imageUrl);
       }
       const payload = {
         title: slideForm.title,
         subtitle: [slideForm.subtitleLine1, slideForm.subtitleLine2],
-        imageUrl,
+        imageUrl: ensureHttpsUrl(imageUrl),
         categoryId:
           slideForm.categoryId === "" || slideForm.categoryId == null
             ? null
@@ -324,12 +325,14 @@ function SlidesAdminSection() {
       let imageUrl = editSlideForm.image;
       if (editImageFile) {
         imageUrl = await uploadImageToCloudinary(editImageFile);
+      } else if (imageUrl && !imageUrl.startsWith("blob:")) {
+        imageUrl = ensureHttpsUrl(imageUrl);
       }
 
       const payload = {
         title: editSlideForm.title,
         subtitle: [editSlideForm.subtitleLine1, editSlideForm.subtitleLine2],
-        imageUrl,
+        imageUrl: ensureHttpsUrl(imageUrl),
         categoryId:
           editSlideForm.categoryId === "" || editSlideForm.categoryId == null
             ? null

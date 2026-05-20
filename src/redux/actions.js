@@ -1,3 +1,11 @@
+import {
+  deepEnsureHttpsImages,
+  ensureHttpsUrl,
+  normalizeCatalogProductPayload,
+  normalizeCatalogProductRecord,
+  normalizeCatalogSearchResponse,
+} from "../utils/ensureHttpsUrl";
+
 // const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://website-backend-bot8.vercel.app";
   //  const API_BASE = "https://website-backend-bot8.vercel.app";
   // const API_BASE = "http://35.244.32.175:4000";
@@ -6,27 +14,44 @@ const API_BASE = "https://api.smalcouture.com";
 // const API_BASE =
 //    process.env.REACT_APP_API_BASE_URL ||
 //    `http://${window.location.hostname}:4000`;
+function normalizeJsonRequestBody(options = {}) {
+  const body = options.body;
+  if (!body || typeof body !== "string") return options;
+  try {
+    const parsed = JSON.parse(body);
+    if (!parsed || typeof parsed !== "object") return options;
+    return { ...options, body: JSON.stringify(deepEnsureHttpsImages(parsed)) };
+  } catch {
+    return options;
+  }
+}
+
+async function readApiJsonResponse(res) {
+  const text = await res.text();
+  let data;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
+  }
+  if (!res.ok) {
+    const msg =
+      (data && typeof data === "object" && data.error) ||
+      (typeof data === "string" && data) ||
+      `Request failed (${res.status})`;
+    throw new Error(msg);
+  }
+  return deepEnsureHttpsImages(data);
+}
+
 async function fetchJson(url, options = {}, timeoutMs = 30000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), timeoutMs);
+  const opts = normalizeJsonRequestBody(options);
 
   try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
-    const text = await res.text();
-    let data;
-    try {
-      data = text ? JSON.parse(text) : null;
-    } catch {
-      data = text;
-    }
-    if (!res.ok) {
-      const msg =
-        (data && typeof data === "object" && data.error) ||
-        (typeof data === "string" && data) ||
-        `Request failed (${res.status})`;
-      throw new Error(msg);
-    }
-    return data;
+    const res = await fetch(url, { ...opts, signal: controller.signal });
+    return await readApiJsonResponse(res);
   } catch (err) {
     if (err && err.name === "AbortError") {
       throw new Error("Request timeout");
@@ -67,7 +92,11 @@ export async function uploadImageToCloudinary(file) {
     throw new Error("No URL returned from server");
   }
 
-  return url;
+  return ensureHttpsUrl(url);
+}
+
+function normalizeSliderSlideRecord(slide) {
+  return deepEnsureHttpsImages(slide);
 }
 
 export async function uploadImagesToCloudinary(files) {
@@ -100,7 +129,7 @@ export async function adminUpdateSiteLogo(url) {
   return fetchJson(`${API_BASE}/api/admin/site-settings/logo`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url: String(url || "").trim() }),
+    body: JSON.stringify({ url: ensureHttpsUrl(url) }),
   });
 }
 
@@ -210,11 +239,9 @@ export async function submitContactMessage(payload) {
 export const fetchSliderSlides = () => async (dispatch) => {
   try {
     const res = await fetch(`${API_BASE}/api/slider`);
-    if (!res.ok) {
-      throw new Error(`Slider request failed (${res.status})`);
-    }
-    const data = await res.json();
-    dispatch({ type: "FETCH_SLIDER", payload: Array.isArray(data) ? data : [] });
+    const data = await readApiJsonResponse(res);
+    const rows = Array.isArray(data) ? data.map(normalizeSliderSlideRecord) : [];
+    dispatch({ type: "FETCH_SLIDER", payload: rows });
   } catch (error) {
     dispatch({
       type: "FETCH_SLIDER",
@@ -227,7 +254,7 @@ export const fetchSliderSlides = () => async (dispatch) => {
 export const fetchCollectionHeaderSlides = () => async (dispatch) => {
   try {
     const res = await fetch(`${API_BASE}/api/collection-header-slides`);
-    const data = await res.json();
+    const data = await readApiJsonResponse(res);
     dispatch({
       type: "FETCH_COLLECTION_HEADER_SLIDES",
       payload: Array.isArray(data) ? data : [],
@@ -286,7 +313,7 @@ export async function adminReorderCollectionHeaderSlides(items) {
 export const fetchMixMatchLooks = () => async (dispatch) => {
   try {
     const res = await fetch(`${API_BASE}/api/mixmatch`);
-    const data = await res.json();
+    const data = await readApiJsonResponse(res);
     dispatch({
       type: "FETCH_MIXMATCH",
       payload: Array.isArray(data) ? data : [],
@@ -382,7 +409,7 @@ export const fetchHomepageProducts =
         `${API_BASE}/api/products?page=${page}&limit=${limit}`,
       );
 
-      const data = await res.json();
+      const data = await readApiJsonResponse(res);
       dispatch({
         type: "FETCH_HOMEPAGE_PRODUCTS",
         payload: Array.isArray(data.items) ? data.items : [],
@@ -402,11 +429,7 @@ export const fetchHomepageProducts =
 export const fetchNavMenu = () => async (dispatch) => {
   try {
     const res = await fetch(`${API_BASE}/api/nav-menu`);
-    if (!res.ok) {
-      dispatch({ type: "FETCH_NAV_MENU", payload: [] });
-      return;
-    }
-    const data = await res.json();
+    const data = await readApiJsonResponse(res);
     dispatch({
       type: "FETCH_NAV_MENU",
       payload: Array.isArray(data) ? data : [],
@@ -420,14 +443,7 @@ export const fetchShopCategories = () => async (dispatch) => {
   try {
     // `split=1` lets backend annotate root categories with `splitGroup` for UI.
     const res = await fetch(`${API_BASE}/api/categories?split=1`);
-    if (!res.ok) {
-      dispatch({
-        type: "FETCH_SHOP_CATEGORIES",
-        payload: [],
-      });
-      return;
-    }
-    const data = await res.json();
+    const data = await readApiJsonResponse(res);
     dispatch({
       type: "FETCH_SHOP_CATEGORIES",
       payload: Array.isArray(data) ? data : [],
@@ -465,14 +481,10 @@ export async function saveShopCategories(categories) {
   const response = await fetch(`${API_BASE}/api/admin/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(deepEnsureHttpsImages(body)),
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to save categories");
-  }
-
-  return response.json();
+  return readApiJsonResponse(response);
 }
 
 // Admin: update a category by numeric id
@@ -491,13 +503,9 @@ export async function updateShopCategory(category) {
   const response = await fetch(`${API_BASE}/api/admin/categories/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(deepEnsureHttpsImages(payload)),
   });
-  if (!response.ok) {
-    const data = await response.json().catch(() => null);
-    throw new Error(data?.error || "Failed to update category");
-  }
-  return response.json();
+  return readApiJsonResponse(response);
 }
 
 // Admin: delete a category by numeric id
@@ -513,24 +521,34 @@ export async function deleteShopCategory(id) {
   return response.json();
 }
 
+function normalizeSliderPayload(payload) {
+  if (!payload || typeof payload !== "object") return payload;
+  const out = { ...payload };
+  if (out.imageUrl) out.imageUrl = ensureHttpsUrl(out.imageUrl);
+  return out;
+}
+
 // Create slider slide (plain API helper, no key changes)
 export async function createSliderSlide(payload) {
+  const body = normalizeSliderPayload(payload);
   const response = await fetch(`${API_BASE}/api/admin/slider`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(body),
   });
-  // same response, koi key/value change nahi
-  return response.json();
+  const data = await readApiJsonResponse(response);
+  return normalizeSliderSlideRecord(data);
 }
 
 export async function updateSliderSlide(id, payload) {
   if (!id) throw new Error("id is required");
-  return fetchJson(`${API_BASE}/api/admin/slider/${id}`, {
+  const body = normalizeSliderPayload(payload);
+  const data = await fetchJson(`${API_BASE}/api/admin/slider/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload || {}),
+    body: JSON.stringify(body),
   });
+  return normalizeSliderSlideRecord(data);
 }
 
 export async function deleteSliderSlide(id) {
@@ -550,26 +568,29 @@ export async function fetchMasterCategories() {
 }
 
 export async function createCatalogProduct(payload) {
-  return fetchJson(`${API_BASE}/api/admin/catalog-products`, {
+  const body = normalizeCatalogProductPayload(payload);
+  const data = await fetchJson(`${API_BASE}/api/admin/catalog-products`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(body),
   });
+  return normalizeCatalogProductRecord(data);
 }
 
 export async function fetchCatalogProducts(params = {}) {
   // Storefront: ONLY active products (POST body so filters aren't exposed in URL)
-  return fetchJson(`${API_BASE}/api/catalog-products/search`, {
+  const data = await fetchJson(`${API_BASE}/api/catalog-products/search`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   });
+  return normalizeCatalogSearchResponse(data);
 }
 
 // Admin: active + inactive
 export async function fetchCatalogProductsAdmin(params = {}) {
   const token = localStorage.getItem("token") || "";
-  return fetchJson(`${API_BASE}/api/admin/catalog-products/search`, {
+  const data = await fetchJson(`${API_BASE}/api/admin/catalog-products/search`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -577,6 +598,7 @@ export async function fetchCatalogProductsAdmin(params = {}) {
     },
     body: JSON.stringify(params),
   });
+  return normalizeCatalogSearchResponse(data);
 }
 
 // GET /api/catalog-products/filters
@@ -609,16 +631,19 @@ export async function fetchCatalogProductFilters({
 
 export async function fetchCatalogProductById(id) {
   if (!id) throw new Error("id is required");
-  return fetchJson(`${API_BASE}/api/admin/catalog-products/${id}`);
+  const data = await fetchJson(`${API_BASE}/api/admin/catalog-products/${id}`);
+  return normalizeCatalogProductRecord(data);
 }
 
 export async function updateCatalogProduct(id, payload) {
   if (!id) throw new Error("id is required");
-  return fetchJson(`${API_BASE}/api/admin/catalog-products/${id}`, {
+  const body = normalizeCatalogProductPayload(payload);
+  const data = await fetchJson(`${API_BASE}/api/admin/catalog-products/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload || {}),
+    body: JSON.stringify(body),
   });
+  return normalizeCatalogProductRecord(data);
 }
 
 export async function deleteCatalogProduct(id) {
@@ -926,7 +951,7 @@ export const fetchWishlistMongo = (userId) => async (dispatch) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: String(userId || "") }),
     });
-    const data = await res.json();
+    const data = await readApiJsonResponse(res);
     dispatch({
       type: "FETCH_WISHLIST",
       payload: data.items ? data.items : [],
@@ -973,11 +998,12 @@ export const addToRecentlyViewedMongo =
             Number(
               product?.priceSale || product?.priceRegular || product?.price,
             ) || 0,
-          image:
+          image: ensureHttpsUrl(
             product?.mainImage?.src ||
-            product?.imageSrc ||
-            product?.image ||
-            "",
+              product?.imageSrc ||
+              product?.image ||
+              "",
+          ),
         }),
       });
       dispatch(fetchRecentlyViewedMongo(userId));
