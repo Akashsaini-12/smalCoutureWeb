@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Production deploy (auto on push)
+
+Pushes to `main` deploy to the existing VM Docker container `frontend-container` on port **3000**. One-time VM and GitHub setup: see [deployment/DEPLOY.md](deployment/DEPLOY.md).
+
 ## Available Scripts
 
 In the project directory, you can run:

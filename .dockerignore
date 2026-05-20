@@ -1,0 +1,12 @@
+node_modules
+build
+dist
+.git
+.github
+.env
+.env.*
+*.log
+coverage
+.DS_Store
+website.backup
+website_old
