@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Production deploy (auto on push)
 
-Pushes to `main` deploy to the existing VM Docker container `frontend-container` on port **3000**. One-time VM and GitHub setup: see [deployment/DEPLOY.md](deployment/DEPLOY.md).
+Pushes to `main` build on GitHub, upload to the VM, and update `frontend-container` on port **3000** (same flow as Ecommerce). Setup: [deployment/DEPLOY.md](deployment/DEPLOY.md).
 
 ## Available Scripts
 

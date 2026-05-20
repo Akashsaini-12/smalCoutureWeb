@@ -1,24 +1,20 @@
 #!/usr/bin/env bash
+# Manual deploy on VM (same result as GitHub Actions): copy local build into frontend-container.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "==> Pulling latest code from main..."
-git pull origin main
+if [[ ! -d build ]] || [[ -z "$(ls -A build 2>/dev/null)" ]]; then
+  echo "ERROR: build/ folder missing or empty. Run: npm install && npm run build"
+  exit 1
+fi
 
-echo "==> Building Docker image website-frontend:latest..."
-docker build -t website-frontend:latest .
+echo "==> Copying build into frontend-container..."
+docker cp build/. frontend-container:/usr/share/nginx/html/
 
-echo "==> Restarting frontend-container on port 3000..."
-docker stop frontend-container 2>/dev/null || true
-docker rm frontend-container 2>/dev/null || true
-
-docker run -d \
-  --name frontend-container \
-  -p 3000:80 \
-  --restart unless-stopped \
-  website-frontend:latest
+echo "==> Restarting frontend-container..."
+docker restart frontend-container
 
 echo "==> Deploy complete. Container status:"
 docker ps --filter name=frontend-container

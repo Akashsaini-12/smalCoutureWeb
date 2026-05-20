@@ -1,4 +1,4 @@
-name: Deploy frontend to VM
+name: Deploy Website Frontend
 
 on:
   push:
@@ -8,13 +8,44 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          script_stop: true
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build App
+        run: npm run build
+
+      - name: Upload Build
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/*"
+          target: "/home/smalcouture/website/build"
+          strip_components: 1
+          overwrite: true
+
+      - name: Restart Frontend Container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
-            bash ~/website/deploy.sh
+            sudo chown -R smalcouture:smalcouture /home/smalcouture/website
+            chmod -R 755 /home/smalcouture/website
+
+            docker cp /home/smalcouture/website/build/. frontend-container:/usr/share/nginx/html/
+            docker restart frontend-container
+
+            docker ps --filter name=frontend-container
