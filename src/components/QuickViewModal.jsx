@@ -777,7 +777,7 @@ const QuickViewModal = ({
         slug: product.handle || product.slug || "",
         price: Number.isFinite(numericPrice) ? numericPrice : 0,
         color: resolvedColor || null,
-        size: selectedSize || null,
+        size: cartLineSize ?? null,
         quantity,
         image: mainSrc || (Array.isArray(images) && images[0]) || "",
       };

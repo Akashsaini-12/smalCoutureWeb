@@ -22,6 +22,7 @@ import ScrollingPromotion from "./components/ScrollingPromotion";
 import HotWeek from "./components/HotWeek";
 import FeaturedPress from "./components/FeaturedPress";
 import { isInternalFreeSizeLabel } from "./utils/internalFreeSize";
+import { trackAddToCart, trackMetaPageView } from "./utils/metaPixel";
 import CoastalEdition from "./components/CoastalEdition";
 import ShopCollection from "./components/ShopCollection";
 import ShopMixMatch from "./components/ShopMixMatch";
@@ -171,6 +172,7 @@ const AppInner = () => {
         },
       ];
     });
+    trackAddToCart(product, quantity);
   };
 
   const removeFromCart = (variantId) => {
@@ -198,12 +200,22 @@ const AppInner = () => {
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isFirstPathRef = useRef(true);
 
   // SPA: new route should start at top (otherwise scroll position carries over from previous page).
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/admin")) return;
+    if (isFirstPathRef.current) {
+      isFirstPathRef.current = false;
+      return;
+    }
+    trackMetaPageView();
   }, [location.pathname]);
 
   // Remember the last "browsing" page so product pages opened in a fresh tab

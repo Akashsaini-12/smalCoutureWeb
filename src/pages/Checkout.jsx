@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -19,6 +19,7 @@ import {
   formatSizeForCustomerDisplay,
   isInternalFreeSizeLabel,
 } from "../utils/internalFreeSize";
+import { trackInitiateCheckout, trackPurchase } from "../utils/metaPixel";
 
 function formatINR(n) {
   const num = Number(n || 0);
@@ -102,6 +103,7 @@ export default function Checkout({ cartItems = [] }) {
   const buyNowItem = location?.state?.buyNowItem || null;
   const isBuyNowMode =
     Boolean(buyNowItem && (buyNowItem.productId || buyNowItem.variantId));
+  const checkoutTrackedRef = useRef(false);
 
   const [items, setItems] = useState(() => {
     if (isBuyNowMode) return [buyNowItem];
@@ -210,6 +212,12 @@ export default function Checkout({ cartItems = [] }) {
     0,
     FREE_SHIPPING_THRESHOLD - Math.max(0, Number(subtotal || 0)),
   );
+
+  useEffect(() => {
+    if (checkoutTrackedRef.current || !items.length) return;
+    checkoutTrackedRef.current = true;
+    trackInitiateCheckout({ items, value: totalPreview });
+  }, [items, totalPreview]);
 
   // Checkout should always hit production API (no localStorage/env switching here)
   const API_BASE = "https://api.smalcouture.com";
@@ -458,11 +466,13 @@ export default function Checkout({ cartItems = [] }) {
         return;
       }
 
+      let orderItems = items;
       if (!isBuyNowMode) {
         try {
           const cartSnap = await fetchCartMongo(userId);
           const liveLines = Array.isArray(cartSnap?.items) ? cartSnap.items : [];
           setItems(liveLines);
+          orderItems = liveLines;
           if (!liveLines.length) {
             setError("Your cart is empty.");
             return;
@@ -473,6 +483,8 @@ export default function Checkout({ cartItems = [] }) {
         } catch {
           // Server down → checkout still validates; UX may show server error afterward
         }
+      } else if (buyNowItem) {
+        orderItems = [buyNowItem];
       }
 
       const shippingAddress = ensureSavedAddressSelected();
@@ -498,6 +510,16 @@ export default function Checkout({ cartItems = [] }) {
           });
 
       const orderId = res?.order?._id || res?.orderId;
+      const purchaseValue = orderItems.reduce((sum, it) => {
+        const price = parsePrice(it?.price);
+        const qty = Number(it?.quantity || 1);
+        return sum + (isFinite(price) ? price : 0) * (isFinite(qty) ? qty : 1);
+      }, 0);
+      const purchaseTotal = Math.max(
+        0,
+        purchaseValue + shippingPreview - discountPreview,
+      );
+      trackPurchase({ orderId, items: orderItems, value: purchaseTotal });
       navigate(`/order-success${orderId ? `?orderId=${encodeURIComponent(orderId)}` : ""}`);
     } catch (e) {
       const msg = e?.message || "Checkout failed";
