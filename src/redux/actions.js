@@ -6,6 +6,7 @@ import {
   normalizeCatalogSearchResponse,
 } from "../utils/ensureHttpsUrl";
 
+
 // const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://website-backend-bot8.vercel.app";
   //  const API_BASE = "https://website-backend-bot8.vercel.app";
   // const API_BASE = "http://35.244.32.175:4000";

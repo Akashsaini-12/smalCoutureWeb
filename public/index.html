@@ -26,7 +26,45 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1609839080107013');
+    var META_PIXEL_ID = '1609839080107013';
+    fbq('init', META_PIXEL_ID, {}, { autoConfig: false });
+    fbq('set', 'autoConfig', false, META_PIXEL_ID);
+    (function () {
+      function isBlockedPurchase(args) {
+        var cmd = args[0];
+        var ev = args[1];
+        return (
+          (cmd === 'track' || cmd === 'trackSingle') &&
+          typeof ev === 'string' &&
+          ev.toLowerCase() === 'purchase'
+        );
+      }
+      function installFbqGuard() {
+        if (!window.fbq || window.fbq.__purchaseGuardInstalled) return;
+        var original = window.fbq;
+        var guarded = function () {
+          var args = Array.prototype.slice.call(arguments);
+          if (isBlockedPurchase(args) && !window.__metaAllowPurchase) return;
+          return original.apply(this, args);
+        };
+        for (var key in original) {
+          if (Object.prototype.hasOwnProperty.call(original, key)) {
+            guarded[key] = original[key];
+          }
+        }
+        guarded.queue = original.queue;
+        guarded.loaded = original.loaded;
+        guarded.version = original.version;
+        guarded.__purchaseGuardInstalled = true;
+        window.fbq = guarded;
+      }
+      installFbqGuard();
+      var guardAttempts = 0;
+      var guardTimer = setInterval(function () {
+        installFbqGuard();
+        if (++guardAttempts > 100) clearInterval(guardTimer);
+      }, 50);
+    })();
     fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
@@ -744,9 +782,12 @@ Shopify.routes.root = "zh/index.html";</script>
 </script>
 
 <link href="https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.css" rel="stylesheet" type="text/css" media="all" />
+<!-- FoxKit vendor/main/global disabled: legacy Shopify scripts fired Meta Purchase on clicks -->
+<!--
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/vendor.js' defer='defer' fetchpriority='high'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.js' defer='defer' fetchpriority='high'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/global.js' defer='defer' fetchpriority='low'></script>
+-->
 
 
 
@@ -2249,9 +2290,12 @@ Shopify.routes.root = "index.html";</script>
     if(FoxKitPlugins.CartGoal) FoxKitPlugins.CartGoal.locales = !FoxKitSettings.primaryLocale && FoxKitPlugins.CartGoal?.locales?.[Shopify.locale];
   
 </script>
+<!-- FoxKit vendor/main/global disabled: legacy Shopify scripts fired Meta Purchase on clicks -->
+<!--
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/vendor.js' defer='defer' fetchpriority='high'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/main.js' defer='defer' fetchpriority='high'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/global.js' defer='defer' fetchpriority='low'></script>
+-->
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/slider-component.js' fetchpriority='low' defer='defer'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/incart-upsell.js' fetchpriority='low' defer='defer'></script>
 <script>
@@ -2266,13 +2310,19 @@ Shopify.routes.root = "index.html";</script>
   </script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/sales-pop.js' fetchpriority='low' defer='defer'></script>
 <script src='https://cdn.shopify.com/extensions/019b8c19-8484-7ce5-89bf-db65367d5a08/foxkit-extensions-450/assets/cart-countdown.js' fetchpriority='low' defer='defer'></script>
+<!-- GTM disabled: was firing Meta Purchase on button clicks (GTM-TQD9RJFT) -->
+<!--
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-TQD9RJFT');</script>
+-->
+<!-- Shopify web-pixels-manager disabled: FoxKit/Foxify synced false Purchase events to Meta -->
+<!--
 <script>(function(){if ("sendBeacon" in navigator && "performance" in window) {try {var session_token_from_headers = performance.getEntriesByType('navigation')[0].serverTiming.find(x => x.name == '_s').description;} catch {var session_token_from_headers = undefined;}var session_cookie_matches = document.cookie.match(/_shopify_s=([^;]*)/);var session_token_from_cookie = session_cookie_matches && session_cookie_matches.length === 2 ? session_cookie_matches[1] : "";var session_token = session_token_from_headers || session_token_from_cookie || "";function handle_abandonment_event(e) {var entries = performance.getEntries().filter(function(entry) {return /monorail-edge.shopifysvc.com/.test(entry.name);});if (!window.abandonment_tracked && entries.length === 0) {window.abandonment_tracked = true;var currentMs = Date.now();var navigation_start = performance.timing.navigationStart;var payload = {shop_id: 23480105,url: window.location.href,navigation_start,duration: currentMs - navigation_start,session_token,page_type: "index"};window.navigator.sendBeacon("https://monorail-edge.shopifysvc.com/v1/produce", JSON.stringify({schema_id: "online_store_buyer_site_abandonment/1.1",payload: payload,metadata: {event_created_at_ms: currentMs,event_sent_at_ms: currentMs}}));}}window.addEventListener('pagehide', handle_abandonment_event);}}());</script>
 <script id="web-pixels-manager-setup">(function e(e,d,r,n,o){if(void 0===o&&(o={}),!Boolean(null===(a=null===(i=window.Shopify)||void 0===i?void 0:i.analytics)||void 0===a?void 0:a.replayQueue)){var i,a;window.Shopify=window.Shopify||{};var t=window.Shopify;t.analytics=t.analytics||{};var s=t.analytics;s.replayQueue=[],s.publish=function(e,d,r){return s.replayQueue.push([e,d,r]),!0};try{self.performance.mark("wpm:start")}catch(e){}var l=function(){var e={modern:/Edge?\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Firefox\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Chrom(ium|e)\/(9{2}|\d{3,})\.\d+(\.\d+|)|(Maci|X1{2}).+ Version\/(15\.\d+|(1[6-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(9{2}|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(15[._]\d+|(1[6-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|SamsungBrowser\/([2-9]\d|\d{3,})\.\d+/,legacy:/Edge?\/(1[6-9]|[2-9]\d|\d{3,})\.\d+(\.\d+|)|Firefox\/(5[4-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)|Chrom(ium|e)\/(5[1-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)([\d.]+$|.*Safari\/(?![\d.]+ Edge\/[\d.]+$))|(Maci|X1{2}).+ Version\/(10\.\d+|(1[1-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(3[89]|[4-9]\d|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(10[._]\d+|(1[1-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Mobile Safari.+OPR\/([89]\d|\d{3,})\.\d+\.\d+|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?(15\.([5-9]|\d{2,})|(1[6-9]|[2-9]\d|\d{3,})\.\d+)\.\d+|SamsungBrowser\/(5\.\d+|([6-9]|\d{2,})\.\d+)|Android.+MQ{2}Browser\/(14(\.(9|\d{2,})|)|(1[5-9]|[2-9]\d|\d{3,})(\.\d+|))(\.\d+|)|K[Aa][Ii]OS\/(3\.\d+|([4-9]|\d{2,})\.\d+)(\.\d+|)/},d=e.modern,r=e.legacy,n=navigator.userAgent;return n.match(d)?"modern":n.match(r)?"legacy":"unknown"}(),u="modern"===l?"modern":"legacy",c=(null!=n?n:{modern:"",legacy:""})[u],f=function(e){return[e.baseUrl,"/wpm","/b",e.hashVersion,"modern"===e.buildTarget?"m":"l",".js"].join("")}({baseUrl:d,hashVersion:r,buildTarget:u}),m=function(e){var d=e.version,r=e.bundleTarget,n=e.surface,o=e.pageUrl,i=e.monorailEndpoint;return{emit:function(e){var a=e.status,t=e.errorMsg,s=(new Date).getTime(),l=JSON.stringify({metadata:{event_sent_at_ms:s},events:[{schema_id:"web_pixels_manager_load/3.1",payload:{version:d,bundle_target:r,page_url:o,status:a,surface:n,error_msg:t},metadata:{event_created_at_ms:s}}]});if(!i)return console&&console.warn&&console.warn("[Web Pixels Manager] No Monorail endpoint provided, skipping logging."),!1;try{return self.navigator.sendBeacon.bind(self.navigator)(i,l)}catch(e){}var u=new XMLHttpRequest;try{return u.open("POST.html",i,!0),u.setRequestHeader("Content-Type","text/plain"),u.send(l),!0}catch(e){return console&&console.warn&&console.warn("[Web Pixels Manager] Got an unhandled error while logging to Monorail."),!1}}}}({version:r,bundleTarget:l,surface:e.surface,pageUrl:self.location.href,monorailEndpoint:e.monorailEndpoint});try{o.browserTarget=l,function(e){var d=e.src,r=e.async,n=void 0===r||r,o=e.onload,i=e.onerror,a=e.sri,t=e.scriptDataAttributes,s=void 0===t?{}:t,l=document.createElement("script"),u=document.querySelector("head"),c=document.querySelector("body");if(l.async=n,l.src=d,a&&(l.integrity=a,l.crossOrigin="anonymous"),s)for(var f in s)if(Object.prototype.hasOwnProperty.call(s,f))try{l.dataset[f]=s[f]}catch(e){}if(o&&l.addEventListener("load",o),i&&l.addEventListener("error",i),u)u.appendChild(l);else{if(!c)throw new Error("Did not find a head or body element to append the script");c.appendChild(l)}}({src:f,async:!0,onload:function(){if(!function(){var e,d;return Boolean(null===(d=null===(e=window.Shopify)||void 0===e?void 0:e.analytics)||void 0===d?void 0:d.initialized)}()){var d=window.webPixelsManager.init(e)||void 0;if(d){var r=window.Shopify.analytics;r.replayQueue.forEach((function(e){var r=e[0],n=e[1],o=e[2];d.publishCustomEvent(r,n,o)})),r.replayQueue=[],r.publish=d.publishCustomEvent,r.visitor=d.visitor,r.initialized=!0}}},onerror:function(){return m.emit({status:"failed",errorMsg:"".concat(f," has failed to load")})},sri:function(e){var d=/^sha384-[A-Za-z0-9+/=]+$/;return"string"==typeof e&&d.test(e)}(c)?c:"",scriptDataAttributes:o}),m.emit({status:"loading"})}catch(e){m.emit({status:"failed",errorMsg:(null==e?void 0:e.message)||"Unknown error"})}}})({shopId: 23480105,storefrontBaseUrl: "https://fashion.minimog.co",extensionsBaseUrl: "https://extensions.shopifycdn.com/cdn/shopifycloud/web-pixels-manager",monorailEndpoint: "https://monorail-edge.shopifysvc.com/unstable/produce_batch",surface: "storefront-renderer",enabledBetaFlags: ["2dca8a86","a0d5f9d2"],webPixelsConfigList: [{"id":"33718377","configuration":"{\"accountID\":\"82f25811-b8d7-463e-980a-687c6e4ebc88\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"d0369370d97f2cca6d5c273406637796","type":"APP","apiClientId":5433881,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"31326313","configuration":"{\"accountID\":\"2de2ed03-0af8-4fa2-a602-a56f522d5573\",\"configs\":\"foxify,420dde02-66e0-4e84-a285-abcd1bbc3790,https:\/\/tracking.foxecom.app\/track\/batch\",\"appType\":\"production\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"22c5c1aa7eb30e90f9586cff580af32a","type":"APP","apiClientId":12239405057,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_email","read_customer_name","read_customer_personal_data"]}},{"id":"shopify-app-pixel","configuration":"{}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"APP","privacyPurposes":["ANALYTICS","MARKETING"]},{"id":"shopify-custom-pixel","eventPayloadVersion":"v1","runtimeContext":"LAX","scriptVersion":"0450","apiClientId":"shopify-pixel","type":"CUSTOM","privacyPurposes":["ANALYTICS","MARKETING"]}],isMerchantRequest: false,initData: {"shop":{"name":"Smalcouture","paymentSettings":{"currencyCode":"USD"},"myshopifyDomain":"simplestjewelry.myshopify.com","countryCode":"US","storefrontUrl":"https:\/\/fashion.minimog.co"},"customer":null,"cart":null,"checkout":null,"productVariants":[],"purchasingCompany":null},},"cdn.html","7cecd0b6w90c54c6cpe92089d5m57a67346",{"modern":"","legacy":""},{"shopId":"23480105","storefrontBaseUrl":"https:\/\/fashion.minimog.co","extensionBaseUrl":"https:\/\/extensions.shopifycdn.com\/cdn\/shopifycloud\/web-pixels-manager","surface":"storefront-renderer","enabledBetaFlags":"[\"2dca8a86\", \"a0d5f9d2\"]","isMerchantRequest":"false","hashVersion":"7cecd0b6w90c54c6cpe92089d5m57a67346","publish":"custom","events":"[[\"page_viewed\",{}]]"});</script>
+-->
 <script>
   window.ShopifyAnalytics = window.ShopifyAnalytics || {};
   window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};

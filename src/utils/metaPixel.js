@@ -85,14 +85,20 @@ export function trackPurchase({ orderId, items, value }) {
     (sum, it) => sum + Math.max(1, Number(it?.quantity) || 1),
     0,
   );
-  trackMetaEvent("Purchase", {
-    value: Number(value) || 0,
-    currency: "INR",
-    num_items: numItems,
-    content_ids: contents.map((c) => c.id),
-    contents,
-    order_id: orderId ? String(orderId) : undefined,
-  });
+  if (!fbqReady()) return;
+  try {
+    window.__metaAllowPurchase = true;
+    trackMetaEvent("Purchase", {
+      value: Number(value) || 0,
+      currency: "INR",
+      num_items: numItems,
+      content_ids: contents.map((c) => c.id),
+      contents,
+      order_id: orderId ? String(orderId) : undefined,
+    });
+  } finally {
+    window.__metaAllowPurchase = false;
+  }
 }
 
 const PURCHASE_TRACKED_PREFIX = "meta_pixel_purchase_tracked:";
