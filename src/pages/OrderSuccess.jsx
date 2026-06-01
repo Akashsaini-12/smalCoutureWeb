@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import {
+  readStashedPurchaseMeta,
+  trackPurchaseOnOrderSuccess,
+} from "../utils/metaPixel";
 
 export default function OrderSuccess() {
   const location = useLocation();
+  const purchaseTrackedRef = useRef(false);
   const params = new URLSearchParams(location.search);
   const orderId = params.get("orderId");
+
+  useEffect(() => {
+    if (purchaseTrackedRef.current || !orderId) return;
+    purchaseTrackedRef.current = true;
+
+    const fromState = location.state?.purchaseMeta;
+    const fromStorage = readStashedPurchaseMeta(orderId);
+    const orderIdStr = String(orderId);
+    const purchaseMeta =
+      fromState?.orderId === orderIdStr
+        ? fromState
+        : fromStorage?.orderId === orderIdStr
+          ? fromStorage
+          : null;
+
+    if (!purchaseMeta?.orderId) return;
+
+    trackPurchaseOnOrderSuccess(purchaseMeta);
+  }, [orderId, location.state]);
 
   return (
     <main style={{ background: "#fff", padding: "44px 16px 80px" }}>

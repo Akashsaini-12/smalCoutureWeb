@@ -94,3 +94,57 @@ export function trackPurchase({ orderId, items, value }) {
     order_id: orderId ? String(orderId) : undefined,
   });
 }
+
+const PURCHASE_TRACKED_PREFIX = "meta_pixel_purchase_tracked:";
+const PURCHASE_META_PREFIX = "meta_pixel_purchase_meta:";
+
+/** Stash order totals before redirecting to /order-success (read once on that page). */
+export function stashPurchaseMetaForSuccess({ orderId, items, value }) {
+  const id = orderId ? String(orderId).trim() : "";
+  if (!id) return;
+  try {
+    sessionStorage.setItem(
+      `${PURCHASE_META_PREFIX}${id}`,
+      JSON.stringify({ orderId: id, items, value: Number(value) || 0 }),
+    );
+  } catch {
+    // ignore
+  }
+}
+
+export function readStashedPurchaseMeta(orderId) {
+  const id = orderId ? String(orderId).trim() : "";
+  if (!id) return null;
+  const key = `${PURCHASE_META_PREFIX}${id}`;
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    sessionStorage.removeItem(key);
+    return JSON.parse(raw);
+  } catch {
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      // ignore
+    }
+    return null;
+  }
+}
+
+/** Purchase standard event — call only from the order success / thank-you page. */
+export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
+  const id = orderId ? String(orderId).trim() : "";
+  if (!id) return;
+  const dedupeKey = `${PURCHASE_TRACKED_PREFIX}${id}`;
+  try {
+    if (sessionStorage.getItem(dedupeKey)) return;
+  } catch {
+    // continue
+  }
+  trackPurchase({ orderId: id, items, value });
+  try {
+    sessionStorage.setItem(dedupeKey, "1");
+  } catch {
+    // ignore
+  }
+}

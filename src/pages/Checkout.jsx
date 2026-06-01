@@ -19,7 +19,10 @@ import {
   formatSizeForCustomerDisplay,
   isInternalFreeSizeLabel,
 } from "../utils/internalFreeSize";
-import { trackInitiateCheckout, trackPurchase } from "../utils/metaPixel";
+import {
+  trackInitiateCheckout,
+  stashPurchaseMetaForSuccess,
+} from "../utils/metaPixel";
 
 function formatINR(n) {
   const num = Number(n || 0);
@@ -510,6 +513,10 @@ export default function Checkout({ cartItems = [] }) {
           });
 
       const orderId = res?.order?._id || res?.orderId;
+      if (!orderId) {
+        setError("Order was not created. Please try again.");
+        return;
+      }
       const purchaseValue = orderItems.reduce((sum, it) => {
         const price = parsePrice(it?.price);
         const qty = Number(it?.quantity || 1);
@@ -519,8 +526,16 @@ export default function Checkout({ cartItems = [] }) {
         0,
         purchaseValue + shippingPreview - discountPreview,
       );
-      trackPurchase({ orderId, items: orderItems, value: purchaseTotal });
-      navigate(`/order-success${orderId ? `?orderId=${encodeURIComponent(orderId)}` : ""}`);
+      const purchaseMeta = {
+        orderId: String(orderId),
+        items: orderItems,
+        value: purchaseTotal,
+      };
+      stashPurchaseMetaForSuccess(purchaseMeta);
+      navigate(
+        `/order-success?orderId=${encodeURIComponent(orderId)}`,
+        { state: { purchaseMeta } },
+      );
     } catch (e) {
       const msg = e?.message || "Checkout failed";
       if (typeof msg === "string" && /^out of stock:/i.test(msg)) {
