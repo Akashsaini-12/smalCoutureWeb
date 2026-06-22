@@ -272,78 +272,160 @@ const Footor = () => {
                         style={{ display: isDesktop || isOpen("newsletter") ? "block" : "none" }}
                       >
                         <div className="block-text" style={{ display: "grid", gap: 10 }}>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                            {/* Email */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                              <svg
-                                width="22"
-                                height="22"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                aria-hidden="true"
-                                style={{ color: "#111", flexShrink: 0 }}
-                              >
-                                <path d="M4 4h16v16H4z" opacity="0" />
-                                <path d="M4 6h16v12H4z" />
-                                <path d="m4 7 8 6 8-6" />
-                              </svg>
-                              
-                            </span>
-                            <span
-                              className="m-link"
+                          <div style={{ display: "grid", gap: 10, width: "100%" }}>
+                            <div
                               style={{
-                                cursor: "default",
-                                pointerEvents: "none",
-                                color: "rgba(15, 23, 42, 0.78)",
-                                // fontWeight: 700,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                padding: "16px 20px",
+                                borderRadius: 999,
+                                border: "1px solid rgba(176, 141, 87, 0.75)",
+                                background: "#fff",
+                                width: "100%",
+                                minWidth: 0,
                               }}
+                              aria-label="Email smalcouture@gmail.com"
                             >
-                              smalcouture@gmail.com
-                            </span>
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                                <svg
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.4"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  aria-hidden="true"
+                                  style={{ flexShrink: 0 }}
+                                >
+                                  <path d="M4 6h16v12H4z" />
+                                  <path d="M22 6 12 13 2 6" />
+                                </svg>
+                                <span
+                                  style={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "normal",
+                                    color: "rgba(15, 23, 42, 0.7)",
+                                    fontWeight: 700,
+                                    fontSize: 13,
+                                    minWidth: 0,
+                                  }}
+                                >
+                                  Write us on smalcouture@gmail.com
+                                </span>
+                              </span>
                             </div>
 
-                            {/* WhatsApp */}
-                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <a
+                              href="https://wa.me/918199985004?text=Hi%20S-Mal%2C%20I%20came%20across%20your%20website%20and%20would%20like%20to%20connect%20regarding%20a%20query.%20Looking%20forward%20to%20your%20assistance."
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                gap: 10,
+                                padding: "16px 20px",
+                                borderRadius: 999,
+                                border: "1px solid rgba(176, 141, 87, 0.75)",
+                                background: "#fff",
+                                color: "rgba(15, 23, 42, 0.7)",
+                                textDecoration: "none",
+                                width: "100%",
+                                minWidth: 0,
+                                fontWeight: 700,
+                              }}
+                            >
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 8, minWidth: 0, flexWrap: "wrap" }}>
                                 <img
                                   src={whatsappLogo}
                                   alt="WhatsApp"
-                                  width={22}
-                                  height={22}
-                                  style={{ width: 24, height: 24, objectFit: "contain", display: "block", flexShrink: 0 }}
+                                  width={18}
+                                  height={18}
+                                  style={{ width: 18, height: 18, objectFit: "contain", display: "block", flexShrink: 0 }}
                                   loading="lazy"
                                 />
+                                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13, minWidth: 0 }}>
+                                  +918199985004
+                                </span>
+                                <span style={{ whiteSpace: "normal", fontSize: 13, color: "rgba(15, 23, 42, 0.7)", minWidth: 0 }}>
+                                  - Click here to open WhatsApp
+                                </span>
                               </span>
-                             <span
-                               className="m-link"
-                               style={{
-                                 cursor: "default",
-                                 pointerEvents: "none",
-                                 color: "rgba(15, 23, 42, 0.78)",
-                                //  fontWeight: 700,
-                                 fontSize: 14,
-                               }}
-                             >
-                               +91 8199985004
-                             </span>
-                            </div>
+                            </a>
                           </div>
-                          <div style={{ display: "flex", gap: 10, flexWrap: "nowrap", alignItems: "center", whiteSpace: "nowrap",marginLeft:4, color: "rgba(15, 23, 42, 0.78)" }}>
-                            <a className="m-link" href="https://www.instagram.com/smalcouture/" target="_blank" rel="noreferrer" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12 }}>
-                            <svg className="m-svg-icon--medium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style={{ width: 18, height: 18, flexShrink: 0 }}><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>
-                            <span>  smalcouture</span>
+
+                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginLeft: 4, width: "100%" }}>
+                            <a
+                              className="m-link"
+                              href="https://www.instagram.com/smalcouture/"
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: "flex",
+                                flex: 1,
+                                minWidth: 0,
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                gap: 10,
+                                padding: "14px 18px",
+                                borderRadius: 999,
+                                border: "1px solid rgba(176, 141, 87, 0.75)",
+                                background: "#fff",
+                              color: "rgba(15, 23, 42, 0.7)",
+                                textDecoration: "none",
+                                fontWeight: 700,
+                                fontSize: 14,
+                              }}
+                            >
+                              <svg
+                                className="m-svg-icon--medium"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512"
+                                style={{ width: 18, height: 18, flexShrink: 0 }}
+                                aria-hidden="true"
+                              >
+                                <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                              </svg>
+                              smalcouture - Follow
                             </a>
-                            <span style={{ opacity: 0.35 }}>•</span>
-                            <a className="m-link" href="https://www.instagram.com/smal_west/" target="_blank" rel="noreferrer" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 12 }}>
-                            <svg className="m-svg-icon--medium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style={{ width: 18, height: 18, flexShrink: 0 }}><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>
-                            <span> smal_west</span>
+                            <a
+                              className="m-link"
+                              href="https://www.instagram.com/smal_west/"
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: "flex",
+                                flex: 1,
+                                minWidth: 0,
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                gap: 10,
+                                padding: "14px 18px",
+                                borderRadius: 999,
+                                border: "1px solid rgba(176, 141, 87, 0.75)",
+                                background: "#fff",
+                                color: "rgba(15, 23, 42, 0.7)",
+                                textDecoration: "none",
+                                fontWeight: 700,
+                                fontSize: 14,
+                              }}
+                            >
+                              <svg
+                                className="m-svg-icon--medium"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512"
+                                style={{ width: 18, height: 18, flexShrink: 0 }}
+                                aria-hidden="true"
+                              >
+                                <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7-102.7-9-132.1z" />
+                              </svg>
+                              smal_west - Follow
                             </a>
-                              </div>
+                          </div>
                           <div style={{ color: "rgba(15, 23, 42, 0.78)", fontSize: 15, lineHeight: 1.5 }}>
                             For order support, product queries, and collaborations — reach out anytime.
                             </div>
