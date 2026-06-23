@@ -251,6 +251,15 @@ const Footor = () => {
                   max-height: none !important;
                   overflow: visible !important;
                 }
+                /* Keep Instagram buttons in a single row on small screens */
+                .m-footer .insta-buttons {
+                  flex-wrap: nowrap !important;
+                }
+                .m-footer .insta-buttons > a {
+                  flex: 1 1 auto !important;
+                  min-width: 0 !important;
+                  padding: 10px 14px !important;
+                }
               }
             `}</style>
             <div className="m-footer--middle m-gradient m-color-footer">
@@ -358,7 +367,7 @@ const Footor = () => {
                             </a>
                           </div>
 
-                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginLeft: 4, width: "100%" }}>
+                          <div className="insta-buttons" style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginLeft: 4, width: "100%" }}>
                             <a
                               className="m-link"
                               href="https://www.instagram.com/smalcouture/"
