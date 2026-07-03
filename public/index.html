@@ -27,8 +27,15 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     var META_PIXEL_ID = '1609839080107013';
-    fbq('init', META_PIXEL_ID, {}, { autoConfig: false });
-    fbq('set', 'autoConfig', false, META_PIXEL_ID);
+        var WEST_PIXEL_ID = '860862546423818';
+
+        // S-Mal Couture Pixel Initialize
+        fbq('init', META_PIXEL_ID, {}, { autoConfig: false });
+        fbq('set', 'autoConfig', false, META_PIXEL_ID);
+
+        // S-Mal West Pixel Initialize
+        fbq('init', WEST_PIXEL_ID, {}, { autoConfig: false });
+        fbq('set', 'autoConfig', false, WEST_PIXEL_ID);
     (function () {
       function isBlockedPurchase(args) {
         var cmd = args[0];
