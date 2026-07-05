@@ -307,10 +307,10 @@ export default function Checkout({ cartItems = [] }) {
     // Auto-apply saved coupon (if any) once subtotal is known
     if (!couponCode) return;
     if (!subtotal) return;
-    validateCoupon({ userId, code: couponCode, subtotal })
+    validateCoupon({ userId, code: couponCode, subtotal, paymentMethod, items })
       .then((res) => setCouponStatus(res))
       .catch(() => setCouponStatus(null));
-  }, [couponCode, subtotal]);
+  }, [couponCode, subtotal, paymentMethod, items]);
 
   useEffect(() => {
     let mounted = true;
@@ -452,7 +452,7 @@ export default function Checkout({ cartItems = [] }) {
     setError("");
     setCouponStatus(null);
     try {
-      const res = await validateCoupon({ userId, code: couponCode, subtotal });
+      const res = await validateCoupon({ userId, code: couponCode, subtotal, paymentMethod, items });
       setCouponStatus(res);
     } catch (e) {
       setCouponStatus(null);

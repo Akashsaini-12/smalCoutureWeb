@@ -22,6 +22,7 @@ export default function CouponsAdminSection() {
   const [maxDiscount, setMaxDiscount] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [isActive, setIsActive] = useState(true);
+  const [applicableCategories, setApplicableCategories] = useState([]);
 
   const normalizedCode = useMemo(() => String(code || "").trim().toUpperCase(), [code]);
 
@@ -53,6 +54,8 @@ export default function CouponsAdminSection() {
         maxDiscount: maxDiscount === "" ? 0 : Number(maxDiscount),
         isActive,
         expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
+        applicableOn,
+            applicableCategories,
       });
       setCode("");
       setValue("");
@@ -60,6 +63,8 @@ export default function CouponsAdminSection() {
       setMaxDiscount("");
       setExpiresAt("");
       setIsActive(true);
+      setApplicableOn("");
+setApplicableCategories([]);
       await load();
     } catch (e) {
       setError(e?.message || "Failed to create coupon");
@@ -123,6 +128,38 @@ export default function CouponsAdminSection() {
             <label className="form-label">Expires at</label>
             <input className="form-input" type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
           </div>
+          {/* Payment Method aur Category Restrictions */}
+<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 18 }}>
+    <div className="form-group" style={{ marginBottom: 0 }}>
+        <label className="form-label">Applicable On (Payment Method)</label>
+        <select 
+            className="form-select" 
+            value={applicableOn} 
+            onChange={(e) => setApplicableOn(e.target.value)}
+        >
+            <option value="">All (No Restriction)</option>
+            <option value="prepaid">Prepaid Only</option>
+            <option value="cod">COD Only</option>
+        </select>
+    </div>
+
+    <div className="form-group" style={{ marginBottom: 0 }}>
+        <label className="form-label">Applicable Categories (Comma Separated IDs)</label>
+        <input 
+            className="form-input" 
+            type="text" 
+            placeholder="e.g., suits, kurti, coord" 
+            value={applicableCategories.join(", ")} 
+            onChange={(e) => {
+                const values = e.target.value.split(",").map(cat => cat.trim()).filter(cat => cat !== "");
+                setApplicableCategories(values);
+            }} 
+        />
+        <div style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}>
+            Leave empty if applicable on all categories.
+        </div>
+    </div>
+</div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <label style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, color: "#111827" }}>
