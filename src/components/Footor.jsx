@@ -436,7 +436,7 @@ const Footor = () => {
                             </a>
                           </div>
                           <div style={{ color: "rgba(15, 23, 42, 0.78)", fontSize: 15, lineHeight: 1.5 }}>
-                            For order support, product queries, and collaborations — reach out anytime.
+                            <strong>Let's Connect.</strong> Whether you need help with an order, have a product inquiry, or want to collaborate, we'd love to hear from you.
                             </div>
                         </div>
                       </div>
