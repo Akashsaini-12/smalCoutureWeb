@@ -23,7 +23,7 @@ export default function CouponsAdminSection() {
   const [expiresAt, setExpiresAt] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [applicableCategories, setApplicableCategories] = useState([]);
-
+  const [applicableOn, setApplicableOn] = useState("");
   const normalizedCode = useMemo(() => String(code || "").trim().toUpperCase(), [code]);
 
   const load = async () => {
