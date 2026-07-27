@@ -448,30 +448,20 @@ export default function Checkout({ cartItems = [] }) {
     }
   }
 
-  async function applyCoupon() {
-    setError("");
-    setCouponStatus(null);
-    try {
-      const res = await validateCoupon({ userId, code: couponCode, subtotal, paymentMethod, items });
-      setCouponStatus(res);
-    } catch (e) {
-      setCouponStatus(null);
-      setError(e?.message || "Invalid coupon");
-    }
-  }
+  setCouponStatus(res);
 
   useEffect(() => {
     // Agar customer ne coupon apply kar rakha hai, tabhi re-validate karenge
     if (couponCode && couponStatus) {
-        validateCoupon({ 
-            userId, 
-            code: couponCode, 
-            subtotal, 
-            paymentMethod, 
-            items 
-        });
+      validateCoupon({
+        userId,
+        code: couponCode,
+        subtotal,
+        paymentMethod,
+        items
+      });
     }
-}, [paymentMethod]); // Jab bhi paymentMethod switch hoga, yeh automatic trigger hoga
+  }, [paymentMethod]); // Jab bhi paymentMethod switch hoga, yeh automatic trigger hoga
 
   async function placeOrder(paymentPayload = null) {
     setError("");
@@ -508,22 +498,22 @@ export default function Checkout({ cartItems = [] }) {
 
       const res = isBuyNowMode
         ? await createBuyNowCheckout({
-            userId,
-            paymentMethod,
-            note,
-            couponCode,
-            shippingAddress,
-            item: buyNowItem,
-            ...(paymentPayload ? { payment: paymentPayload } : {}),
-          })
+          userId,
+          paymentMethod,
+          note,
+          couponCode,
+          shippingAddress,
+          item: buyNowItem,
+          ...(paymentPayload ? { payment: paymentPayload } : {}),
+        })
         : await createCheckout({
-            userId,
-            paymentMethod,
-            note,
-            couponCode,
-            shippingAddress,
-            ...(paymentPayload ? { payment: paymentPayload } : {}),
-          });
+          userId,
+          paymentMethod,
+          note,
+          couponCode,
+          shippingAddress,
+          ...(paymentPayload ? { payment: paymentPayload } : {}),
+        });
 
       const orderId = res?.order?._id || res?.orderId;
       if (!orderId) {
@@ -622,7 +612,7 @@ export default function Checkout({ cartItems = [] }) {
             meta: { receipt },
           }),
         });
-      } catch {}
+      } catch { }
 
       // Don't prefill any personal info in Razorpay.
       const prefill = {};
@@ -655,7 +645,7 @@ export default function Checkout({ cartItems = [] }) {
                   meta: { receipt },
                 }),
               });
-            } catch {}
+            } catch { }
             setError("Payment cancelled.");
             toast.info("Payment cancelled.");
             setPaying(false);
@@ -693,7 +683,7 @@ export default function Checkout({ cartItems = [] }) {
                   meta: { receipt },
                 }),
               });
-            } catch {}
+            } catch { }
 
             const paymentPayload = {
               provider: "razorpay",
@@ -723,7 +713,7 @@ export default function Checkout({ cartItems = [] }) {
           "Payment failed";
         const msg = code ? `${desc} (${code})` : desc;
         // Keep full payload for debugging in devtools
-        try { console.error("Razorpay payment.failed", resp); } catch {}
+        try { console.error("Razorpay payment.failed", resp); } catch { }
 
         // Best-effort: log failure
         try {
@@ -743,7 +733,7 @@ export default function Checkout({ cartItems = [] }) {
               meta: resp?.error || null,
             }),
           });
-        } catch {}
+        } catch { }
 
         setError(msg);
         toast.error(msg);
@@ -1005,7 +995,19 @@ export default function Checkout({ cartItems = [] }) {
                         : { borderColor: "#e5e7eb" }),
                     }}
                   >
-                    <input type="radio" name="pay" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
+                    <input
+                      type="radio"
+                      name="pay"
+                      checked={paymentMethod === "cod"}
+                      onChange={() => {
+                        setPaymentMethod("cod");
+                        if (couponStatus) {
+                          setCouponStatus(null);
+                          if (typeof setDiscount === "function") setDiscount(0);
+                          setError("Payment method changed. Please re-apply coupon.");
+                        }
+                      }}
+                    />
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                       <div style={{ minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1044,7 +1046,15 @@ export default function Checkout({ cartItems = [] }) {
                         : { borderColor: "#e5e7eb" }),
                     }}
                   >
-                    <input type="radio" name="pay" checked={paymentMethod === "online"} onChange={() => setPaymentMethod("online")} />
+                    <input type="radio" name="pay" checked={paymentMethod === "online"} onChange={() => {
+                      setPaymentMethod("online");
+                      if (couponStatus) {
+                        setCouponStatus(null);
+                        if (typeof setDiscount === "function") setDiscount(0);
+                        setError("Payment method changed. Please re-apply coupon.");
+                      }
+                    }}
+                    />
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                       <div style={{ minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
