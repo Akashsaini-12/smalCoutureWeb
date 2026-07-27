@@ -1003,7 +1003,6 @@ export default function Checkout({ cartItems = [] }) {
                         setPaymentMethod("cod");
                         if (couponStatus) {
                           setCouponStatus(null);
-                          if (typeof setDiscount === "function") setDiscount(0);
                           setError("Payment method changed. Please re-apply coupon.");
                         }
                       }}
@@ -1050,7 +1049,6 @@ export default function Checkout({ cartItems = [] }) {
                       setPaymentMethod("online");
                       if (couponStatus) {
                         setCouponStatus(null);
-                        if (typeof setDiscount === "function") setDiscount(0);
                         setError("Payment method changed. Please re-apply coupon.");
                       }
                     }}
