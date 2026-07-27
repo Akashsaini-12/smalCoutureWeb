@@ -448,7 +448,23 @@ export default function Checkout({ cartItems = [] }) {
     }
   }
 
-  setCouponStatus(res);
+  const applyCoupon = async () => {
+    if (!couponCode) return;
+    setError("");
+    try {
+      const res = await validateCoupon({
+        userId,
+        code: couponCode,
+        subtotal,
+        paymentMethod,
+        items
+      });
+      setCouponStatus(res);
+    } catch (err) {
+      setCouponStatus(null);
+      setError(err?.response?.data?.error || err?.message || "Invalid coupon");
+    }
+  };
 
   useEffect(() => {
     // Agar customer ne coupon apply kar rakha hai, tabhi re-validate karenge
@@ -459,7 +475,15 @@ export default function Checkout({ cartItems = [] }) {
         subtotal,
         paymentMethod,
         items
-      });
+      })
+        .then((data) => {
+          setCouponStatus(data);
+          setError("");
+        })
+        .catch((err) => {
+          setCouponStatus(null);
+          setError(err?.response?.data?.error || err?.message || "Invalid coupon for this payment method");
+        });
     }
   }, [paymentMethod]); // Jab bhi paymentMethod switch hoga, yeh automatic trigger hoga
 
@@ -931,7 +955,7 @@ export default function Checkout({ cartItems = [] }) {
                     placeholder="Enter coupon code"
                     style={inputStyle}
                   />
-                  <button type="button" onClick={applyCoupon} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
+                  <button type="button" onClick={handleApplyCoupon} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
                     Apply
                   </button>
                 </div>
@@ -956,7 +980,7 @@ export default function Checkout({ cartItems = [] }) {
                               const next = String(c.code || "");
                               setCouponCode(next);
                               // apply immediately for better UX
-                              setTimeout(() => applyCoupon(), 0);
+                              setTimeout(() => handleApplyCoupon(), 0);
                             }}
                             style={{
                               padding: "10px 12px",
