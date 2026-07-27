@@ -460,6 +460,19 @@ export default function Checkout({ cartItems = [] }) {
     }
   }
 
+  useEffect(() => {
+    // Agar customer ne coupon apply kar rakha hai, tabhi re-validate karenge
+    if (couponCode && couponStatus) {
+        validateCoupon({ 
+            userId, 
+            code: couponCode, 
+            subtotal, 
+            paymentMethod, 
+            items 
+        });
+    }
+}, [paymentMethod]); // Jab bhi paymentMethod switch hoga, yeh automatic trigger hoga
+
   async function placeOrder(paymentPayload = null) {
     setError("");
     setOutOfStockInfo(null);
