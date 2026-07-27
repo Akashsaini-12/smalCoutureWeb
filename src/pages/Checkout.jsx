@@ -955,7 +955,7 @@ export default function Checkout({ cartItems = [] }) {
                     placeholder="Enter coupon code"
                     style={inputStyle}
                   />
-                  <button type="button" onClick={handleApplyCoupon} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
+                  <button type="button" onClick={applyCoupon} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
                     Apply
                   </button>
                 </div>
@@ -980,7 +980,7 @@ export default function Checkout({ cartItems = [] }) {
                               const next = String(c.code || "");
                               setCouponCode(next);
                               // apply immediately for better UX
-                              setTimeout(() => handleApplyCoupon(), 0);
+                              setTimeout(() => applyCoupon(), 0);
                             }}
                             style={{
                               padding: "10px 12px",
