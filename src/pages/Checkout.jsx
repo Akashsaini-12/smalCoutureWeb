@@ -304,17 +304,6 @@ export default function Checkout({ cartItems = [] }) {
   }, []);
 
   useEffect(() => {
-    // Auto-apply saved coupon (if any) once subtotal is known.
-    // Do not validate coupons until the user has chosen a payment method.
-    if (!couponCode) return;
-    if (!subtotal) return;
-    if (!paymentMethod) return;
-    validateCoupon({ userId, code: couponCode, subtotal, paymentMethod, items })
-      .then((res) => setCouponStatus(res))
-      .catch(() => setCouponStatus(null));
-  }, [couponCode, subtotal, paymentMethod, items]);
-
-  useEffect(() => {
     let mounted = true;
     setAddrLoading(true);
     setAddrError("");
@@ -450,20 +439,22 @@ export default function Checkout({ cartItems = [] }) {
     }
   }
 
-  const applyCoupon = async () => {
-    if (!couponCode) return;
+  const applyCoupon = async (overrideCode = null) => {
+    const normalizedCoupon = String(overrideCode ?? couponCode ?? "").trim();
+    if (!normalizedCoupon) return;
     if (!paymentMethod) {
       setError("Please select a payment method before applying a coupon.");
       return;
     }
+    setCouponCode(normalizedCoupon);
     setError("");
     try {
       const res = await validateCoupon({
         userId,
-        code: couponCode,
+        code: normalizedCoupon,
         subtotal,
         paymentMethod,
-        items
+        items,
       });
       setCouponStatus(res);
     } catch (err) {
@@ -964,12 +955,15 @@ export default function Checkout({ cartItems = [] }) {
                   <input
                     value={couponCode}
                     onChange={(e) => {
-                      setCouponCode(e.target.value);
+                      const nextValue = e.target.value;
+                      setCouponCode(nextValue);
+                      setCouponStatus(null);
+                      setError("");
                     }}
                     placeholder="Enter coupon code"
                     style={inputStyle}
                   />
-                  <button type="button" onClick={applyCoupon} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
+                  <button type="button" onClick={() => applyCoupon()} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
                     Apply
                   </button>
                 </div>
@@ -992,9 +986,7 @@ export default function Checkout({ cartItems = [] }) {
                             disabled={disabled}
                             onClick={() => {
                               const next = String(c.code || "");
-                              setCouponCode(next);
-                              // apply immediately for better UX
-                              setTimeout(() => applyCoupon(), 0);
+                              applyCoupon(next);
                             }}
                             style={{
                               padding: "10px 12px",
