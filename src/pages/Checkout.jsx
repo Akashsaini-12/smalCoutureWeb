@@ -117,7 +117,7 @@ export default function Checkout({ cartItems = [] }) {
   const [note] = useState(() => String(location?.state?.note || ""));
   const [couponCode, setCouponCode] = useState(() => String(location?.state?.couponCode || ""));
   const [couponStatus, setCouponStatus] = useState(null); // { valid, code, discount }
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [paying, setPaying] = useState(false);
 
@@ -304,9 +304,11 @@ export default function Checkout({ cartItems = [] }) {
   }, []);
 
   useEffect(() => {
-    // Auto-apply saved coupon (if any) once subtotal is known
+    // Auto-apply saved coupon (if any) once subtotal is known.
+    // Do not validate coupons until the user has chosen a payment method.
     if (!couponCode) return;
     if (!subtotal) return;
+    if (!paymentMethod) return;
     validateCoupon({ userId, code: couponCode, subtotal, paymentMethod, items })
       .then((res) => setCouponStatus(res))
       .catch(() => setCouponStatus(null));
@@ -450,6 +452,10 @@ export default function Checkout({ cartItems = [] }) {
 
   const applyCoupon = async () => {
     if (!couponCode) return;
+    if (!paymentMethod) {
+      setError("Please select a payment method before applying a coupon.");
+      return;
+    }
     setError("");
     try {
       const res = await validateCoupon({
@@ -490,6 +496,10 @@ export default function Checkout({ cartItems = [] }) {
   async function placeOrder(paymentPayload = null) {
     setError("");
     setOutOfStockInfo(null);
+    if (!paymentMethod) {
+      setError("Select mode of payment first.");
+      return;
+    }
     try {
       if (!items.length) {
         setError("Your cart is empty.");
@@ -578,6 +588,10 @@ export default function Checkout({ cartItems = [] }) {
   async function payWithRazorpayThenPlaceOrder() {
     setError("");
     setOutOfStockInfo(null);
+    if (!paymentMethod) {
+      setError("Select mode of payment first.");
+      return;
+    }
     // Block payment unless a saved address exists/selected (API source of truth)
     const shippingAddress = ensureSavedAddressSelected();
     if (!shippingAddress) return;
