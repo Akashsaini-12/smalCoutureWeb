@@ -107,6 +107,7 @@ export default function Checkout({ cartItems = [] }) {
   const isBuyNowMode =
     Boolean(buyNowItem && (buyNowItem.productId || buyNowItem.variantId));
   const checkoutTrackedRef = useRef(false);
+  const errorRef = useRef(null);
 
   const [items, setItems] = useState(() => {
     if (isBuyNowMode) return [buyNowItem];
@@ -135,9 +136,20 @@ export default function Checkout({ cartItems = [] }) {
   const [addrError, setAddrError] = useState("");
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [showAddressOptions, setShowAddressOptions] = useState(false);
 
   const [shipPreview, setShipPreview] = useState(null); // { shipping, etaDays }
   const [shipLoading, setShipLoading] = useState(false);
+
+  const selectedAddress = useMemo(() => {
+    if (!savedAddresses.length) return null;
+    return (
+      savedAddresses.find((a) => String(a?._id) === String(selectedAddressId)) ||
+      savedAddresses.find((a) => Boolean(a?.isDefault)) ||
+      savedAddresses[0] ||
+      null
+    );
+  }, [savedAddresses, selectedAddressId]);
 
   const ensureSavedAddressSelected = () => {
     // User must select an address that exists in API (or save the new one first).
@@ -215,6 +227,14 @@ export default function Checkout({ cartItems = [] }) {
     0,
     FREE_SHIPPING_THRESHOLD - Math.max(0, Number(subtotal || 0)),
   );
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      setTimeout(() => {
+        errorRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 100);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (checkoutTrackedRef.current || !items.length) return;
@@ -363,6 +383,7 @@ export default function Checkout({ cartItems = [] }) {
   const handleSelectAddress = (id) => {
     const found = savedAddresses.find((a) => String(a?._id) === String(id));
     setSelectedAddressId(String(id || ""));
+    setShowAddressOptions(false);
     if (!found) return;
     setCustomerName(found.name || "");
     setPhone(found.phone || "");
@@ -385,11 +406,13 @@ export default function Checkout({ cartItems = [] }) {
     setCity("");
     setState("");
     setPincode("");
+    setShowAddressOptions(false);
     setShowAddressForm(true);
   };
 
   const startEditAddress = (id) => {
     handleSelectAddress(id);
+    setShowAddressOptions(false);
     setShowAddressForm(true);
   };
 
@@ -413,6 +436,7 @@ export default function Checkout({ cartItems = [] }) {
       const list = Array.isArray(listRes?.items) ? listRes.items : [];
       setSavedAddresses(list);
       if (saved?._id) setSelectedAddressId(String(saved._id));
+      setShowAddressOptions(false);
       setShowAddressForm(false);
     } catch (e) {
       setAddrError(e?.message || "Failed to save address");
@@ -465,7 +489,7 @@ export default function Checkout({ cartItems = [] }) {
 
   useEffect(() => {
     // Agar customer ne coupon apply kar rakha hai, tabhi re-validate karenge
-    if (couponCode && couponStatus) {
+    if (couponCode) {
       validateCoupon({
         userId,
         code: couponCode,
@@ -777,8 +801,8 @@ export default function Checkout({ cartItems = [] }) {
   }
 
   return (
-    <main style={{ background: "#fff", padding: isMobile ? "20px 14px 72px" : "28px 16px 80px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <main style={{ background: "#fff", padding: isMobile ? "20px 14px 72px" : "28px 32px 80px" }}>
+      <div style={{ maxWidth: 1320, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: isMobile ? "flex-start" : "baseline", justifyContent: "space-between", gap: 12, marginBottom: 16, flexDirection: isMobile ? "column" : "row" }}>
           <h1 style={{ margin: 0, fontSize: isMobile ? 24 : 28, fontWeight: 800, color: "#0f172a" }}>Checkout</h1>
           <Link to="/cart" style={{ color: "#0f172a", textDecoration: "underline", fontWeight: 600 }}>
@@ -790,110 +814,201 @@ export default function Checkout({ cartItems = [] }) {
           <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa" }}>
             Loading your cart…
           </div>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.25fr) minmax(0, 0.75fr)", gap: 18, alignItems: "start" }}>
-            <section style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, background: "#fff" }}>
-              <h2 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 800, color: "#111827" }}>Shipping details</h2>
+          ) : (
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.6fr) minmax(0, 0.9fr) minmax(0, 0.8fr)", gap: 20, alignItems: "start" }}>
+            <section style={{ border: "1px solid #e5e7eb", borderRadius: 20, padding: 20, background: "#fff" }}>
+              <div style={{ marginBottom: 18, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ color: "rgba(15,23,42,0.65)", fontSize: 13, fontWeight: 700, lineHeight: 1.5, minWidth: 0 }}>
+                  Delivery Addresses
+                </div>
+                <div style={{ color: "rgba(15,23,42,0.45)", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>Choose or save an address for delivery</div>
+              </div>
 
               <div style={{ marginBottom: 14 }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-                  <label style={labelStyle}>Saved addresses</label>
-                  <button type="button" onClick={startNewAddress} style={smallGhostBtn}>
-                    + Add new address
-                  </button>
-                </div>
 
                 {addrLoading ? (
-                  <div style={{ padding: 10, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa", color: "#64748b", fontWeight: 800 }}>
+                  <div style={{ padding: 10, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa", color: "#64748b", fontWeight: 800, marginTop: 10 }}>
                     Loading addresses…
                   </div>
-                ) : savedAddresses.length ? (
-                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: 12, marginTop: 10 }}>
-                    {savedAddresses.map((a) => {
-                      const active = String(a?._id) === String(selectedAddressId);
-                      return (
-                        <button
-                          key={a._id}
-                          type="button"
-                          onClick={() => handleSelectAddress(String(a._id))}
-                          style={{
-                            textAlign: "left",
-                            borderRadius: 14,
-                            border: active ? "2px solid #111" : "1px solid #e5e7eb",
-                            background: active ? "#fff" : "#fafafa",
-                            padding: 12,
-                            cursor: "pointer",
-                          }}
-                        >
-                          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                                <span style={{ fontWeight: 950, color: "#0f172a" }}>{a.label || "Address"}</span>
-                                {a.isDefault ? (
-                                  <span style={{ fontSize: 12, fontWeight: 900, color: "#166534", background: "#dcfce7", border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 999 }}>
-                                    Default
-                                  </span>
-                                ) : null}
-                              </div>
-                              <div style={{ marginTop: 6, color: "#0f172a", fontWeight: 800, fontSize: 13 }}>
-                                {a.name} • {a.phone}
-                              </div>
-                              <div style={{ marginTop: 4, color: "#64748b", fontWeight: 700, fontSize: 13, lineHeight: 1.3 }}>
-                                {a.address1}
-                                <br />
-                                {a.city}, {a.state} {a.pincode}
-                              </div>
-                            </div>
-                            <div style={{ display: "grid", gap: 8, flexShrink: 0 }}>
-                              <span style={{ width: 18, height: 18, borderRadius: 999, border: active ? "6px solid #111" : "2px solid #cbd5e1", boxSizing: "border-box", marginLeft: "auto" }} />
-                            </div>
-                          </div>
+                ) : (
+                  <div style={{ display: "grid", gap: 12, marginTop: 10 }}>
+                    <div style={{ padding: 20, borderRadius: 20, border: "1px solid rgba(15,23,42,0.12)", background: "#f8fafc", boxShadow: "0 10px 25px rgba(15,23,42,0.05)" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                        <div style={{ fontWeight: 950, color: "#0f172a", fontSize: 15 }}>
+                          {selectedAddress ? selectedAddress.label || "Address" : "No saved address"}
+                          {selectedAddress?.isDefault ? (
+                            <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 800, fontSize: 12 }}>
+                              • Default
+                            </span>
+                          ) : null}
+                        </div>
+                        <span style={{ color: "rgba(15,23,42,0.65)", fontWeight: 800, fontSize: 12 }}>
+                          {selectedAddress ? "Selected" : "Select one"}
+                        </span>
+                      </div>
 
-                          <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
-                            <span
-                              role="button"
-                              tabIndex={0}
+                      {selectedAddress ? (
+                        <>
+                          <div style={{ marginTop: 8, color: "rgba(15,23,42,0.72)", fontWeight: 700, fontSize: 13 }}>
+                            {selectedAddress.name} • {selectedAddress.phone}
+                          </div>
+                          <div style={{ marginTop: 8, color: "rgba(15,23,42,0.62)", fontSize: 13, lineHeight: 1.4 }}>
+                            {selectedAddress.address1}
+                            <br />
+                            {selectedAddress.city}, {selectedAddress.state} {selectedAddress.pincode}
+                          </div>
+                          <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                            <button
+                              type="button"
                               onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
-                                startEditAddress(String(a._id));
+                                startEditAddress(String(selectedAddress._id));
                               }}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.stopPropagation();
-                                  startEditAddress(String(a._id));
-                                }
+                              style={{
+                                padding: "9px 14px",
+                                borderRadius: 10,
+                                border: "1px solid #111827",
+                                background: "#fff",
+                                color: "#111827",
+                                fontWeight: 900,
+                                fontSize: 13,
+                                cursor: "pointer",
                               }}
-                              style={{ fontWeight: 900, fontSize: 13, color: "#111", textDecoration: "underline" }}
                             >
                               Edit
-                            </span>
-                            <span
-                              role="button"
-                              tabIndex={0}
+                            </button>
+                            <button
+                              type="button"
                               onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
-                                setSelectedAddressId(String(a._id));
+                                setSelectedAddressId(String(selectedAddress._id));
                                 handleDeleteAddress();
                               }}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.stopPropagation();
-                                  setSelectedAddressId(String(a._id));
-                                  handleDeleteAddress();
-                                }
+                              style={{
+                                padding: "9px 14px",
+                                borderRadius: 10,
+                                border: "1px solid #e11d48",
+                                background: "#fff",
+                                color: "#e11d48",
+                                fontWeight: 900,
+                                fontSize: 13,
+                                cursor: "pointer",
                               }}
-                              style={{ fontWeight: 900, fontSize: 13, color: "#b91c1c", textDecoration: "underline" }}
                             >
-                              Delete
-                            </span>
+                              Remove
+                            </button>
                           </div>
+                        </>
+                      ) : (
+                        <div style={{ marginTop: 8, color: "rgba(15,23,42,0.65)", fontWeight: 700 }}>
+                          Add a delivery address to continue.
+                        </div>
+                      )}
+                    </div>
+
+                    {savedAddresses.length > 1 && !showAddressForm ? (
+                      <div style={{ display: "grid", gap: 12 }}>
+                        <button type="button" onClick={() => setShowAddressOptions((value) => !value)} style={{ ...smallGhostBtn, width: "fit-content", padding: "10px 14px" }}>
+                          {showAddressOptions ? "Hide other addresses" : "Use another address"}
                         </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div style={{ marginTop: 10, padding: 12, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa", color: "#64748b", fontWeight: 800 }}>
-                    No saved addresses yet. Add one to continue.
+                        {showAddressOptions ? (
+                          <div style={{ display: "grid", gap: 12 }}>
+                            {savedAddresses
+                              .filter((a) => String(a?._id) !== String(selectedAddress?._id))
+                              .map((a) => (
+                                <button
+                                  key={a._id}
+                                  type="button"
+                                  onClick={() => handleSelectAddress(String(a._id))}
+                                  style={{
+                                    textAlign: "left",
+                                    borderRadius: 14,
+                                    border: "1px solid #e5e7eb",
+                                    background: "#fff",
+                                    padding: 14,
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                                    <div style={{ fontWeight: 950, color: "#0f172a" }}>
+                                      {a.label || "Address"}
+                                      {a.isDefault ? (
+                                        <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 800, fontSize: 12 }}>
+                                          • Default
+                                        </span>
+                                      ) : null}
+                                    </div>
+                                    <span style={{ color: "rgba(15,23,42,0.55)", fontWeight: 800, fontSize: 12 }}>
+                                      Select
+                                    </span>
+                                  </div>
+                                  <div style={{ marginTop: 8, color: "rgba(15,23,42,0.72)", fontWeight: 700, fontSize: 13 }}>
+                                    {a.name} • {a.phone}
+                                  </div>
+                                  <div style={{ marginTop: 8, color: "rgba(15,23,42,0.62)", fontSize: 13, lineHeight: 1.4 }}>
+                                    {a.address1}
+                                    <br />
+                                    {a.city}, {a.state} {a.pincode}
+                                  </div>
+                                  <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        startEditAddress(String(a._id));
+                                      }}
+                                      style={{
+                                        padding: "9px 14px",
+                                        borderRadius: 10,
+                                        border: "1px solid #111827",
+                                        background: "#fff",
+                                        color: "#111827",
+                                        fontWeight: 900,
+                                        fontSize: 13,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setSelectedAddressId(String(a._id));
+                                        handleDeleteAddress();
+                                      }}
+                                      style={{
+                                        padding: "9px 14px",
+                                        borderRadius: 10,
+                                        border: "1px solid #e11d48",
+                                        background: "#fff",
+                                        color: "#e11d48",
+                                        fontWeight: 900,
+                                        fontSize: 13,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                </button>
+                              ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    {savedAddresses.length > 0 && !showAddressForm ? (
+                      <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+                        <button type="button" onClick={startNewAddress} style={{ ...smallGhostBtn, width: "fit-content", padding: "10px 14px" }}>
+                          + Add new address
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 )}
 
@@ -905,8 +1020,8 @@ export default function Checkout({ cartItems = [] }) {
               </div>
 
               {showAddressForm && (
-                <div style={{ marginTop: 14, border: "1px solid #e5e7eb", borderRadius: 14, padding: 14, background: "#fff" }}>
-                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+                <div style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                     <div style={{ fontWeight: 950, color: "#0f172a" }}>
                       {selectedAddressId ? "Edit address" : "Add new address"}
                     </div>
@@ -915,7 +1030,7 @@ export default function Checkout({ cartItems = [] }) {
                     </button>
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: 12 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: 14 }}>
                     <input value={addressLabel} onChange={(e) => setAddressLabel(e.target.value)} placeholder="Home/Office" style={inputStyle} />
                     <label style={{ ...inlineRowStyle, ...inputStyle, display: "flex", alignItems: "center", gap: 10, margin: 0 }}>
                       <input type="checkbox" checked={isDefaultAddress} onChange={(e) => setIsDefaultAddress(e.target.checked)} />
@@ -929,7 +1044,7 @@ export default function Checkout({ cartItems = [] }) {
                     <input value={pincode} onChange={(e) => setPincode(e.target.value)} placeholder="Pincode" style={inputStyle} />
                   </div>
 
-                  <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", gap: 12, marginTop: 14, flexWrap: "wrap" }}>
                     <button type="button" onClick={handleSaveAddress} style={smallPrimaryBtn}>
                       {selectedAddressId ? "Update address" : "Save address"}
                     </button>
@@ -949,180 +1064,85 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               )}
 
-              <div style={{ marginTop: 12 }}>
-                <label style={labelStyle}>Coupon (optional)</label>
-                <div style={{ display: "flex", gap: 10, flexDirection: isMobile ? "column" : "row" }}>
-                  <input
-                    value={couponCode}
-                    onChange={(e) => {
-                      const nextValue = e.target.value;
-                      setCouponCode(nextValue);
-                      setCouponStatus(null);
-                      setError("");
-                    }}
-                    placeholder="Enter coupon code"
-                    style={inputStyle}
-                  />
-                  <button type="button" onClick={() => applyCoupon()} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
-                    Apply
-                  </button>
-                </div>
-                {Array.isArray(availableCoupons) && availableCoupons.length > 0 && (
-                  <div style={{ marginTop: 10 }}>
-                    <div style={{ fontSize: 12, fontWeight: 900, color: "#64748b", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
-                      Available coupons
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                      {availableCoupons.map((c) => {
-                        const disabled = subtotal < Number(c.minSubtotal || 0);
-                        const label =
-                          c.type === "percent"
-                            ? `${c.code} • ${c.value}% OFF`
-                            : `${c.code} • ₹${c.value} OFF`;
-                        return (
-                          <button
-                            key={c._id || c.code}
-                            type="button"
-                            disabled={disabled}
-                            onClick={() => {
-                              const next = String(c.code || "");
-                              applyCoupon(next);
-                            }}
-                            style={{
-                              padding: "10px 12px",
-                              borderRadius: 999,
-                              border: "1px solid #e5e7eb",
-                              background: disabled ? "#f1f5f9" : "#fff",
-                              color: disabled ? "#94a3b8" : "#0f172a",
-                              fontWeight: 900,
-                              fontSize: 12,
-                              cursor: disabled ? "not-allowed" : "pointer",
-                            }}
-                            title={disabled ? `Min subtotal ₹${c.minSubtotal} required` : "Click to apply"}
-                          >
-                            {label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                {couponStatus?.valid ? (
-                  <div style={{ marginTop: 10, padding: 10, borderRadius: 10, border: "1px solid #bbf7d0", background: "#f0fdf4", color: "#166534", fontWeight: 800 }}>
-                    Coupon <strong>{couponStatus.code}</strong> applied — Discount {formatINR(couponStatus.discount)}
-                  </div>
-                ) : null}
-              </div>
+              {/* Coupon UI moved to a dedicated middle column for compact layout */}
 
-              <div style={{ marginTop: 16 }}>
-                <h3 style={{ margin: "0 0 10px", fontSize: 14, fontWeight: 800, color: "#111827" }}>Payment method</h3>
-                <div style={{ display: "grid", gap: 10 }}>
-                  <label
-                    style={{
-                      ...radioRowStyle,
-                      ...(paymentMethod === "cod"
-                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
-                        : { borderColor: "#e5e7eb" }),
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="pay"
-                      checked={paymentMethod === "cod"}
-                      onChange={() => {
-                        setPaymentMethod("cod");
-                        if (couponStatus) {
-                          setCouponStatus(null);
-                          setError("Payment method changed. Please re-apply coupon.");
-                        }
-                      }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              width: 28,
-                              height: 28,
-                              borderRadius: 10,
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              background: paymentMethod === "cod" ? "#111" : "#f1f5f9",
-                              color: paymentMethod === "cod" ? "#fff" : "#0f172a",
-                              flexShrink: 0,
-                              fontWeight: 950,
-                              fontSize: 12,
-                            }}
-                          >
-                            COD
-                          </span>
-                          <span style={{ fontWeight: 900, color: "#0f172a" }}>Cash on delivery</span>
-                        </div>
-                        <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginTop: 2 }}>
-                          Pay after delivery • No online payment needed
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-
-                  <label
-                    style={{
-                      ...radioRowStyle,
-                      ...(paymentMethod === "online"
-                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
-                        : { borderColor: "#e5e7eb" }),
-                    }}
-                  >
-                    <input type="radio" name="pay" checked={paymentMethod === "online"} onChange={() => {
-                      setPaymentMethod("online");
-                      if (couponStatus) {
-                        setCouponStatus(null);
-                        setError("Payment method changed. Please re-apply coupon.");
-                      }
-                    }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              width: 28,
-                              height: 28,
-                              borderRadius: 10,
-                              display: "inline-flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              background: paymentMethod === "online" ? "#111" : "#f1f5f9",
-                              color: paymentMethod === "online" ? "#fff" : "#0f172a",
-                              flexShrink: 0,
-                              fontWeight: 950,
-                              fontSize: 12,
-                            }}
-                          >
-                            PAY
-                          </span>
-                          <span style={{ fontWeight: 900, color: "#0f172a" }}>Online payment</span>
-                        </div>
-                        <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginTop: 2 }}>
-                          UPI / Cards / Netbanking • Secure checkout
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-              </div>
+              {/* Payment moved to order summary column */}
 
               {error ? (
-                <div style={{ marginTop: 14, padding: 12, borderRadius: 10, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontWeight: 600 }}>
+                <div ref={errorRef} style={{ marginTop: 16, padding: 14, borderRadius: 10, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontWeight: 600 }}>
                   {error}
                 </div>
               ) : null}
             </section>
 
-            <aside style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, background: "#fafafa" }}>
+            <section style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, background: "#fff" }}>
+              <label style={labelStyle}>Offers for you</label>
+              <div style={{ display: "flex", gap: 12, flexDirection: isMobile ? "column" : "row" }}>
+                <input
+                  value={couponCode}
+                  onChange={(e) => {
+                    const nextValue = e.target.value;
+                    setCouponCode(nextValue);
+                    setCouponStatus(null);
+                    setError("");
+                  }}
+                  placeholder="Enter coupon code"
+                  style={inputStyle}
+                />
+                <button type="button" onClick={() => applyCoupon()} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
+                  Apply
+                </button>
+              </div>
+              {Array.isArray(availableCoupons) && availableCoupons.length > 0 && (
+                <div style={{ marginTop: 16 }}>
+                  <div style={{ fontSize: 12, fontWeight: 900, color: "#64748b", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
+                    Available coupons
+                  </div>
+
+                  {!paymentMethod && (
+                    <div style={{ marginBottom: 12, padding: 12, borderRadius: 8, background: "#fef3c7", border: "1px solid #fcd34d", color: "#92400e", fontSize: 12, fontWeight: 600, textAlign: "center" }}>
+                      Select a payment option to enable coupons
+                    </div>
+                  )}
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {availableCoupons.map((c) => {
+                      const minSubtotalNotMet = subtotal < Number(c.minSubtotal || 0);
+                      const isApplied = couponStatus?.code === c.code;
+                      const discountLabel = c.type === "percent" ? `${c.value}% OFF` : `₹${c.value} OFF`;
+                      const applicableOn = String(c.applicableOn || "all").toLowerCase();
+                      const isApplicableToPayment = !paymentMethod || applicableOn === "all" || (applicableOn === "cod" && paymentMethod === "cod") || (applicableOn === "prepaid" && paymentMethod === "online");
+                      const buttonDisabled = !paymentMethod || minSubtotalNotMet || !isApplicableToPayment;
+                      const getPaymentLabel = () => {
+                        if (applicableOn === "all") return "All Payment Methods";
+                        if (applicableOn === "cod") return "Cash on Delivery";
+                        if (applicableOn === "prepaid") return "Online Payment";
+                        return "All Payment Methods";
+                      };
+                      const couponInfo = [getPaymentLabel(), c.minSubtotal > 0 ? `Min order value ₹${c.minSubtotal}` : null].filter(Boolean).join(" · ");
+
+                      return (
+                        <div key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
+                          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+                            <div>
+                              <div style={{ fontSize: 14, fontWeight: 950, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
+                              <div style={{ fontSize: 12, fontWeight: 700, color: "#059669" }}>{discountLabel}</div>
+                            </div>
+                            <button type="button" disabled={buttonDisabled && !isApplied} onClick={() => { const next = String(c.code || ""); applyCoupon(next); }} style={{ padding: "8px 12px", borderRadius: 8, border: "none", minWidth: 110, background: isApplied ? "#10b981" : buttonDisabled ? "#e5e7eb" : "#111", color: isApplied ? "#fff" : buttonDisabled ? "#6b7280" : "#fff", fontWeight: 700, fontSize: 12, cursor: buttonDisabled && !isApplied ? "not-allowed" : "pointer", whiteSpace: "nowrap" }} title={!paymentMethod ? "Select payment method first" : minSubtotalNotMet ? `Min order ₹${c.minSubtotal} required` : !isApplicableToPayment ? `Not applicable for ${paymentMethod === "cod" ? "COD" : "online payment"}` : isApplied ? "Coupon applied" : "Apply this coupon"}>
+                              {isApplied ? "✓ Applied" : "Tap to apply"}
+                            </button>
+                          </div>
+                          <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, lineHeight: 1.4 }}>
+                            {couponInfo}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </section>
+            <aside style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, background: "#fafafa" }}>
               <h2 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 800, color: "#111827" }}>Order summary</h2>
 
               {!items.length ? (
@@ -1130,18 +1150,18 @@ export default function Checkout({ cartItems = [] }) {
                   No items in cart.
                 </div>
               ) : (
-                <div style={{ display: "grid", gap: 10 }}>
+                <div style={{ display: "grid", gap: 12 }}>
                   {items.map((it) => (
                     <div
                       key={it._id || `${it.productId}-${it.variantId}-${it.size}-${it.color}`}
                       style={{
                         display: "flex",
-                        gap: 10,
+                        gap: 12,
                         alignItems: "center",
                         background: "#fff",
                         border: "1px solid #e5e7eb",
                         borderRadius: 10,
-                        padding: 10,
+                        padding: 12,
                         ...(checkoutLineMatchesOosBanner(it, outOfStockInfo)
                           ? { borderColor: "#fb7185", background: "#fff1f2" }
                           : {}),
@@ -1178,54 +1198,90 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               )}
 
-              <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#0f172a" }}>
+              <div style={{ marginTop: 16 }}>
+                <h3 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 800, color: "#111827" }}>Payment options</h3>
+                <div style={{ display: "grid", gap: 10 }}>
+                  <label
+                    style={{
+                      ...radioRowStyle,
+                      padding: 12,
+                      ...(paymentMethod === "cod"
+                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
+                        : { borderColor: "#e5e7eb", background: "#fff" }),
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="pay"
+                      checked={paymentMethod === "cod"}
+                      onChange={() => {
+                        setPaymentMethod("cod");
+                      }}
+                    />
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 900, color: "#0f172a" }}>Cash on delivery</div>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label
+                    style={{
+                      ...radioRowStyle,
+                      padding: 12,
+                      ...(paymentMethod === "online"
+                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
+                        : { borderColor: "#e5e7eb", background: "#fff" }),
+                    }}
+                  >
+                    <input type="radio" name="pay" checked={paymentMethod === "online"} onChange={() => {
+                      setPaymentMethod("online");
+                    }}
+                    />
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 900, color: "#0f172a" }}>Online payment</div>
+                        <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginTop: 4 }}>
+                          UPI · NetBanking · cards
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#0f172a", fontSize: 13 }}>
                 <span>Subtotal</span>
                 <span>{formatINR(subtotal)}</span>
               </div>
-              <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155" }}>
+              <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155", fontSize: 13 }}>
                 <span>Shipping {shipLoading ? "(…)" : ""}</span>
-                <span>{formatINR(shippingPreview)}</span>
+                <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
               </div>
-              {!shipLoading && items.length ? (
-                remainingForFreeShipping > 0 ? (
-                  <div
-                    style={{
-                      marginTop: 8,
-                      padding: "10px 12px",
-                      borderRadius: 10,
-                      background: "#fff",
-                      border: "1px solid #e5e7eb",
-                      color: "#0f172a",
-                      fontWeight: 800,
-                      fontSize: 13,
-                      lineHeight: 1.25,
-                    }}
-                  >
-                    Add <strong>{formatINR(remainingForFreeShipping)}</strong> more to get{" "}
-                    <strong>FREE shipping</strong>.
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      marginTop: 8,
-                      padding: "10px 12px",
-                      borderRadius: 10,
-                      background: "#f0fdf4",
-                      border: "1px solid #bbf7d0",
-                      color: "#166534",
-                      fontWeight: 900,
-                      fontSize: 13,
-                    }}
-                  >
-                    You’ve unlocked <strong>FREE shipping</strong>.
-                  </div>
-                )
+              {!shipLoading && items.length && remainingForFreeShipping > 0 && shippingPreview > 0 ? (
+                <div
+                  style={{
+                    marginTop: 8,
+                    padding: "10px 12px",
+                    borderRadius: 8,
+                    background: "#fff",
+                    border: "1px solid #e5e7eb",
+                    color: "#0f172a",
+                    fontWeight: 800,
+                    fontSize: 12,
+                    lineHeight: 1.3,
+                  }}
+                >
+                  Add <strong>{formatINR(remainingForFreeShipping)}</strong> for <strong>FREE shipping</strong>
+                </div>
               ) : null}
-              <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155" }}>
-                <span>Discount</span>
-                <span>-{formatINR(discountPreview)}</span>
-              </div>
-              <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#0f172a" }}>
+              {discountPreview > 0 ? (
+                <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155", fontSize: 13 }}>
+                  <span>Discount</span>
+                  <span>-{formatINR(discountPreview)}</span>
+                </div>
+              ) : null}
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#0f172a", fontSize: 15 }}>
                 <span>Total</span>
                 <span>{formatINR(totalPreview)}</span>
               </div>
@@ -1238,16 +1294,17 @@ export default function Checkout({ cartItems = [] }) {
                 }}
                 disabled={!items.length || paying}
                 style={{
-                  marginTop: 14,
+                  marginTop: 18,
                   width: "100%",
-                  padding: "14px 16px",
+                  padding: "16px 18px",
                   border: "none",
-                  borderRadius: 10,
+                  borderRadius: 12,
                   cursor: items.length && !paying ? "pointer" : "not-allowed",
                   background: items.length ? "#111" : "#9ca3af",
                   color: "#fff",
                   fontWeight: 900,
-                  letterSpacing: 0.2,
+                  letterSpacing: 0.3,
+                  fontSize: 15,
                   opacity: paying ? 0.75 : 1,
                 }}
               >
@@ -1321,5 +1378,15 @@ const smallGhostBtn = {
   color: "#111",
   fontWeight: 900,
   cursor: "pointer",
+};
+
+const linkBtn = {
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  color: "#111",
+  fontWeight: 900,
+  cursor: "pointer",
+  textDecoration: "underline",
 };
 
