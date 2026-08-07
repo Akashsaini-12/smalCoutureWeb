@@ -17,6 +17,9 @@ function getPageViewDedupeKey() {
 export function trackMetaEvent(eventName, params) {
   if (!fbqReady()) return;
   try {
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[Meta Pixel] ${eventName}`, params || {});
+    }
     if (params) window.fbq("track", eventName, params);
     else window.fbq("track", eventName);
   } catch {
@@ -110,12 +113,34 @@ export function trackPurchase({ orderId, items, value }) {
     0,
   );
   const hasValidPayload = Boolean(id) && (Number(value) > 0 || lines.length > 0);
-  if (!fbqReady() || !hasValidPayload) return;
+  if (!fbqReady() || !hasValidPayload) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "[Meta Pixel] trackPurchase blocked - fbqReady:",
+        fbqReady(),
+        "hasValidPayload:",
+        hasValidPayload,
+      );
+    }
+    return;
+  }
 
   const isOrderSuccessPage =
     typeof window !== "undefined" &&
     window.location?.pathname === "/order-success";
-  if (!isOrderSuccessPage) return;
+  if (!isOrderSuccessPage) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "[Meta Pixel] trackPurchase blocked - not on order-success page. Current:",
+        window.location?.pathname,
+      );
+    }
+    return;
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    console.log("[Meta Pixel] trackPurchase - allowing Purchase event with orderId:", id);
+  }
 
   try {
     window.__metaAllowPurchase = true;
@@ -171,23 +196,64 @@ export function readStashedPurchaseMeta(orderId) {
 /** Purchase standard event — call only from the order success / thank-you page. */
 export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
   const id = orderId ? String(orderId).trim() : "";
-  if (!id) return;
+  if (!id) {
+    if (process.env.NODE_ENV === "development") {
+      console.log("[Meta Pixel] trackPurchaseOnOrderSuccess blocked - no orderId");
+    }
+    return;
+  }
 
   const isOrderSuccessPage =
     typeof window !== "undefined" &&
     window.location?.pathname === "/order-success";
-  if (!isOrderSuccessPage) return;
+  if (!isOrderSuccessPage) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "[Meta Pixel] trackPurchaseOnOrderSuccess blocked - not on order-success page",
+      );
+    }
+    return;
+  }
 
   const dedupeKey = `${PURCHASE_TRACKED_PREFIX}${id}`;
   try {
-    if (sessionStorage.getItem(dedupeKey)) return;
+    if (sessionStorage.getItem(dedupeKey)) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Meta Pixel] Purchase already tracked for orderId:", id);
+      }
+      return;
+    }
   } catch {
     // continue
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    console.log(
+      "[Meta Pixel] trackPurchaseOnOrderSuccess - calling trackPurchase for orderId:",
+      id,
+    );
   }
 
   trackPurchase({ orderId: id, items, value });
   try {
     sessionStorage.setItem(dedupeKey, "1");
+  } catch {
+    // ignore
+  }
+}
+
+/** Clear any stale purchase metadata on app init. */
+export function clearStaleStoredPurchaseMetadata() {
+  try {
+    const keys = Object.keys(sessionStorage);
+    keys.forEach((key) => {
+      if (key.startsWith(PURCHASE_META_PREFIX)) {
+        sessionStorage.removeItem(key);
+        if (process.env.NODE_ENV === "development") {
+          console.log("[Meta Pixel] Cleared stale purchase metadata:", key);
+        }
+      }
+    });
   } catch {
     // ignore
   }
