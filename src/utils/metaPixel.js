@@ -1,8 +1,17 @@
 const META_PIXEL_ID =
   process.env.REACT_APP_META_PIXEL_ID || "1609839080107013";
+const PAGE_VIEW_DEDUPE_KEY = "meta_pixel_page_view:";
 
 function fbqReady() {
   return typeof window !== "undefined" && typeof window.fbq === "function";
+}
+
+function getPageViewDedupeKey() {
+  if (typeof window === "undefined") return "";
+  const pathname = window.location?.pathname || "/";
+  const search = window.location?.search || "";
+  const hash = window.location?.hash || "";
+  return `${PAGE_VIEW_DEDUPE_KEY}${pathname}${search}${hash}`;
 }
 
 export function trackMetaEvent(eventName, params) {
@@ -16,6 +25,20 @@ export function trackMetaEvent(eventName, params) {
 }
 
 export function trackMetaPageView() {
+  const dedupeKey = getPageViewDedupeKey();
+  if (!dedupeKey) {
+    trackMetaEvent("PageView");
+    return;
+  }
+
+  try {
+    const lastTrackedKey = window.sessionStorage.getItem(dedupeKey);
+    if (lastTrackedKey === "1") return;
+    window.sessionStorage.setItem(dedupeKey, "1");
+  } catch {
+    // ignore storage errors and fall back to sending once
+  }
+
   trackMetaEvent("PageView");
 }
 
