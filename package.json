@@ -22,6 +22,7 @@
     "dev": "PORT=3001 react-scripts start",
     "start": "PORT=3001 react-scripts start",
     "start:lan": "HOST=0.0.0.0 PORT=3001 react-scripts start",
+    "meta-capi": "node server/meta-capi.js",
     "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
