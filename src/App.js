@@ -200,7 +200,6 @@ const AppInner = () => {
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const isAdminRoute = location.pathname.startsWith("/admin");
-  const isFirstPathRef = useRef(true);
 
   // SPA: new route should start at top (otherwise scroll position carries over from previous page).
   useEffect(() => {
@@ -211,10 +210,6 @@ const AppInner = () => {
 
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) return;
-    if (isFirstPathRef.current) {
-      isFirstPathRef.current = false;
-      return;
-    }
     trackMetaPageView();
   }, [location.pathname]);
 
