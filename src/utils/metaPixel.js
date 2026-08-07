@@ -102,13 +102,21 @@ export function trackInitiateCheckout({ items, value }) {
 }
 
 export function trackPurchase({ orderId, items, value }) {
+  const id = orderId ? String(orderId).trim() : "";
   const lines = Array.isArray(items) ? items : [];
   const contents = cartLinesToMetaContents(lines);
   const numItems = lines.reduce(
     (sum, it) => sum + Math.max(1, Number(it?.quantity) || 1),
     0,
   );
-  if (!fbqReady()) return;
+  const hasValidPayload = Boolean(id) && (Number(value) > 0 || lines.length > 0);
+  if (!fbqReady() || !hasValidPayload) return;
+
+  const isOrderSuccessPage =
+    typeof window !== "undefined" &&
+    window.location?.pathname === "/order-success";
+  if (!isOrderSuccessPage) return;
+
   try {
     window.__metaAllowPurchase = true;
     trackMetaEvent("Purchase", {
@@ -117,7 +125,7 @@ export function trackPurchase({ orderId, items, value }) {
       num_items: numItems,
       content_ids: contents.map((c) => c.id),
       contents,
-      order_id: orderId ? String(orderId) : undefined,
+      order_id: id,
     });
   } finally {
     window.__metaAllowPurchase = false;
@@ -164,12 +172,19 @@ export function readStashedPurchaseMeta(orderId) {
 export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
   const id = orderId ? String(orderId).trim() : "";
   if (!id) return;
+
+  const isOrderSuccessPage =
+    typeof window !== "undefined" &&
+    window.location?.pathname === "/order-success";
+  if (!isOrderSuccessPage) return;
+
   const dedupeKey = `${PURCHASE_TRACKED_PREFIX}${id}`;
   try {
     if (sessionStorage.getItem(dedupeKey)) return;
   } catch {
     // continue
   }
+
   trackPurchase({ orderId: id, items, value });
   try {
     sessionStorage.setItem(dedupeKey, "1");
