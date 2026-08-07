@@ -61,7 +61,7 @@
         }
 
         return (
-          cmd === 'track' &&
+          (cmd === 'track' || cmd === 'trackSingle') &&
           typeof ev === 'string' &&
           ev.toLowerCase() === 'purchase'
         );
