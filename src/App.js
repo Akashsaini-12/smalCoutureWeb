@@ -22,7 +22,7 @@ import ScrollingPromotion from "./components/ScrollingPromotion";
 import HotWeek from "./components/HotWeek";
 import FeaturedPress from "./components/FeaturedPress";
 import { isInternalFreeSizeLabel } from "./utils/internalFreeSize";
-import { trackAddToCart, trackMetaPageView } from "./utils/metaPixel";
+import { trackAddToCart, trackMetaPageView, clearStaleStoredPurchaseMetadata } from "./utils/metaPixel";
 import CoastalEdition from "./components/CoastalEdition";
 import ShopCollection from "./components/ShopCollection";
 import ShopMixMatch from "./components/ShopMixMatch";
@@ -76,6 +76,10 @@ const AppInner = () => {
     };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    clearStaleStoredPurchaseMetadata();
   }, []);
 
   const addToCart = (product, quantity = 1) => {
