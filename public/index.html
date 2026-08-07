@@ -44,7 +44,6 @@
 
       PIXEL_IDS.forEach(function (pixelId) {
         fbqFn('init', pixelId, {}, { autoConfig: false });
-        fbqFn('set', 'autoConfig', false, pixelId);
       });
 
       function isBlockedPurchase(args) {
