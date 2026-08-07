@@ -7,7 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
     <meta name="theme-color" content="">
-    <link rel="canonical" href="zh.html">
+    <script>
+      (function () {
+        var host = (window.location.hostname || '').toLowerCase();
+        var protocol = window.location.protocol || 'https:';
+        var pathname = window.location.pathname || '/';
+        var search = window.location.search || '';
+        var hash = window.location.hash || '';
+
+        if (host === 'localhost' || host === '127.0.0.1') {
+          return;
+        }
+
+        if (host !== 'www.smalcouture.com' || protocol !== 'https:') {
+          var target = 'https://www.smalcouture.com' + pathname + search + hash;
+          if (window.location.href !== target) {
+            window.location.replace(target);
+          }
+        }
+      })();
+    </script>
+    <link rel="canonical" href="https://www.smalcouture.com/">
     <link rel="preconnect" href="https://fonts.shopifycdn.com/" crossorigin>
     <link rel="preconnect" href="https://cdn.shopify.com/" crossorigin>
     <!-- Site icon (used by Google search results / browser tab) -->
