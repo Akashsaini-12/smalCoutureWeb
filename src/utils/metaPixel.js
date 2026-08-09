@@ -1,9 +1,6 @@
 const META_PIXEL_ID =
   process.env.REACT_APP_META_PIXEL_ID || "1609839080107013";
 const PAGE_VIEW_DEDUPE_KEY = "meta_pixel_page_view:";
-const META_CAPI_ENDPOINT = process.env.REACT_APP_META_CAPI_ENDPOINT || "";
-const META_CAPI_PIXEL_ID =
-  process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || "";
 
 function fbqReady() {
   return typeof window !== "undefined" && typeof window.fbq === "function";
@@ -46,60 +43,6 @@ export function trackMetaPageView() {
   }
 
   trackMetaEvent("PageView");
-}
-
-export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }) {
-  if (!META_CAPI_ENDPOINT || !META_CAPI_PIXEL_ID) {
-    return false;
-  }
-
-  const id = orderId ? String(orderId).trim() : "";
-  const lines = Array.isArray(items) ? items : [];
-  const payload = {
-    pixel_id: META_CAPI_PIXEL_ID,
-    event_name: "Purchase",
-    event_time: Math.floor(Date.now() / 1000),
-    event_id: id || `purchase_${Date.now()}`,
-    action_source: "website",
-    custom_data: {
-      value: Number(value) || 0,
-      currency,
-      num_items: lines.reduce(
-        (sum, it) => sum + Math.max(1, Number(it?.quantity) || 1),
-        0,
-      ),
-      content_ids: lines
-        .map((it) => productIdFrom(it))
-        .filter(Boolean),
-      contents: cartLinesToMetaContents(lines),
-      order_id: id,
-    },
-    user_data: {
-      em: [],
-      ph: [],
-      client_ip_address: "",
-      client_user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
-    },
-  };
-
-  const isBrowser = typeof window !== "undefined";
-  if (!isBrowser) return false;
-
-  try {
-    fetch(META_CAPI_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify(payload),
-    }).catch(() => {
-      // Ignore backend failures; the browser pixel remains the primary signal.
-    });
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export function parseProductPrice(value) {
@@ -292,7 +235,6 @@ export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
   }
 
   trackPurchase({ orderId: id, items, value });
-  sendMetaCapiPurchase({ orderId: id, items, value, currency: "INR" });
   try {
     sessionStorage.setItem(dedupeKey, "1");
   } catch {
