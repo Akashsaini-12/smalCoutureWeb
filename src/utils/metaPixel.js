@@ -4,6 +4,23 @@ const PAGE_VIEW_DEDUPE_KEY = "meta_pixel_page_view:";
 const META_CAPI_ENDPOINT = process.env.REACT_APP_META_CAPI_ENDPOINT || "";
 const META_CAPI_PIXEL_ID =
   process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || "";
+const MIN_PURCHASE_TRIGGER_VALUE = 100;
+
+function normalizePurchaseValue(value) {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+  if (typeof value === "string") {
+    const parsed = parseFloat(value.replace(/[^\d.]/g, ""));
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function meetsPurchaseTriggerThreshold(value) {
+  return normalizePurchaseValue(value) >= MIN_PURCHASE_TRIGGER_VALUE;
+}
 
 function fbqReady() {
   return typeof window !== "undefined" && typeof window.fbq === "function";
@@ -53,6 +70,10 @@ export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }
     return false;
   }
 
+  if (!meetsPurchaseTriggerThreshold(value)) {
+    return false;
+  }
+
   const id = orderId ? String(orderId).trim() : "";
   const lines = Array.isArray(items) ? items : [];
   const payload = {
@@ -62,7 +83,7 @@ export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }
     event_id: id || `purchase_${Date.now()}`,
     action_source: "website",
     custom_data: {
-      value: Number(value) || 0,
+      value: normalizePurchaseValue(value),
       currency,
       num_items: lines.reduce(
         (sum, it) => sum + Math.max(1, Number(it?.quantity) || 1),
@@ -169,7 +190,9 @@ export function trackPurchase({ orderId, items, value }) {
     (sum, it) => sum + Math.max(1, Number(it?.quantity) || 1),
     0,
   );
-  const hasValidPayload = Boolean(id) && (Number(value) > 0 || lines.length > 0);
+  const purchaseValue = normalizePurchaseValue(value);
+  const meetsThreshold = meetsPurchaseTriggerThreshold(purchaseValue);
+  const hasValidPayload = Boolean(id) && meetsThreshold;
   if (!fbqReady() || !hasValidPayload) {
     if (process.env.NODE_ENV === "development") {
       console.log(
@@ -177,6 +200,8 @@ export function trackPurchase({ orderId, items, value }) {
         fbqReady(),
         "hasValidPayload:",
         hasValidPayload,
+        "purchaseValue:",
+        purchaseValue,
       );
     }
     return;
@@ -202,7 +227,7 @@ export function trackPurchase({ orderId, items, value }) {
   try {
     window.__metaAllowPurchase = true;
     trackMetaEvent("Purchase", {
-      value: Number(value) || 0,
+      value: normalizePurchaseValue(value),
       currency: "INR",
       num_items: numItems,
       content_ids: contents.map((c) => c.id),
@@ -224,7 +249,7 @@ export function stashPurchaseMetaForSuccess({ orderId, items, value }) {
   try {
     sessionStorage.setItem(
       `${PURCHASE_META_PREFIX}${id}`,
-      JSON.stringify({ orderId: id, items, value: Number(value) || 0 }),
+      JSON.stringify({ orderId: id, items, value: normalizePurchaseValue(value) }),
     );
   } catch {
     // ignore
