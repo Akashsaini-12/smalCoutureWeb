@@ -18,56 +18,29 @@
 
     <!-- Meta Pixel Code -->
     <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    var META_PIXEL_ID = '1609839080107013';
+    fbq('init', META_PIXEL_ID, {}, { autoConfig: false });
+    fbq('set', 'autoConfig', false, META_PIXEL_ID);
     (function () {
-      if (window.__smalMetaPixelSetup) return;
-      window.__smalMetaPixelSetup = true;
-
-      var META_PIXEL_ID = '1609839080107013';
-      var WEST_PIXEL_ID = '860862546423818';
-      var PIXEL_IDS = [META_PIXEL_ID, WEST_PIXEL_ID];
-
-      function ensureFbq() {
-        if (window.fbq && typeof window.fbq === 'function') return window.fbq;
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        return window.fbq;
-      }
-
-      var fbqFn = ensureFbq();
-      if (!fbqFn) return;
-
-      PIXEL_IDS.forEach(function (pixelId) {
-        fbqFn('init', pixelId, {}, { autoConfig: false });
-      });
-
       function isBlockedPurchase(args) {
         var cmd = args[0];
         var ev = args[1];
-
-        if (cmd === 'trackSingle') {
-          var pixelId = args.length > 1 ? args[1] : null;
-          var eventName = args.length > 2 ? args[2] : args[1];
-          if (typeof pixelId === 'string' && PIXEL_IDS.indexOf(pixelId) === -1) {
-            return false;
-          }
-          return typeof eventName === 'string' && eventName.toLowerCase() === 'purchase';
-        }
-
         return (
           (cmd === 'track' || cmd === 'trackSingle') &&
           typeof ev === 'string' &&
           ev.toLowerCase() === 'purchase'
         );
       }
-
       function installFbqGuard() {
-        if (!window.fbq || typeof window.fbq !== 'function' || window.fbq.__purchaseGuardInstalled) return;
+        if (!window.fbq || window.fbq.__purchaseGuardInstalled) return;
         var original = window.fbq;
         var guarded = function () {
           var args = Array.prototype.slice.call(arguments);
@@ -85,7 +58,6 @@
         guarded.__purchaseGuardInstalled = true;
         window.fbq = guarded;
       }
-
       installFbqGuard();
       var guardAttempts = 0;
       var guardTimer = setInterval(function () {
@@ -93,6 +65,7 @@
         if (++guardAttempts > 100) clearInterval(guardTimer);
       }, 50);
     })();
+    fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1609839080107013&ev=PageView&noscript=1"
