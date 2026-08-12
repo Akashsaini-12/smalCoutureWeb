@@ -26,11 +26,8 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    var META_PIXEL_IDS = ['1609839080107013', '860862546423818'];
-    META_PIXEL_IDS.forEach(function (pixelId) {
-      fbq('init', pixelId, {}, { autoConfig: false });
-      fbq('set', 'autoConfig', false, pixelId);
-    });
+    fbq('init', '1609839080107013');
+    fbq('init', '860862546423818');
     (function () {
       function isBlockedPurchase(args) {
         var cmd = args[0];
