@@ -26,9 +26,11 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    var META_PIXEL_ID = '1609839080107013';
-    fbq('init', META_PIXEL_ID, {}, { autoConfig: false });
-    fbq('set', 'autoConfig', false, META_PIXEL_ID);
+    var META_PIXEL_IDS = ['1609839080107013', '860862546423818'];
+    META_PIXEL_IDS.forEach(function (pixelId) {
+      fbq('init', pixelId, {}, { autoConfig: false });
+      fbq('set', 'autoConfig', false, pixelId);
+    });
     (function () {
       function isBlockedPurchase(args) {
         var cmd = args[0];
@@ -67,9 +69,12 @@
     })();
     fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1609839080107013&ev=PageView&noscript=1"
-    /></noscript>
+    <noscript>
+      <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1609839080107013&ev=PageView&noscript=1" />
+      <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=860862546423818&ev=PageView&noscript=1" />
+    </noscript>
     <!-- End Meta Pixel Code -->
 
     <!-- Open Graph (link sharing preview) -->

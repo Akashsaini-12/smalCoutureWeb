@@ -1,9 +1,19 @@
+const DEFAULT_META_PIXEL_IDS = ["1609839080107013", "860862546423818"];
+const META_PIXEL_IDS = (() => {
+  const raw = process.env.REACT_APP_META_PIXEL_IDS;
+  if (!raw) return DEFAULT_META_PIXEL_IDS;
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  return String(raw)
+    .split(",")
+    .map((id) => String(id).trim())
+    .filter(Boolean);
+})();
 const META_PIXEL_ID =
-  process.env.REACT_APP_META_PIXEL_ID || "1609839080107013";
+  process.env.REACT_APP_META_PIXEL_ID || META_PIXEL_IDS[0] || DEFAULT_META_PIXEL_IDS[0];
 const PAGE_VIEW_DEDUPE_KEY = "meta_pixel_page_view:";
 const META_CAPI_ENDPOINT = process.env.REACT_APP_META_CAPI_ENDPOINT || "";
 const META_CAPI_PIXEL_ID =
-  process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || "";
+  process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || META_PIXEL_IDS[0] || "";
 
 function fbqReady() {
   return typeof window !== "undefined" && typeof window.fbq === "function";
