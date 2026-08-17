@@ -14,6 +14,7 @@ import { isInternalFreeSizeLabel } from "../utils/internalFreeSize";
 import { useDispatch, useSelector } from "react-redux";
 import ProductGrid from "../components/ProductGrid";
 import { getUserId } from "../utils/userId";
+import { resolveProductListingLabel } from "../utils/productBreadcrumb";
 
 /** Same catalog → detail shape as `mapCatalogProduct` in Product.jsx */
 function mapCatalogProduct(p, index) {
@@ -195,29 +196,10 @@ function ProductDetailPageContent({ handleParam, addToCart }) {
   }, []);
 
   const fromBrowse = location?.state?.from;
-  const listingLabel = useMemo(() => {
-    const explicit = String(fromBrowse?.label || "").trim();
-    if (explicit && explicit.toLowerCase() !== "all products") return explicit;
-
-    const searchStr = String(fromBrowse?.search || "");
-    if (!searchStr) return "All products";
-
-    const p = new URLSearchParams(searchStr.startsWith("?") ? searchStr.slice(1) : searchStr);
-    const raw =
-      p.get("categoryId") ||
-      p.get("category") ||
-      p.get("categoryIds") ||
-      "";
-    const first = String(raw)
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)[0];
-    const id = first != null && first !== "" ? Number(first) : NaN;
-    if (!Number.isFinite(id)) return "All products";
-
-    const hit = shopCategories.find((c) => Number(c?.id) === id);
-    return String(hit?.title || "").trim() || "All products";
-  }, [fromBrowse?.label, fromBrowse?.search, shopCategories]);
+  const listingLabel = useMemo(
+    () => resolveProductListingLabel({ fromBrowse, shopCategories }),
+    [fromBrowse, shopCategories],
+  );
 
   const goBack = useCallback(() => {
     // Prefer explicit "from" source when available (preserves selected category/filter page).
