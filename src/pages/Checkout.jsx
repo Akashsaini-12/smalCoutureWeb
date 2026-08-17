@@ -1002,10 +1002,10 @@ export default function Checkout({ cartItems = [] }) {
                       </div>
                     ) : null}
 
-                    {savedAddresses.length > 0 && !showAddressForm ? (
+                    {!showAddressForm ? (
                       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
                         <button type="button" onClick={startNewAddress} style={{ ...smallGhostBtn, width: "fit-content", padding: "10px 14px" }}>
-                          + Add new address
+                          {savedAddresses.length > 0 ? "+ Add new address" : "+ Add your first address"}
                         </button>
                       </div>
                     ) : null}
