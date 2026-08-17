@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loginThunk,
@@ -11,6 +11,7 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
@@ -35,13 +36,29 @@ const Login = () => {
     setLocalError("");
   };
 
-  // Redirect when login succeeds
+  // Redirect when login succeeds.
+  // Preserve the original destination when the user was sent to login from checkout/buy-now.
   useEffect(() => {
-    if (auth.user && auth.token) {
-      if (auth.user.role === 0) navigate("/admin");
-      else navigate("/");
+    if (!auth.user || !auth.token) return;
+
+    const redirectTo = location?.state?.returnTo || "/";
+    const buyNowItem = location?.state?.buyNowItem || null;
+
+    if (auth.user.role === 0) {
+      navigate("/admin", { replace: true });
+      return;
     }
-  }, [auth.user, auth.token, navigate]);
+
+    if (redirectTo === "/checkout") {
+      navigate("/checkout", {
+        replace: true,
+        state: buyNowItem ? { buyNowItem } : undefined,
+      });
+      return;
+    }
+
+    navigate(redirectTo, { replace: true });
+  }, [auth.user, auth.token, navigate, location]);
 
   // Switch to OTP panel when server says account needs verification
   const needsOtp = Boolean(auth.pendingEmail) && !auth.user;
