@@ -92,7 +92,23 @@ const AppInner = () => {
       const rawUser = localStorage.getItem("user");
       const isLoggedIn = Boolean(token && rawUser);
       if (!isLoggedIn) {
-        navigate("/login");
+        navigate("/login", {
+          state: {
+            returnTo: "/checkout",
+            buyNowItem: {
+              userId: product.userId || undefined,
+              productId: product.productId ?? product.id,
+              variantId: product.variantId ?? product.variant_id ?? null,
+              name: product.title || product.name || "Product",
+              slug: product.slug || product.handle || "",
+              price: product.priceSale || product.priceRegular || product.price || 0,
+              color: product.color || null,
+              size: product.size || null,
+              quantity: 1,
+              image: typeof product.mainImage === "string" ? product.mainImage : product.mainImage?.src || "",
+            },
+          },
+        });
         return;
       }
     } catch {
@@ -258,9 +274,23 @@ const AppInner = () => {
       const token = localStorage.getItem("token");
       const rawUser = localStorage.getItem("user");
       const isLoggedIn = Boolean(token && rawUser);
-      if (!isLoggedIn) return <Navigate to="/login" replace />;
+      if (!isLoggedIn) {
+        return (
+          <Navigate
+            to="/login"
+            replace
+            state={{ returnTo: `${location.pathname}${location.search || ""}` }}
+          />
+        );
+      }
     } catch {
-      return <Navigate to="/login" replace />;
+      return (
+        <Navigate
+          to="/login"
+          replace
+          state={{ returnTo: `${location.pathname}${location.search || ""}` }}
+        />
+      );
     }
     return children;
   };
