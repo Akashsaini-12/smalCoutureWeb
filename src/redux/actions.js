@@ -1057,11 +1057,13 @@ export const registerThunk =
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, email, phone, password }),
       });
+      persistAuth(data.token, data.user);
       dispatch({
-        type: "AUTH_OTP_SENT",
+        type: "AUTH_SUCCESS",
         payload: {
-          message: data.message || "OTP sent to your email",
-          email: data.email || email,
+          token: data.token,
+          user: data.user,
+          message: data.message || "Registered successfully.",
         },
       });
     } catch (err) {
