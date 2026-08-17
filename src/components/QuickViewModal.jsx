@@ -813,6 +813,34 @@ const QuickViewModal = ({
   };
 
   const handleBuyNow = async () => {
+    if (!isLoggedIn) {
+      const numericPrice = Number(
+        String(product.priceSale || product.priceRegular || product.price || "")
+          .replace(/[^\d.]/g, ""),
+      );
+      navigate("/login", {
+        state: {
+          returnTo: "/checkout",
+          buyNowItem: {
+            userId,
+            productId: String(product.productId ?? product.id ?? product._id ?? ""),
+            variantId: String(
+              (product.variantId != null && product.variantId !== "" ? product.variantId : activeVariant?._id) || "",
+            ),
+            name: String(product.title || product.name || "").trim() || "Product",
+            slug: product.handle || product.slug || "",
+            price: Number.isFinite(numericPrice) ? numericPrice : 0,
+            color: resolvedColor || null,
+            size: selectedSize || null,
+            quantity,
+            image: mainSrc || (Array.isArray(images) && images[0]) || "",
+          },
+        },
+      });
+      if (!isPage) onClose?.();
+      return;
+    }
+
     const ok = await runAddToCartPipeline({ openDrawer: false });
     if (!ok) return;
     if (!isPage) onClose();
