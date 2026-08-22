@@ -1,10 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  adminCreateCoupon,
-  adminDeleteCoupon,
-  adminListCoupons,
-  fetchMasterCategories,
-} from "../../redux/actions";
+import React, { useEffect, useMemo, useState } from "react";
+import { adminCreateCoupon, adminDeleteCoupon, adminListCoupons } from "../../redux/actions";
 
 function formatDate(iso) {
   if (!iso) return "-";
@@ -13,12 +8,6 @@ function formatDate(iso) {
   } catch {
     return String(iso);
   }
-}
-
-function formatPaymentMethod(applicableOn) {
-  if (applicableOn === "prepaid") return "Prepaid";
-  if (applicableOn === "cod") return "COD";
-  return "All";
 }
 
 export default function CouponsAdminSection() {
@@ -32,11 +21,8 @@ export default function CouponsAdminSection() {
   const [minSubtotal, setMinSubtotal] = useState("");
   const [maxDiscount, setMaxDiscount] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
+  const [isActive, setIsActive] = useState(true);
   const [applicableCategories, setApplicableCategories] = useState([]);
-  const [applicableCategoriesInput, setApplicableCategoriesInput] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const [categorySuggestionsOpen, setCategorySuggestionsOpen] = useState(false);
-  const categoryInputRef = useRef(null);
   const [applicableOn, setApplicableOn] = useState("");
   const normalizedCode = useMemo(() => String(code || "").trim().toUpperCase(), [code]);
 
@@ -57,77 +43,8 @@ export default function CouponsAdminSection() {
     load();
   }, []);
 
-  useEffect(() => {
-    if (!categorySuggestionsOpen) return undefined;
-    const closeSuggestionsOnOutsideClick = (event) => {
-      if (!categoryInputRef.current?.contains(event.target)) {
-        setCategorySuggestionsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", closeSuggestionsOnOutsideClick);
-    return () => document.removeEventListener("mousedown", closeSuggestionsOnOutsideClick);
-  }, [categorySuggestionsOpen]);
-
-  useEffect(() => {
-    fetchMasterCategories()
-      .then((categories) => {
-        const options = (Array.isArray(categories) ? categories : [])
-          .map((category) => ({
-            id: String(category?.id ?? category?._id ?? ""),
-            title: String(category?.title || category?.name || "").trim(),
-            parentId: category?.parentId == null ? null : String(category.parentId),
-          }))
-          .filter((category) => category.id && category.title)
-          .sort((first, second) => first.title.localeCompare(second.title));
-        setCategoryOptions(options);
-      })
-      .catch(() => setCategoryOptions([]));
-  }, []);
-
-  const addApplicableCategory = () => {
-    const category = applicableCategoriesInput.trim();
-    if (!category) return;
-    setApplicableCategories((categories) => (
-      categories.includes(category) ? categories : [...categories, category]
-    ));
-    setApplicableCategoriesInput("");
-    setCategorySuggestionsOpen(false);
-  };
-
-  const getCategoryLabel = (categoryId) => (
-    categoryOptions.find((category) => category.id === categoryId)?.title || categoryId
-  );
-
-  const formatCouponCategories = (categories) => {
-    if (!Array.isArray(categories) || !categories.length) return "All categories";
-    return categories.map((category) => getCategoryLabel(String(category))).join(", ");
-  };
-
-  const selectCategorySuggestion = (category) => {
-    const value = category.id;
-    setApplicableCategories((categories) => (
-      categories.includes(value) ? categories : [...categories, value]
-    ));
-    setApplicableCategoriesInput("");
-  };
-
-  const categorySuggestions = useMemo(() => {
-    const search = applicableCategoriesInput.trim().toLowerCase();
-    if (!search) return [];
-    return categoryOptions
-      .filter((category) => (
-        category.title.toLowerCase().includes(search) || category.id.toLowerCase().includes(search)
-      ))
-      .filter((category) => !applicableCategories.includes(category.id))
-      .slice(0, 10);
-  }, [applicableCategories, applicableCategoriesInput, categoryOptions]);
-
   const handleCreate = async () => {
     setError("");
-    const categories = [
-      ...applicableCategories,
-      ...(applicableCategoriesInput.trim() ? [applicableCategoriesInput.trim()] : []),
-    ].filter((category, index, allCategories) => allCategories.indexOf(category) === index);
     try {
       await adminCreateCoupon({
         code: normalizedCode,
@@ -135,18 +52,19 @@ export default function CouponsAdminSection() {
         value: Number(value),
         minSubtotal: minSubtotal === "" ? 0 : Number(minSubtotal),
         maxDiscount: maxDiscount === "" ? 0 : Number(maxDiscount),
+        isActive,
         expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
         applicableOn,
-        applicableCategories: categories,
+            applicableCategories,
       });
       setCode("");
       setValue("");
       setMinSubtotal("");
       setMaxDiscount("");
       setExpiresAt("");
+      setIsActive(true);
       setApplicableOn("");
-      setApplicableCategories([]);
-      setApplicableCategoriesInput("");
+setApplicableCategories([]);
       await load();
     } catch (e) {
       setError(e?.message || "Failed to create coupon");
@@ -179,7 +97,7 @@ export default function CouponsAdminSection() {
         </div>
       ) : null}
 
-      <div className="table-wrap" style={{ padding: 16, marginBottom: 18, overflow: "visible" }}>
+      <div className="table-wrap" style={{ padding: 16, marginBottom: 18 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr", gap: 12 }}>
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label">Code</label>
@@ -225,127 +143,30 @@ export default function CouponsAdminSection() {
         </select>
     </div>
 
-    <div ref={categoryInputRef} className="form-group" style={{ marginBottom: 0, position: "relative", zIndex: 2 }}>
+    <div className="form-group" style={{ marginBottom: 0 }}>
         <label className="form-label">Applicable Categories (Comma Separated IDs)</label>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: 6,
-            minHeight: 42,
-            padding: "5px 8px",
-            border: "1px solid #d1d5db",
-            borderRadius: 8,
-            background: "#fff",
-            position: "relative",
-          }}
-        >
-          {applicableCategories.map((category) => (
-            <span
-              key={category}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                padding: "4px 7px",
-                borderRadius: 6,
-                background: "#f3f4f6",
-                color: "#111827",
-                fontSize: 12,
-                fontWeight: 700,
-              }}
-            >
-              {getCategoryLabel(category)}
-              <button
-                type="button"
-                onClick={() => setApplicableCategories((categories) => categories.filter((item) => item !== category))}
-                aria-label={`Remove ${category}`}
-                style={{
-                  border: 0,
-                  padding: 0,
-                  background: "transparent",
-                  color: "#4b5563",
-                  fontSize: 16,
-                  lineHeight: 1,
-                  cursor: "pointer",
-                }}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-          <input
-            type="text"
-            placeholder={applicableCategories.length ? "Add category" : "e.g., suits, kurti, coord"}
-            value={applicableCategoriesInput}
+        <input 
+            className="form-input" 
+            type="text" 
+            placeholder="e.g., suits, kurti, coord" 
+            value={applicableCategories.join(", ")} 
             onChange={(e) => {
-              setApplicableCategoriesInput(e.target.value);
-              setCategorySuggestionsOpen(true);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === ",") {
-                e.preventDefault();
-                addApplicableCategory();
-              }
-            }}
-            style={{
-              flex: "1 1 120px",
-              minWidth: 120,
-              border: 0,
-              outline: "none",
-              padding: "6px 2px",
-              font: "inherit",
-            }}
-          />
-          {categorySuggestionsOpen && categorySuggestions.length ? (
-            <div
-              style={{
-                position: "absolute",
-                zIndex: 5,
-                left: 0,
-                right: 0,
-                top: "calc(100% + 4px)",
-                maxHeight: 220,
-                overflowY: "auto",
-                padding: 4,
-                border: "1px solid #d1d5db",
-                borderRadius: 8,
-                background: "#fff",
-                boxShadow: "0 8px 18px rgba(15, 23, 42, 0.12)",
-              }}
-            >
-              {categorySuggestions.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => selectCategorySuggestion(category)}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    padding: "8px 10px",
-                    border: 0,
-                    borderRadius: 6,
-                    background: "transparent",
-                    color: "#111827",
-                    textAlign: "left",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  {category.title}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
+                const values = e.target.value.split(",").map(cat => cat.trim()).filter(cat => cat !== "");
+                setApplicableCategories(values);
+            }} 
+        />
         <div style={{ marginTop: 6, fontSize: 12, color: "#6b7280" }}>
             Leave empty if applicable on all categories.
         </div>
     </div>
 </div>
 
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, color: "#111827" }}>
+              <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
+              Active
+            </label>
+          </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             <button className="btn btn-primary" type="button" onClick={handleCreate} disabled={!normalizedCode || !value}>
               ➕ Create coupon
@@ -366,8 +187,7 @@ export default function CouponsAdminSection() {
               <th>Value</th>
               <th>Min Subtotal</th>
               <th>Max Discount</th>
-              <th>Payment Method</th>
-              <th>Categories</th>
+              <th>Status</th>
               <th>Expires</th>
               <th>Created</th>
               <th style={{ width: 90 }}>Action</th>
@@ -375,7 +195,7 @@ export default function CouponsAdminSection() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={10} style={{ color: "#6b7280", fontWeight: 600 }}>Loading…</td></tr>
+              <tr><td colSpan={9} style={{ color: "#6b7280", fontWeight: 600 }}>Loading…</td></tr>
             ) : items.length ? (
               items.map((c) => (
                 <tr key={c._id}>
@@ -384,9 +204,10 @@ export default function CouponsAdminSection() {
                   <td>{c.type === "percent" ? `${c.value}%` : `₹${c.value}`}</td>
                   <td>₹{Number(c.minSubtotal || 0)}</td>
                   <td>₹{Number(c.maxDiscount || 0)}</td>
-                  <td>{formatPaymentMethod(c.applicableOn)}</td>
-                  <td style={{ maxWidth: 220, whiteSpace: "normal" }}>
-                    {formatCouponCategories(c.applicableCategories)}
+                  <td>
+                    <span className={`status-pill ${c.isActive ? "status-active" : "status-inactive"}`}>
+                      {c.isActive ? "ACTIVE" : "INACTIVE"}
+                    </span>
                   </td>
                   <td>{c.expiresAt ? formatDate(c.expiresAt) : "-"}</td>
                   <td>{formatDate(c.createdAt)}</td>
@@ -398,7 +219,7 @@ export default function CouponsAdminSection() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan={10} style={{ color: "#6b7280", fontWeight: 600 }}>No coupons yet.</td></tr>
+              <tr><td colSpan={9} style={{ color: "#6b7280", fontWeight: 600 }}>No coupons yet.</td></tr>
             )}
           </tbody>
         </table>
