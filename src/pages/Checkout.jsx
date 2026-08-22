@@ -120,6 +120,7 @@ export default function Checkout({ cartItems = [] }) {
   const [couponStatus, setCouponStatus] = useState(null); // { valid, code, discount }
   const [paymentMethod, setPaymentMethod] = useState("");
   const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [expandedCouponInfo, setExpandedCouponInfo] = useState(null);
   const [paying, setPaying] = useState(false);
 
   const [customerName, setCustomerName] = useState("");
@@ -244,6 +245,7 @@ export default function Checkout({ cartItems = [] }) {
 
   // Checkout should always hit production API (no localStorage/env switching here)
   const API_BASE = "https://api.smalcouture.com";
+  //const API_BASE = "https://localhost:4000";
   const RZP_KEY_ID = "rzp_live_SjnmWIeRD6I7fN" || "";
 
   const ensureRazorpayLoaded = () =>
@@ -309,7 +311,7 @@ export default function Checkout({ cartItems = [] }) {
 
   useEffect(() => {
     let mounted = true;
-    listAvailableCoupons({ userId, limit: 12 })
+    listAvailableCoupons({ userId, limit: 12, items })
       .then((res) => {
         if (!mounted) return;
         setAvailableCoupons(Array.isArray(res?.items) ? res.items : []);
@@ -321,7 +323,7 @@ export default function Checkout({ cartItems = [] }) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [items, userId]);
 
   useEffect(() => {
     let mounted = true;
@@ -1112,7 +1114,8 @@ export default function Checkout({ cartItems = [] }) {
                       const discountLabel = c.type === "percent" ? `${c.value}% OFF` : `₹${c.value} OFF`;
                       const applicableOn = String(c.applicableOn || "all").toLowerCase();
                       const isApplicableToPayment = !paymentMethod || applicableOn === "all" || (applicableOn === "cod" && paymentMethod === "cod") || (applicableOn === "prepaid" && paymentMethod === "online");
-                      const buttonDisabled = !paymentMethod || minSubtotalNotMet || !isApplicableToPayment;
+                      const isApplicableToCart = c.applicableToCart !== false;
+                      const buttonDisabled = !paymentMethod || minSubtotalNotMet || !isApplicableToPayment || !isApplicableToCart;
                       const getPaymentLabel = () => {
                         if (applicableOn === "all") return "All Payment Methods";
                         if (applicableOn === "cod") return "Cash on Delivery";
@@ -1120,6 +1123,11 @@ export default function Checkout({ cartItems = [] }) {
                         return "All Payment Methods";
                       };
                       const couponInfo = [getPaymentLabel(), c.minSubtotal > 0 ? `Min order value ₹${c.minSubtotal}` : null].filter(Boolean).join(" · ");
+                      const categoryLabels = Array.isArray(c.applicableCategoryLabels) && c.applicableCategoryLabels.length
+                        ? c.applicableCategoryLabels
+                        : (Array.isArray(c.applicableCategories) ? c.applicableCategories : []);
+                      const hasCategoryRestriction = categoryLabels.length > 0;
+                      const isCouponInfoOpen = expandedCouponInfo === (c._id || c.code);
 
                       return (
                         <div key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1132,9 +1140,28 @@ export default function Checkout({ cartItems = [] }) {
                               {isApplied ? "✓ Applied" : "Tap to apply"}
                             </button>
                           </div>
-                          <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, lineHeight: 1.4 }}>
-                            {couponInfo}
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, lineHeight: 1.4 }}>
+                              {couponInfo}{hasCategoryRestriction ? " · Selected products only" : ""}
+                            </div>
+                            {hasCategoryRestriction && (
+                              <button
+                                type="button"
+                                aria-label={`View where ${c.code} is applicable`}
+                                title="View applicable categories"
+                                onClick={() => setExpandedCouponInfo(isCouponInfoOpen ? null : (c._id || c.code))}
+                                style={{ width: 24, height: 24, flex: "0 0 24px", borderRadius: "50%", border: "1px solid #94a3b8", background: isCouponInfoOpen ? "#e2e8f0" : "#fff", color: "#334155", fontWeight: 800, cursor: "pointer", padding: 0 }}
+                              >
+                                i
+                              </button>
+                            )}
                           </div>
+                          {isCouponInfoOpen && (
+                            <div style={{ padding: "10px 12px", borderRadius: 8, background: "#f8fafc", border: "1px solid #e2e8f0", color: "#475569", fontSize: 12, lineHeight: 1.5 }}>
+                              <strong>Applicable on:</strong> {categoryLabels.join(", ")}
+                              <div>Products in your cart must belong to one of these categories.</div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}

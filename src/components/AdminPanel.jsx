@@ -754,7 +754,8 @@ function AdminOrdersTab({ adminListOrders }) {
       const oid = String(o?._id || "").toLowerCase();
       const uid = String(o?.userId || "").toLowerCase();
       const mail = String(o?.shippingAddress?.name || "").toLowerCase(); // fallback
-      return oid.includes(q) || uid.includes(q) || mail.includes(q);
+      const phone = String(o?.phone || o?.shippingAddress?.phone || "").toLowerCase();
+      return oid.includes(q) || uid.includes(q) || mail.includes(q) || phone.includes(q);
     });
   }, [orders, query]);
 

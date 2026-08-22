@@ -17,7 +17,7 @@ import Slider from "./components/HeaderSection/Slider";
 import ShopCatogries from "./components/ShopCatogries";
 import Product from "./components/Product";
 import NewCollection from "./components/NewCollection";
-import MixMatch from "./components/ MixMatch";
+import MixMatch from "./components/MixMatch";
 import ScrollingPromotion from "./components/ScrollingPromotion";
 import HotWeek from "./components/HotWeek";
 import FeaturedPress from "./components/FeaturedPress";
