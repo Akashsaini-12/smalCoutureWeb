@@ -244,8 +244,8 @@ export default function Checkout({ cartItems = [] }) {
   }, [items, totalPreview]);
 
   // Checkout should always hit production API (no localStorage/env switching here)
-  const API_BASE = "http://localhost:4000";
-  //const API_BASE = "https://api.smalcouture.com";
+  //const API_BASE = "http://localhost:4000";
+  const API_BASE = "https://api.smalcouture.com";
   const RZP_KEY_ID = "rzp_live_SjnmWIeRD6I7fN" || "";
 
   const ensureRazorpayLoaded = () =>
