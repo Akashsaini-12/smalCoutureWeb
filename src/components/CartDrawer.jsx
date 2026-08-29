@@ -211,8 +211,12 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       }
     }
 
-    handleClose();
+    // The drawer adds a history entry when it opens. Do not call handleClose
+    // here because its history.back() can race with checkout navigation.
+    addedRef.current = false;
+    onClose?.();
     navigate("/checkout", {
+      replace: true,
       state: {
         note: noteText || "",
         couponCode: String(couponCode || ""),
@@ -785,7 +789,17 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
           >
             Check out
           </button>
-          <Link to="/cart" style={styles.viewCartLink} onClick={onClose}>
+          <Link
+            to="/cart"
+            replace
+            style={styles.viewCartLink}
+            onClick={() => {
+              // Replace the drawer history entry instead of calling handleClose,
+              // whose history.back() can race with route navigation on mobile.
+              addedRef.current = false;
+              onClose?.();
+            }}
+          >
             View Cart
           </Link>
         </div>
