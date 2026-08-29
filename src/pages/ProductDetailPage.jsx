@@ -496,7 +496,7 @@ function ProductDetailPageContent({ handleParam, addToCart }) {
       id="MainContent"
       role="main"
       className="template-product-main"
-      style={{ paddingBottom: 48 }}
+      style={{ paddingBottom: 120 }}
     >
       <div className="shopify-section" id="shopify-section-product-detail">
         <div className="m-page-header m-page-header--template-page m:text-center m-scroll-trigger animate--fade-in-up" style={{ paddingTop: 12, paddingBottom: 8 }}>

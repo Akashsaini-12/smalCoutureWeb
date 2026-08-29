@@ -74,6 +74,78 @@ const QuickViewModal = ({
     startScale: 1,
     startDist: 0,
   });
+
+  // Show a fixed footer only when the inline action buttons are out of view (page variant)
+  const [showFixedFooter, setShowFixedFooter] = useState(false);
+  const actionRef = useRef(null);
+  const footerTimerRef = useRef(null);
+  const DEBOUNCE_MS = 140; // Prevent flicker on quick interactions
+
+  useEffect(() => {
+    if (!isPage) return undefined;
+
+    // Helper to set with debounce
+    const setDebounced = (value) => {
+      if (footerTimerRef.current) {
+        clearTimeout(footerTimerRef.current);
+        footerTimerRef.current = null;
+      }
+      footerTimerRef.current = setTimeout(() => {
+        setShowFixedFooter(Boolean(value));
+        footerTimerRef.current = null;
+      }, DEBOUNCE_MS);
+    };
+
+    // Fallback for environments without IntersectionObserver
+    if (typeof IntersectionObserver === "undefined") {
+      const check = () => {
+        const el = actionRef.current;
+        if (!el) {
+          setDebounced(false);
+          return;
+        }
+        const rect = el.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        setDebounced(!inView);
+      };
+      check();
+      window.addEventListener("scroll", check, { passive: true });
+      window.addEventListener("resize", check);
+      return () => {
+        window.removeEventListener("scroll", check);
+        window.removeEventListener("resize", check);
+        if (footerTimerRef.current) {
+          clearTimeout(footerTimerRef.current);
+          footerTimerRef.current = null;
+        }
+      };
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      const e = entries[0];
+      if (!e) return;
+      // When the inline buttons are NOT intersecting, show fixed footer (debounced)
+      setDebounced(!e.isIntersecting);
+    }, { root: null, threshold: 0.05 });
+
+    if (actionRef.current) obs.observe(actionRef.current);
+    return () => {
+      obs.disconnect();
+      if (footerTimerRef.current) {
+        clearTimeout(footerTimerRef.current);
+        footerTimerRef.current = null;
+      }
+    };
+  }, [isPage]);
+
+  // Hide fixed footer when user navigates to cart/checkout pages
+  useEffect(() => {
+    const path = String(location?.pathname || "").toLowerCase();
+    if (path.includes('/cart') || path.includes('/checkout')) {
+      try { setShowFixedFooter(false); } catch (err) { }
+    }
+  }, [location?.pathname]);
+
   const [lightboxScale, setLightboxScale] = useState(1);
   const [lightboxPos, setLightboxPos] = useState({ x: 0, y: 0 });
   const lightboxGestureRef = useRef({
@@ -295,6 +367,9 @@ const QuickViewModal = ({
     }
     setShowSizeChart(false);
     setImageLightboxOpen(false);
+
+    // When product changes (navigating to another product), ensure footer visibility recomputes
+    try { setShowFixedFooter(false); } catch (err) { }
   }, [product]);
 
   const resolveProductId = (p) =>
@@ -783,6 +858,12 @@ const QuickViewModal = ({
       };
 
       await addToCartMongo(payload);
+      // Hide the fixed footer once the item is successfully added to cart to avoid UI glitches on mobile
+      try {
+        setShowFixedFooter(false);
+      } catch (err) {
+        // ignore
+      }
     } catch (e) {
       const msg = String(e?.message || "");
       // If user already has the max qty in cart, treat as non-fatal UX (no error toast).
@@ -809,6 +890,10 @@ const QuickViewModal = ({
 
   const handleAddToCart = async () => {
     const ok = await runAddToCartPipeline({ openDrawer: true });
+    if (ok) {
+      // hide fixed footer after adding to cart to prevent mobile flicker
+      try { setShowFixedFooter(false); } catch (err) { }
+    }
     if (ok && !isPage) onClose();
   };
 
@@ -843,6 +928,9 @@ const QuickViewModal = ({
 
     const ok = await runAddToCartPipeline({ openDrawer: false });
     if (!ok) return;
+    if (ok) {
+      try { setShowFixedFooter(false); } catch (err) { }
+    }
     if (!isPage) onClose();
     // Single-item checkout: pass the selected variant as navigation state.
     // Checkout will use this when present (without affecting normal cart checkout).
@@ -2054,7 +2142,7 @@ const QuickViewModal = ({
 
                   {/* Add to cart button */}
                   {pageFullWidth ? (
-                    <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+                    <div ref={actionRef} style={{ display: "flex", gap: 10, marginTop: 4 }}>
                       <button
                         type="button"
                         onClick={handleAddToCart}
@@ -2150,7 +2238,62 @@ const QuickViewModal = ({
             </div>
           </div>
         </div>
-      </div>
+
+        {/* Fixed footer for page variant: keep actions visible while scrolling */}
+        {isPage && showFixedFooter && (
+          <div
+            style={{
+              position: "fixed",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 2147483200,
+              background: "#fff",
+              borderTop: "1px solid #f1f5f9",
+              padding: "12px 16px",
+              boxShadow: "0 -6px 20px rgba(0,0,0,0.06)",
+            }}
+          >
+            <div style={{ maxWidth: pageFullWidth ? 1280 : 960, margin: "0 auto", display: "flex", gap: 10 }}>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={isOutOfStock}
+                className="qv-atc-btn"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  borderRadius: 12,
+                  background: isOutOfStock ? "#e5e7eb" : "#ffffff",
+                  color: isOutOfStock ? "#94a3b8" : "#111827",
+                  border: "1px solid #111827",
+                  whiteSpace: "nowrap",
+                  padding: "12px 16px",
+                }}
+              >
+                {isOutOfStock ? "Out of stock" : "Add to cart"}
+              </button>
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                disabled={isOutOfStock}
+                className="qv-atc-btn"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  borderRadius: 12,
+                  background: isOutOfStock ? "#e5e7eb" : "#0f172a",
+                  color: isOutOfStock ? "#94a3b8" : "#ffffff",
+                  border: "1px solid #0f172a",
+                  whiteSpace: "nowrap",
+                  padding: "12px 16px",
+                }}
+              >
+                {isOutOfStock ? "Out of stock" : "Buy now"}
+              </button>
+            </div>
+          </div>
+        )}      </div>
 
       {/* ── LIGHTBOX ── */}
       {imageLightboxOpen && currentImage && (
