@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 // QuickViewModal removed for CartDrawer: go to product page instead
@@ -211,7 +211,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       }
     }
 
-    onClose?.();
+    handleClose();
     navigate("/checkout", {
       state: {
         note: noteText || "",
@@ -240,9 +240,53 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
   };
 
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => { document.body.style.overflow = ""; };
+    if (typeof document === "undefined") return undefined;
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (!isOpen) {
+      // restore
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      body.style.overflow = "";
+      html.style.overflow = "";
+      return undefined;
+    }
+
+    // lock scroll in a mobile-friendly way (works on iOS)
+    const scrollY = window.scrollY || html.scrollTop || body.scrollTop || 0;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
+      htmlOverflow: html.style.overflow,
+    };
+
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+
+    return () => {
+      // restore previous styles and scroll position
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      body.style.overflow = prev.overflow;
+      html.style.overflow = prev.htmlOverflow;
+      window.scrollTo(0, scrollY);
+    };
   }, [isOpen]);
 
   // Keep note/coupon synced so user can fill once and reuse in Cart/Checkout.
@@ -286,11 +330,72 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     return () => clearInterval(t);
   }, [isOpen]);
 
+  // Manage history so Safari/Android browser Back closes the drawer without leaving the page.
+  const addedRef = useRef(false);
+  const ignorePopRef = useRef(false);
+
+  const restoreCurrentHistoryState = useCallback(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const hasCartState = Boolean(window.history.state && window.history.state.cartDrawer);
+      if (!hasCartState) {
+        window.history.pushState({ cartDrawer: true }, "", window.location.href);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (addedRef.current) {
+      ignorePopRef.current = true;
+      addedRef.current = false;
+      try {
+        window.history.back();
+        window.setTimeout(() => {
+          restoreCurrentHistoryState();
+        }, 0);
+      } catch {
+        // ignore
+      }
+    }
+    onClose?.();
+  }, [onClose, restoreCurrentHistoryState]);
+
+  // Listen for popstate (Back button). If our pushed state is popped, close the drawer first.
   useEffect(() => {
-    const handleEscape = (e) => { if (e.key === "Escape") onClose(); };
-    if (isOpen) document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
+    const onPop = () => {
+      if (ignorePopRef.current) {
+        ignorePopRef.current = false;
+        return;
+      }
+      if (addedRef.current && isOpen) {
+        addedRef.current = false;
+        onClose?.();
+        restoreCurrentHistoryState();
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [onClose, isOpen, restoreCurrentHistoryState]);
+
+  // When the drawer opens, add an extra history entry so browser Back triggers popstate.
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      window.history.pushState({ cartDrawer: true }, "", window.location.href);
+      addedRef.current = true;
+    } catch {
+      // ignore
+    }
+  }, [isOpen]);
+
+  // Escape key should also use the unified close handler
+  useEffect(() => {
+    const esc = (e) => { if (e.key === "Escape") handleClose(); };
+    if (isOpen) document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
+  }, [isOpen, handleClose]);
 
   // Load cart items from MongoDB via API (temporary hard-coded user)
   useEffect(() => {
@@ -456,7 +561,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
 
   return createPortal(
     <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
-      <div style={styles.overlay} onClick={onClose} aria-hidden="true" />
+      <div style={styles.overlay} onClick={handleClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-label="Shopping Cart"
@@ -465,7 +570,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       >
         {/* Header */}
         <div style={{ ...styles.header, position: "relative" }}>
-          <button type="button" onClick={onClose} aria-label="Close" style={styles.closeBtn}>
+          <button type="button" onClick={handleClose} aria-label="Close" style={styles.closeBtn}>
             <CloseIcon />
           </button>
           <h2 style={styles.headerTitle}>Shopping Cart</h2>
