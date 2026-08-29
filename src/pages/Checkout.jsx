@@ -292,8 +292,7 @@ export default function Checkout({ cartItems = [] }) {
     // - "Buy now" skips opening the drawer (and thus skips local cart state updates)
     if (isBuyNowMode) return;
     let mounted = true;
-    const hasPropItems = Array.isArray(cartItems) && cartItems.length > 0;
-    if (!userId || hasPropItems) return;
+    if (!userId) return;
     fetchCartMongo(userId)
       .then((res) => {
         if (!mounted) return;
@@ -302,7 +301,7 @@ export default function Checkout({ cartItems = [] }) {
       })
       .catch(() => {
         if (!mounted) return;
-        // keep whatever is already there (usually empty)
+        // Keep the prop-backed cart if the Mongo cart cannot be loaded.
       });
     return () => {
       mounted = false;
@@ -1407,4 +1406,3 @@ const linkBtn = {
   cursor: "pointer",
   textDecoration: "underline",
 };
-
