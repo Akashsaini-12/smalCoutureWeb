@@ -108,8 +108,6 @@ export default function Checkout({ cartItems = [] }) {
     Boolean(buyNowItem && (buyNowItem.productId || buyNowItem.variantId));
   const checkoutTrackedRef = useRef(false);
   const errorRef = useRef(null);
-  const offersSectionRef = useRef(null);
-  const offersListRef = useRef(null);
 
   const [items, setItems] = useState(() => {
     if (isBuyNowMode) return [buyNowItem];
@@ -124,31 +122,6 @@ export default function Checkout({ cartItems = [] }) {
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [openCouponInfo, setOpenCouponInfo] = useState(null);
   const [paying, setPaying] = useState(false);
-
-  const getPaymentOfferCount = (mode) => {
-    const normalizedMode = String(mode || "").toLowerCase();
-    const targetModes = normalizedMode === "online" ? ["prepaid", "all"] : ["cod", "all"];
-    return (Array.isArray(availableCoupons) ? availableCoupons : []).filter((coupon) => {
-      const applicableOn = String(coupon?.applicableOn || "all").toLowerCase();
-      return targetModes.includes(applicableOn);
-    }).length;
-  };
-
-  const scrollToOffersSection = () => {
-    const list = offersListRef.current || document.getElementById("checkout-offers-list");
-    const section = offersSectionRef.current || document.getElementById("checkout-offers-section");
-    const lastItem = list ? list.querySelector("[data-offer-item]:last-of-type") : null;
-
-    if (!lastItem && !section) return;
-
-    const anchor = lastItem || section;
-    const rect = anchor.getBoundingClientRect();
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    const currentScrollY = window.scrollY || window.pageYOffset || 0;
-    const targetY = Math.max(0, currentScrollY + rect.bottom - viewportHeight - 8);
-
-    window.scrollTo({ top: targetY, behavior: "smooth" });
-  };
 
   const [customerName, setCustomerName] = useState("");
   const [phone, setPhone] = useState("");
@@ -165,7 +138,6 @@ export default function Checkout({ cartItems = [] }) {
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [showAddressOptions, setShowAddressOptions] = useState(false);
-  const [removeConfirmAddress, setRemoveConfirmAddress] = useState(null);
 
   const [shipPreview, setShipPreview] = useState(null); // { shipping, etaDays }
   const [shipLoading, setShipLoading] = useState(false);
@@ -250,7 +222,7 @@ export default function Checkout({ cartItems = [] }) {
 
   const discountPreview = Number(couponStatus?.discount || 0);
   const shippingPreview = Number(shipPreview?.shipping || 0);
-  const totalPreview = Math.max(0, subtotal + shippingPreview);
+  const totalPreview = Math.max(0, subtotal + shippingPreview - discountPreview);
   const FREE_SHIPPING_THRESHOLD = 500;
   const remainingForFreeShipping = Math.max(
     0,
@@ -473,15 +445,6 @@ export default function Checkout({ cartItems = [] }) {
   }
 
   async function handleDeleteAddress() {
-    // Just show confirmation, don't delete yet
-    if (!selectedAddressId) return;
-    const addressToDelete = savedAddresses.find((a) => String(a?._id) === String(selectedAddressId));
-    if (addressToDelete) {
-      setRemoveConfirmAddress(addressToDelete);
-    }
-  }
-
-  async function confirmRemoveAddress() {
     setAddrError("");
     try {
       if (!selectedAddressId) return;
@@ -496,10 +459,8 @@ export default function Checkout({ cartItems = [] }) {
         setSelectedAddressId("");
         setShowAddressForm(true);
       }
-      setRemoveConfirmAddress(null);
     } catch (e) {
       setAddrError(e?.message || "Failed to delete address");
-      setRemoveConfirmAddress(null);
     }
   }
 
@@ -940,7 +901,8 @@ export default function Checkout({ cartItems = [] }) {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                setRemoveConfirmAddress(selectedAddress);
+                                setSelectedAddressId(String(selectedAddress._id));
+                                handleDeleteAddress();
                               }}
                               style={{
                                 ...addressActionBtnStyle,
@@ -1030,8 +992,8 @@ export default function Checkout({ cartItems = [] }) {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        setRemoveConfirmAddress(a);
                                         setSelectedAddressId(String(a._id));
+                                        handleDeleteAddress();
                                       }}
                                       style={{
                                         padding: "9px 14px",
@@ -1070,55 +1032,6 @@ export default function Checkout({ cartItems = [] }) {
                   </div>
                 ) : null}
               </div>
-
-                {/* Remove Address Confirmation Modal */}
-                {removeConfirmAddress && (
-                  <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.4)", zIndex: 999999, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <div style={{ background: "#fff", borderRadius: 14, padding: 20, maxWidth: 400, width: "90%", boxShadow: "0 20px 25px rgba(0,0,0,0.15)" }}>
-                      <div style={{ fontWeight: 900, fontSize: 16, color: "#0f172a", marginBottom: 8 }}>Remove Address</div>
-                      <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.5, marginBottom: 20 }}>
-                        Are you sure you want to remove this address?
-                        <div style={{ marginTop: 10, fontWeight: 700, color: "#0f172a" }}>
-                          {removeConfirmAddress.name} • {removeConfirmAddress.phone}
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                        <button
-                          type="button"
-                          onClick={() => setRemoveConfirmAddress(null)}
-                          style={{
-                            padding: "10px 16px",
-                            borderRadius: 8,
-                            border: "1px solid #e5e7eb",
-                            background: "#fff",
-                            color: "#0f172a",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            fontSize: 14,
-                          }}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          onClick={confirmRemoveAddress}
-                          style={{
-                            padding: "10px 16px",
-                            borderRadius: 8,
-                            border: "none",
-                            background: "#e11d48",
-                            color: "#fff",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            fontSize: 14,
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
               {showAddressForm && (
                 <div style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
@@ -1189,36 +1102,9 @@ export default function Checkout({ cartItems = [] }) {
                   }}
                 >
                   <input type="radio" name="checkout-payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
                   <div>
                     <div style={{ fontWeight: 900, color: "#0f172a" }}>Cash on delivery</div>
                     <div style={paymentHintStyle}>Pay when your order arrives</div>
-                    </div>
-                    {getPaymentOfferCount("cod") > 0 ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          scrollToOffersSection();
-                        }}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 999,
-                          border: "1px solid #86efac",
-                          background: "#dcfce7",
-                          color: "#166534",
-                          fontSize: 11,
-                          fontWeight: 900,
-                          letterSpacing: "0.02em",
-                          cursor: "pointer",
-                          whiteSpace: "nowrap",
-                          boxShadow: "0 4px 10px rgba(34, 197, 94, 0.14)",
-                        }}
-                      >
-                        {getPaymentOfferCount("cod")} Offers
-                      </button>
-                    ) : null}
                   </div>
                 </label>
                 <label
@@ -1230,44 +1116,15 @@ export default function Checkout({ cartItems = [] }) {
                   }}
                 >
                   <input type="radio" name="checkout-payment" checked={paymentMethod === "online"} onChange={() => setPaymentMethod("online")} />
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
                   <div>
                     <div style={{ fontWeight: 900, color: "#0f172a" }}>Online payment</div>
                     <div style={paymentHintStyle}>UPI · NetBanking · cards</div>
-                    </div>
-                    {getPaymentOfferCount("online") > 0 ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          scrollToOffersSection();
-                        }}
-                        style={{
-                          padding: "7px 12px",
-                          borderRadius: 999,
-                          border: "1px solid #86efac",
-                          background: "#dcfce7",
-                          color: "#166534",
-                          fontSize: 11,
-                          fontWeight: 900,
-                          letterSpacing: "0.02em",
-                          cursor: "pointer",
-                          whiteSpace: "nowrap",
-                          boxShadow: "0 4px 10px rgba(34, 197, 94, 0.14)",
-                        }}
-                      >
-                        {getPaymentOfferCount("online")} Offers
-                      </button>
-                    ) : null}
                   </div>
                 </label>
               </div>
 
-              <div ref={offersSectionRef} id="checkout-offers-section">
-                <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>3</span> Offers for you</label>
-                <p style={sectionHintStyle}>Apply a promo code before reviewing your order total.</p>
-              </div>
+              <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>3</span> Offers for you</label>
+              <p style={sectionHintStyle}>Apply a promo code before reviewing your order total.</p>
               <div style={{ display: "flex", gap: 12, flexDirection: isMobile ? "column" : "row" }}>
                 <input
                   value={couponCode}
@@ -1296,7 +1153,7 @@ export default function Checkout({ cartItems = [] }) {
                     </div>
                   )}
 
-                  <div id="checkout-offers-list" ref={offersListRef} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {availableCoupons.map((c) => {
                       const minSubtotalNotMet = subtotal < Number(c.minSubtotal || 0);
                       const isApplied = couponStatus?.code === c.code;
@@ -1318,7 +1175,7 @@ export default function Checkout({ cartItems = [] }) {
                         : (Array.isArray(c.applicableCategories) ? c.applicableCategories : []);
 
                       return (
-                        <div key={c._id || c.code} data-offer-item style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
                           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                             <div>
                               <div style={{ fontSize: 14, fontWeight: 950, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
