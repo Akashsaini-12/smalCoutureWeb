@@ -189,7 +189,7 @@ export default function Checkout({ cartItems = [] }) {
   const [addrLoading, setAddrLoading] = useState(false);
   const [addrError, setAddrError] = useState("");
   const [selectedAddressId, setSelectedAddressId] = useState("");
-  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(true);
   const [showAddressOptions, setShowAddressOptions] = useState(false);
 
   const [shipPreview, setShipPreview] = useState(null); // { shipping, etaDays }
@@ -485,6 +485,8 @@ export default function Checkout({ cartItems = [] }) {
         if (ordered.length > 0) {
           const defaultSelection = ordered[0];
           setSelectedAddressId(String(defaultSelection?._id || ""));
+          setShowAddressForm(false);
+          setShowAddressOptions(false);
           if (defaultSelection) {
             setCustomerName(defaultSelection.name || "");
             setPhone(defaultSelection.phone || "");
@@ -507,6 +509,8 @@ export default function Checkout({ cartItems = [] }) {
           setPincode("");
           setAddressLabel("Home");
           setIsDefaultAddress(true);
+          setShowAddressOptions(false);
+          setShowAddressForm(true);
         }
       })
       .catch((e) => {
@@ -1239,7 +1243,7 @@ export default function Checkout({ cartItems = [] }) {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%", marginBottom: 4 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 0, fontWeight: 950, color: "#0f172a", fontSize: 14, minWidth: 0, flex: 1, marginRight: 8, justifyContent: "flex-start" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 0, fontWeight: 700, color: "#0f172a", fontSize: 14, minWidth: 0, flex: 1, marginRight: 8, justifyContent: "flex-start" }}>
                         <span style={{ lineHeight: 1.2, display: "inline-flex", alignItems: "center", flexWrap: "wrap", minWidth: 0, textAlign: "left" }}>
                           {primaryVisibleAddress ? primaryVisibleAddress.name || "Customer" : "No saved address"}
                         </span>
@@ -1308,7 +1312,7 @@ export default function Checkout({ cartItems = [] }) {
                           <br />
                           {primaryVisibleAddress.city}, {primaryVisibleAddress.state} {primaryVisibleAddress.pincode}
                         </div>
-                        <div style={{ marginTop: 8, color: "rgba(15,23,42,0.72)", fontWeight: 800, fontSize: 13, lineHeight: 1.35 }}>
+                        <div style={{ marginTop: 8, color: "rgba(15,23,42,0.72)", fontWeight: 700, fontSize: 13, lineHeight: 1.35 }}>
                           {primaryVisibleAddress.phone}
                         </div>
                         {savedAddresses.length > 0 ? (
@@ -1361,8 +1365,32 @@ export default function Checkout({ cartItems = [] }) {
                         ) : null}
                       </>
                     ) : (
-                      <div style={{ marginTop: 8, color: "rgba(15,23,42,0.65)", fontWeight: 700 }}>
-                        Add a delivery address to continue.
+                      <div style={{ marginTop: 8, display: "grid", gap: 10 }}>
+                        <div style={{ color: "rgba(15,23,42,0.65)", fontWeight: 700 }}>
+                          Add a delivery address to continue.
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            startNewAddress();
+                          }}
+                          style={{
+                            ...addressActionBtnStyle,
+                            width: "100%",
+                            minWidth: 0,
+                            height: 38,
+                            padding: "0 12px",
+                            background: "#f8fafc",
+                            color: "#1f1a17",
+                            border: "1px solid #dbe2ea",
+                            fontSize: 12,
+                            fontWeight: 700,
+                          }}
+                        >
+                          + Add new address
+                        </button>
                       </div>
                     )}
                   </div>
@@ -1414,15 +1442,15 @@ export default function Checkout({ cartItems = [] }) {
                                     }}
                                   >
                                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                                      <div style={{ fontWeight: 950, color: "#0f172a" }}>
+                                      <div style={{ fontWeight: 700, color: "#0f172a" }}>
                                         {a.label || "Address"}
                                         {a.isDefault ? (
-                                          <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 800, fontSize: 12 }}>
+                                          <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 700, fontSize: 12 }}>
                                             • Default
                                           </span>
                                         ) : null}
                                       </div>
-                                      <span style={{ color: "rgba(15,23,42,0.55)", fontWeight: 800, fontSize: 12 }}>
+                                      <span style={{ color: "rgba(15,23,42,0.55)", fontWeight: 700, fontSize: 12 }}>
                                         {isSelected ? "Selected" : "Tap to select"}
                                       </span>
                                     </div>
@@ -1481,7 +1509,7 @@ export default function Checkout({ cartItems = [] }) {
                 )}
 
                 {addrError ? (
-                  <div style={{ marginTop: 10, padding: 10, borderRadius: 12, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontWeight: 800 }}>
+                  <div style={{ marginTop: 10, padding: 10, borderRadius: 12, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontWeight: 700 }}>
                     {addrError}
                   </div>
                 ) : null}
@@ -1490,7 +1518,7 @@ export default function Checkout({ cartItems = [] }) {
               {showAddressForm && (
                 <div ref={addressFormRef} style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
                   <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
-                    <div style={{ fontWeight: 950, color: "#0f172a" }}>
+                    <div style={{ fontWeight: 700, color: "#0f172a" }}>
                       {selectedAddressId ? "Edit address" : "Add new address"}
                     </div>
                     <button type="button" onClick={() => setShowAddressForm(false)} style={{ ...smallGhostBtn, padding: "10px 12px", background: "#fff" }}>
@@ -1499,9 +1527,9 @@ export default function Checkout({ cartItems = [] }) {
                   </div>
 
                   <div style={{ display: "grid", gap: 14 }}>
-                   <label style={{ ...inlineRowStyle, display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, margin: 0, fontWeight: 800, color: "#0f172a", cursor: "pointer" }}>
+                   <label style={{ ...inlineRowStyle, display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, margin: 0, fontWeight: 700, color: "#0f172a", cursor: "pointer" }}>
                      <input type="checkbox" checked={isDefaultAddress} onChange={(e) => setIsDefaultAddress(e.target.checked)} />
-                     <span style={{ fontWeight: 800, color: "#0f172a" }}>Set as default</span>
+                     <span style={{ fontWeight: 600, color: "#0f172a" }}>Set as default</span>
                    </label>
 
                    <FloatingAddressField
@@ -1836,7 +1864,7 @@ export default function Checkout({ cartItems = [] }) {
               ) : null}
               {Array.isArray(availableCoupons) && availableCoupons.length > 0 && (
                 <div style={{ marginTop: 16, marginBottom: 14 }}>
-                  <div style={{ fontSize: 12, fontWeight: 900, color: "#64748b", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
                     Available coupons
                   </div>
 
@@ -1875,7 +1903,7 @@ export default function Checkout({ cartItems = [] }) {
                         <div data-coupon-card="true" key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#0f8f63" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
                           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                             <div>
-                              <div style={{ fontSize: 14, fontWeight: 950, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
                               <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", fontSize: 12, fontWeight: 700, color: "#0f8f63" }}>
                                 <span>{discountLabel}</span>
                                 {savingsAmount > 0 ? (
@@ -1895,7 +1923,7 @@ export default function Checkout({ cartItems = [] }) {
                             {hasCategoryCondition ? (
                               <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 5 }}>
                                 <span>Only applicable on selected products</span>
-                                <button type="button" aria-label="Show applicable products" onClick={() => setOpenCouponInfo(openCouponInfo === c.code ? null : c.code)} style={{ width: 18, height: 18, padding: 0, border: "1px solid #94a3b8", borderRadius: "50%", background: "#fff", color: "#475569", fontSize: 11, fontWeight: 900, cursor: "pointer" }}>i</button>
+                                <button type="button" aria-label="Show applicable products" onClick={() => setOpenCouponInfo(openCouponInfo === c.code ? null : c.code)} style={{ width: 18, height: 18, padding: 0, border: "1px solid #94a3b8", borderRadius: "50%", background: "#fff", color: "#475569", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>i</button>
                               </div>
                             ) : null}
                             {openCouponInfo === c.code && hasCategoryCondition ? (
@@ -1911,7 +1939,7 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               )}
 
-              <div style={{ marginTop: 18, marginBottom: 18, padding: "14px 16px", borderRadius: 14, border: "1px solid #e7d9c7", background: "#ffffff", boxShadow: "0 4px 12px rgba(31, 26, 23, 0.04)", textAlign: "center", fontSize: 12, fontWeight: 800, color: "#4b433f", letterSpacing: "0.02em" }}>
+              <div style={{ marginTop: 18, marginBottom: 18, padding: "14px 16px", borderRadius: 14, border: "1px solid #e7d9c7", background: "#ffffff", boxShadow: "0 4px 12px rgba(31, 26, 23, 0.04)", textAlign: "center", fontSize: 12, fontWeight: 700, color: "#4b433f", letterSpacing: "0.02em" }}>
                 THANK YOU FOR CHOOSING SMALCOUTURE ✦
               </div>
             </section>
@@ -1935,7 +1963,7 @@ export default function Checkout({ cartItems = [] }) {
                 </h2>
               </div>
 
-              <div style={{ marginBottom: 14, padding: "8px 10px", borderRadius: 10, background: "#fff", border: "1px solid #e5e7eb", color: "#4a4a4a", fontWeight: 800, fontSize: 12 }}>
+              <div style={{ marginBottom: 14, padding: "8px 10px", borderRadius: 10, background: "#fff", border: "1px solid #e5e7eb", color: "#4a4a4a", fontWeight: 700, fontSize: 12 }}>
                 Free shipping on orders above ₹499
               </div>
 
@@ -1967,7 +1995,7 @@ export default function Checkout({ cartItems = [] }) {
                       </div>
 
                       <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ fontWeight: 800, color: "#1f1a17", fontSize: 14, lineHeight: 1.3, marginBottom: 2 }}>
+                        <div style={{ fontWeight: 700, color: "#1f1a17", fontSize: 14, lineHeight: 1.3, marginBottom: 2 }}>
                           {it?.name}
                         </div>
                         <div style={{ color: "#6d635d", fontSize: 12, lineHeight: 1.4 }}>
@@ -1981,13 +2009,13 @@ export default function Checkout({ cartItems = [] }) {
                           })()}
                         </div>
                         {checkoutLineMatchesOosBanner(it, outOfStockInfo) ? (
-                          <div style={{ marginTop: 5, fontSize: 12, fontWeight: 900, color: "#b42318" }}>
+                          <div style={{ marginTop: 5, fontSize: 12, fontWeight: 700, color: "#b42318" }}>
                             Out of stock
                           </div>
                         ) : null}
                       </div>
 
-                      <div style={{ fontWeight: 900, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
+                      <div style={{ fontWeight: 700, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
                         {formatINR(parsePrice(it?.price) * Number(it?.quantity || 1))}
                       </div>
                     </div>
@@ -2023,7 +2051,7 @@ export default function Checkout({ cartItems = [] }) {
                     href="https://wa.me/918199985004?text=Hi%20S-Mal%2C%20I%20came%20across%20your%20website%20and%20would%20like%20to%20connect%20regarding%20a%20query.%20Looking%20forward%20to%20your%20assistance."
                     target="_blank"
                     rel="noreferrer"
-                    style={{ color: "#1f1a17", fontWeight: 800, textDecoration: "none", marginLeft: 6, fontSize: 15, display: "inline-flex", alignItems: "center", gap: 4 }}
+                    style={{ color: "#1f1a17", fontWeight: 700, textDecoration: "none", marginLeft: 6, fontSize: 15, display: "inline-flex", alignItems: "center", gap: 4 }}
                   >
                     <span>Chat with us</span>
                     <span aria-hidden="true" style={{ display: "inline-block", transform: "translateY(-1px)" }}>→</span>
@@ -2034,11 +2062,11 @@ export default function Checkout({ cartItems = [] }) {
               {!isMobile ? (
                 <>
                   <div style={{ marginTop: 18, display: "grid", gap: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#1f1a17", fontSize: 13 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#1f1a17", fontSize: 13 }}>
                       <span>Subtotal</span>
                       <span>{formatINR(subtotal)}</span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, color: "#574d46", fontSize: 13 }}>
                       <span>Shipping {shipLoading ? "(...)" : ""}</span>
                       <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
                     </div>
@@ -2061,13 +2089,13 @@ export default function Checkout({ cartItems = [] }) {
                     ) : null}
 
                     {discountPreview > 0 ? (
-                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, color: "#574d46", fontSize: 13 }}>
                         <span>Discount</span>
                         <span>-{formatINR(discountPreview)}</span>
                       </div>
                     ) : null}
 
-                    <div style={{ marginTop: 6, paddingTop: 12, borderTop: "1px solid rgba(38, 28, 21, 0.12)", display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#1f1a17", fontSize: 15 }}>
+                    <div style={{ marginTop: 6, paddingTop: 12, borderTop: "1px solid rgba(38, 28, 21, 0.12)", display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#1f1a17", fontSize: 15 }}>
                       <span>Total</span>
                       <span>{formatINR(totalPreview)}</span>
                     </div>
@@ -2106,9 +2134,9 @@ export default function Checkout({ cartItems = [] }) {
                 <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, background: "#fff", borderTop: "1px solid #e7e1da", boxShadow: "0 -10px 24px rgba(31, 26, 23, 0.08)", padding: "12px 14px calc(12px + env(safe-area-inset-bottom))", zIndex: 40, visibility: isMobileKeyboardOpen ? "hidden" : "visible", pointerEvents: isMobileKeyboardOpen ? "none" : "auto" }}>
                   <div style={{ display: "grid", gap: 8 }}>
                    {couponStatus?.code ? (
-                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13, alignItems: "center" }}>
+                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, color: "#574d46", fontSize: 13, alignItems: "center" }}>
                        <span>Promo</span>
-                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 8px", borderRadius: 999, background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46", fontSize: 11, fontWeight: 800 }}>
+                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 8px", borderRadius: 999, background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46", fontSize: 11, fontWeight: 700 }}>
                          <span>{couponStatus.code}</span>
                          <button
                            type="button"
@@ -2140,16 +2168,16 @@ export default function Checkout({ cartItems = [] }) {
                      </div>
                    ) : null}
                    {discountPreview > 0 ? (
-                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, color: "#574d46", fontSize: 13 }}>
                        <span>Discount</span>
                        <span>-{formatINR(discountPreview)}</span>
                      </div>
                    ) : null}
-                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, color: "#574d46", fontSize: 13 }}>
                      <span>Shipping {shipLoading ? "(...)" : ""}</span>
                      <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
                    </div>
-                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#1f1a17", fontSize: 15 }}>
+                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, color: "#1f1a17", fontSize: 15 }}>
                      <span>Total</span>
                      <span>{formatINR(totalPreview)}</span>
                    </div>
@@ -2165,7 +2193,7 @@ export default function Checkout({ cartItems = [] }) {
                         cursor: !items.length || paying ? "not-allowed" : "pointer",
                         background: "#1f1a17",
                         color: "#fff",
-                        fontWeight: 900,
+                        fontWeight: 700,
                         letterSpacing: 0.3,
                         fontSize: 15,
                         opacity: paying ? 0.75 : 1,
@@ -2221,47 +2249,47 @@ const addressTypeButtonStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-gap: 8,
-minHeight: 42,
+ gap: 8,
+ minHeight: 42,
   borderRadius: 12,
-border: "1px solid #d9d9d9",
-background: "#f5f5f5",
-color: "#2f2f2f",
-  cursor: "pointer",
-  transition: "all 0.2s ease",
-fontSize: 14,
-  fontWeight: 700,
+ border: "1px solid #d9d9d9",
+ background: "#f5f5f5",
+ color: "#2f2f2f",
+ cursor: "pointer",
+ transition: "all 0.2s ease",
+ fontSize: 14,
+ fontWeight: 600,
 };
 
 const eyebrowStyle = {
-  color: "#8a6b4a",
-  fontSize: 10,
-  fontWeight: 700,
-  letterSpacing: "1.8px",
+ color: "#8a6b4a",
+ fontSize: 10,
+ fontWeight: 600,
+ letterSpacing: "1.8px",
 };
 
 const backCartStyle = {
-  color: "#292524",
-  borderBottom: "1px solid #292524",
-  fontSize: 13,
-  fontWeight: 800,
-  textDecoration: "none",
-  paddingBottom: 3,
+ color: "#292524",
+ borderBottom: "1px solid #292524",
+ fontSize: 13,
+ fontWeight: 700,
+ textDecoration: "none",
+ paddingBottom: 3,
 };
 
 const progressBarStyle = {
-  display: "flex",
-  alignItems: "center",
-  flexWrap: "wrap",
-  gap: 10,
-  padding: "14px 18px",
-  marginBottom: 22,
-  border: "1px solid #e7e7e7",
-  borderRadius: 14,
-  background: "#fff",
-  color: "#374151",
-  fontSize: 12,
-  fontWeight: 800,
+ display: "flex",
+ alignItems: "center",
+ flexWrap: "wrap",
+ gap: 10,
+ padding: "14px 18px",
+ marginBottom: 22,
+ border: "1px solid #e7e7e7",
+ borderRadius: 14,
+ background: "#fff",
+ color: "#374151",
+ fontSize: 12,
+ fontWeight: 700,
 };
 
 const progressStepStyle = {
@@ -2330,7 +2358,7 @@ const textareaStyle = {
 const labelStyle = {
   display: "block",
   fontSize: 13,
-  fontWeight: 800,
+  fontWeight: 700,
   color: "#111827",
   marginBottom: 6,
 };
@@ -2340,7 +2368,7 @@ const sectionHeadingStyle = {
   alignItems: "center",
   gap: 8,
   fontSize: 13,
-  fontWeight: 700,
+  fontWeight: 600,
   color: "#111827",
   marginBottom: 6,
 };
@@ -2356,7 +2384,7 @@ const paymentHintStyle = {
   marginTop: 4,
   color: "#64748b",
   fontSize: 12,
-  fontWeight: 600,
+  fontWeight: 500,
 };
 
 const stepBadgeStyle = {
@@ -2397,7 +2425,7 @@ const smallPrimaryBtn = {
   border: "none",
   background: "#1f1a17",
   color: "#fff",
-  fontWeight: 900,
+  fontWeight: 700,
   cursor: "pointer",
 };
 
@@ -2407,7 +2435,7 @@ const smallGhostBtn = {
   border: "1px solid #e5e7eb",
   background: "#fff",
   color: "#1f1a17",
-  fontWeight: 900,
+  fontWeight: 700,
   cursor: "pointer",
 };
 
@@ -2416,7 +2444,7 @@ const linkBtn = {
   border: "none",
   background: "transparent",
   color: "#111",
-  fontWeight: 900,
+  fontWeight: 700,
   cursor: "pointer",
   textDecoration: "underline",
 };
@@ -2426,7 +2454,7 @@ const addressActionBtnStyle = {
   height: 38,
   padding: "0 16px",
   borderRadius: 10,
-  fontWeight: 900,
+  fontWeight: 700,
   fontSize: 13,
   lineHeight: 1,
   cursor: "pointer",
