@@ -131,6 +131,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
   const [apiMode, setApiMode] = useState(false);
   const [recommendItems, setRecommendItems] = useState([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
+  const [removeConfirm, setRemoveConfirm] = useState(null);
   // Recommendations should open product page (no quick view in drawer)
 
   // Once we attempt loading cart from API, prefer API cart even if it's empty.
@@ -513,17 +514,25 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     const current = Number(item?.quantity) || 1;
     if (!key) return;
 
-    // If user tries to go below 1, remove the item.
+    // If user tries to go below 1, show confirmation dialog
     if (current <= 1) {
-      if (apiCartItems.length) {
-        handleRemoveApi(item);
-        return;
-      }
-      removeFromCart?.(item?.variantId || item?._id);
+      setRemoveConfirm(item);
       return;
     }
 
     changeQty(key, current - 1);
+  };
+
+  const confirmRemoveItem = async () => {
+    const item = removeConfirm;
+    setRemoveConfirm(null);
+    if (!item) return;
+
+    if (apiCartItems.length) {
+      await handleRemoveApi(item);
+      return;
+    }
+    removeFromCart?.(item?.variantId || item?._id);
   };
 
   const handleRemoveApi = async (item) => {
@@ -677,12 +686,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                       <button
                         type="button"
                         onClick={() => {
-                          // Prefer API removal when API cart is present
-                          if (apiCartItems.length) {
-                            handleRemoveApi(item);
-                            return;
-                          }
-                          removeFromCart?.(item.variantId || item._id);
+                          setRemoveConfirm(item);
                         }}
                         style={styles.removeBtn}
                       >
@@ -760,22 +764,6 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         <div style={styles.footer}>
           <div style={styles.footerTopRow}>
             <div style={styles.addonGroup}>
-              {[
-                { key: "coupon", label: "Coupon", Icon: CouponIcon },
-              ].map(({ key, label, Icon }) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setAddonModalOpen(key)}
-                  style={{
-                    ...styles.addonBtn,
-                    ...(addonModalOpen === key ? styles.addonBtnActive : {}),
-                  }}
-                >
-                  <Icon />
-                  {label}
-                </button>
-              ))}
             </div>
             <div style={styles.subtotalInline}>
               <span>Subtotal</span>
@@ -920,89 +908,38 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                   </div>
                 </>
               )}
-              {addonModalOpen === "coupon" && (
-                <>
-                  <div style={styles.modalTitle}>
-                    <TagIcon />
-                    Add a discount code
-                  </div>
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      setCouponCode(v);
-                    }}
-                    placeholder="Enter discount code here"
-                    style={styles.modalInput}
-                  />
-                  {availableCoupons.length > 0 && (
-                    <div style={{ marginTop: -6, marginBottom: 14 }}>
-                      <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
-                        Available coupons
-                      </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                        {availableCoupons.map((c) => {
-                          const disabled = subtotal < Number(c.minSubtotal || 0);
-                          const label =
-                            c.type === "percent"
-                              ? `${c.code} • ${c.value}% OFF`
-                              : `${c.code} • ₹${c.value} OFF`;
-                          return (
-                            <button
-                              key={c._id || c.code}
-                              type="button"
-                              disabled={disabled}
-                              onClick={() => {
-                                const next = String(c.code || "");
-                                setCouponCode(next);
-                              }}
-                              style={{
-                                padding: "8px 10px",
-                                borderRadius: 999,
-                                border: "1px solid #e5e7eb",
-                                background: disabled ? "#f1f5f9" : "#fff",
-                                color: disabled ? "#94a3b8" : "#0f172a",
-                                fontWeight: 800,
-                                fontSize: 12,
-                                cursor: disabled ? "not-allowed" : "pointer",
-                              }}
-                              title={disabled ? `Min subtotal ₹${c.minSubtotal} required` : "Click to use at checkout"}
-                            >
-                              {label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      <div style={{ marginTop: 8, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
-                        Coupon will be applied at Checkout.
-                      </div>
-                    </div>
-                  )}
-                  <div style={styles.modalActions}>
-                    <button
-                      type="button"
-                      style={styles.modalBtnCancel}
-                      onClick={() => setAddonModalOpen(null)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      style={styles.modalBtnPrimary}
-                      onClick={() => {
-                        setAddonModalOpen(null);
-                      }}
-                    >
-                      Save
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         )}
       </div>
+
+      {/* Remove Item Confirmation Modal */}
+      {removeConfirm && (
+        <div style={styles.modalOverlay} onClick={() => setRemoveConfirm(null)} role="presentation">
+          <div style={styles.confirmModalBox} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.confirmTitle}>Remove Item</div>
+            <div style={styles.confirmMessage}>
+              Are you sure you want to remove <strong>{removeConfirm?.name || removeConfirm?.title}</strong> from your cart?
+            </div>
+            <div style={styles.confirmActions}>
+              <button
+                type="button"
+                style={styles.modalBtnCancel}
+                onClick={() => setRemoveConfirm(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                style={{ ...styles.modalBtnPrimary, background: "#b91c1c" }}
+                onClick={confirmRemoveItem}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* QuickViewModal intentionally disabled on CartDrawer */}
     </div>,
@@ -1374,12 +1311,15 @@ const styles = {
     textDecoration: "underline",
   },
   modalOverlay: {
-    position: "absolute",
-    inset: 0,
+    position: "fixed",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: "min(440px, 100vw)",
     background: "rgba(0,0,0,0.4)",
-    zIndex: 10,
+    zIndex: 100000,
     display: "flex",
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "center",
   },
   modalBox: {
@@ -1463,5 +1403,29 @@ const styles = {
     background: "#111",
     color: "#fff",
     cursor: "pointer",
+  },
+  confirmModalBox: {
+    width: "90%",
+    maxWidth: 380,
+    background: "#fff",
+    borderRadius: 12,
+    padding: "24px",
+    boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+  },
+  confirmTitle: {
+    fontSize: "18px",
+    fontWeight: 700,
+    color: "#111",
+    marginBottom: 12,
+  },
+  confirmMessage: {
+    fontSize: "14px",
+    color: "#475569",
+    marginBottom: 24,
+    lineHeight: 1.5,
+  },
+  confirmActions: {
+    display: "flex",
+    gap: 12,
   },
 };
