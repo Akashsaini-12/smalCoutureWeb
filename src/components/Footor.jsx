@@ -337,29 +337,46 @@ const Footor = () => {
                 align-items: center;
                 gap: 10px;
                 width: 100%;
-                min-height: 58px;
-                padding: 15px 20px;
+                min-height: 54px;
+                padding: 12px 18px;
                 text-decoration: none;
                 font-weight: 700;
                 font-size: 0.97rem;
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 12px 18px rgba(31, 22, 16, 0.05);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 10px 18px rgba(31, 22, 16, 0.045);
+                transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+              }
+              .m-footer--contact-link:hover {
+                transform: translateY(-1px);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 14px 22px rgba(31, 22, 16, 0.08);
               }
               .m-footer--contact-link > span {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 width: 100%;
                 min-width: 0;
+                white-space: nowrap;
+              }
+              .m-footer--contact-link img {
+                width: 18px;
+                height: 18px;
+                flex-shrink: 0;
+                filter: drop-shadow(0 2px 4px rgba(15, 122, 72, 0.2));
               }
               .m-footer--contact-link .m-footer--wa-number {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                flex-shrink: 0;
+                letter-spacing: -0.01em;
               }
               .m-footer--contact-link .m-footer--wa-copy {
                 opacity: 0.78;
-                white-space: normal;
+                white-space: nowrap;
+                flex-shrink: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
               }
               .m-footer--social-row {
                 display: grid;
@@ -491,8 +508,8 @@ const Footor = () => {
                 .m-footer--contact-card,
                 .m-footer--contact-link,
                 .m-footer--social-pill {
-                  min-height: 50px;
-                  padding: 12px 16px;
+                  min-height: 48px;
+                  padding: 10px 14px;
                 }
                 .m-footer--contact-card-text,
                 .m-footer--social-pill,
@@ -501,6 +518,12 @@ const Footor = () => {
                 }
                 .m-footer--contact-link > span {
                   gap: 6px;
+                  flex-wrap: nowrap;
+                  overflow: hidden;
+                }
+                .m-footer--contact-link .m-footer--wa-copy {
+                  overflow: hidden;
+                  text-overflow: ellipsis;
                 }
                 .m-footer--social-row {
                   grid-template-columns: 1fr;
