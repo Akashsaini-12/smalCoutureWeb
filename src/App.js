@@ -23,6 +23,8 @@ import HotWeek from "./components/HotWeek";
 import FeaturedPress from "./components/FeaturedPress";
 import { isInternalFreeSizeLabel } from "./utils/internalFreeSize";
 import { trackAddToCart, trackMetaPageView, clearStaleStoredPurchaseMetadata } from "./utils/metaPixel";
+import { getUserId } from "./utils/userId";
+import { addToCartMongo } from "./redux/actions";
 import CoastalEdition from "./components/CoastalEdition";
 import ShopCollection from "./components/ShopCollection";
 import ShopMixMatch from "./components/ShopMixMatch";
@@ -56,8 +58,10 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 const AppInner = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userId = getUserId();
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const lastAddRef = useRef(new Map());
 
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState(null);
@@ -82,8 +86,20 @@ const AppInner = () => {
     clearStaleStoredPurchaseMetadata();
   }, []);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, shouldOpenDrawer = true) => {
     if (!product) return;
+
+    const productKey = String(
+      product.productId ?? product.id ?? product._id ?? product.variantId ?? product.variant_id ?? product.slug ?? product.handle ?? product.title ?? product.name ?? ""
+    );
+    const now = Date.now();
+    if (productKey) {
+      const last = lastAddRef.current.get(productKey) || 0;
+      if (now - last < 350) {
+        return;
+      }
+      lastAddRef.current.set(productKey, now);
+    }
 
     // If user is not logged in, show login page instead of adding to cart.
     // (Cart is currently tied to Mongo `userId` so we must not create "guest" cart rows.)
@@ -116,9 +132,46 @@ const AppInner = () => {
       return;
     }
 
-    setCartDrawerOpen(true);
-    const variantId = product.variantId ?? product.variant_id;
-    if (variantId == null) return;
+    if (shouldOpenDrawer) {
+      setCartDrawerOpen(true);
+    }
+
+    const variantId = product.variantId ?? product.variant_id ?? product._id ?? product.productId ?? product.id;
+    if (variantId == null && !product.productId && !product.id && !product._id && !product.slug && !product.handle && !(product.name || product.title)) return;
+
+    const normalizeIdentityValue = (value) => {
+      if (value == null) return "";
+      return String(value).trim().toLowerCase();
+    };
+
+    const productIdentityValues = (candidate) => {
+      const raw = [
+        candidate?._id,
+        candidate?.productId,
+        candidate?.variantId,
+        candidate?.variant_id,
+        candidate?.id,
+        candidate?.slug,
+        candidate?.handle,
+        candidate?.name,
+        candidate?.title,
+      ]
+        .filter((value) => value != null && String(value).trim() !== "")
+        .map((value) => normalizeIdentityValue(value));
+      return [...new Set(raw.filter(Boolean))];
+    };
+
+    const productMatches = (candidateA, candidateB) => {
+      if (!candidateA || !candidateB) return false;
+      const aKeys = productIdentityValues(candidateA);
+      const bKeys = productIdentityValues(candidateB);
+      if (aKeys.length && bKeys.length) {
+        return aKeys.some((key) => bKeys.includes(key));
+      }
+      const aTitle = normalizeIdentityValue(candidateA?.name || candidateA?.title || "");
+      const bTitle = normalizeIdentityValue(candidateB?.name || candidateB?.title || "");
+      return Boolean(aTitle && bTitle && aTitle === bTitle);
+    };
 
     const deriveMaxStockFromProduct = (p) => {
       if (!p) return null;
@@ -156,16 +209,12 @@ const AppInner = () => {
     };
 
     setCartItems((prev) => {
-      const existing = prev.find((i) => i.variantId === variantId);
+      const existing = prev.find((i) => productMatches(i, product));
       if (existing) {
         const maxStock = deriveMaxStockFromProduct(existing);
         const nextQty = Number(existing.quantity || 0) + Number(quantity || 1);
         const clamped = maxStock != null ? Math.min(nextQty, maxStock) : nextQty;
-        return prev.map((i) =>
-          i.variantId === variantId
-            ? { ...i, quantity: clamped }
-            : i,
-        );
+        return prev.map((i) => (productMatches(i, product) ? { ...i, quantity: clamped } : i));
       }
       const price =
         product.priceSale || product.priceRegular || product.price || "$0.00";
@@ -176,12 +225,15 @@ const AppInner = () => {
       const maxStock = deriveMaxStockFromProduct(product);
       const qty = Math.max(1, Number(quantity) || 1);
       const clampedQty = maxStock != null ? Math.min(qty, maxStock) : qty;
+      const productId = product.productId ?? product.id ?? product._id ?? variantId;
       return [
         ...prev,
         {
-          productId: product.productId ?? product.id,
+          _id: product._id ?? variantId,
+          productId,
           variantId,
-          title: product.title,
+          title: product.title || product.name || "Product",
+          name: product.title || product.name || "Product",
           price,
           quantity: clampedQty,
           image,
@@ -192,21 +244,47 @@ const AppInner = () => {
         },
       ];
     });
+
+    const paidQuantity = Math.max(1, Number(quantity) || 1);
+    const productId = product.productId ?? product.id ?? product._id ?? variantId;
+    if (userId && productId) {
+      addToCartMongo({
+        userId: String(userId),
+        productId: String(productId),
+        variantId: variantId ? String(variantId) : undefined,
+        name: product.title || product.name || "Product",
+        slug: product.slug || product.handle || "",
+        price: Number(product.priceSale || product.priceRegular || product.price || 0),
+        color: product.color || product.selectedColor || "",
+        size: product.size || product.selectedSize || "",
+        quantity: paidQuantity,
+        image: typeof product.mainImage === "string" ? product.mainImage : product.mainImage?.src || product.image || "",
+      }).catch(() => undefined);
+    }
+
     trackAddToCart(product, quantity);
   };
 
-  const removeFromCart = (variantId) => {
-    setCartItems((prev) => prev.filter((i) => i.variantId !== variantId));
+  const removeFromCart = (itemKey) => {
+    if (!itemKey) return;
+    setCartItems((prev) =>
+      prev.filter((i) => {
+        const matchKeys = [i._id, i.productId, i.variantId, i.id, i.name, i.title];
+        return !matchKeys.some((key) => key != null && String(key) === String(itemKey));
+      }),
+    );
   };
 
-  const updateCartQuantity = (variantId, quantity) => {
+  const updateCartQuantity = (itemKey, quantity) => {
     if (quantity < 1) {
-      removeFromCart(variantId);
+      removeFromCart(itemKey);
       return;
     }
     setCartItems((prev) =>
       prev.map((i) => {
-        if (i.variantId !== variantId) return i;
+        const matchKeys = [i._id, i.productId, i.variantId, i.id, i.name, i.title];
+        const shouldUpdate = matchKeys.some((key) => key != null && String(key) === String(itemKey));
+        if (!shouldUpdate) return i;
         const maxStock =
           i.maxStock != null && Number.isFinite(Number(i.maxStock))
             ? Math.max(0, Number(i.maxStock))
@@ -303,6 +381,7 @@ const AppInner = () => {
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
+        addToCart={addToCart}
       />
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {!isAdminRoute && (

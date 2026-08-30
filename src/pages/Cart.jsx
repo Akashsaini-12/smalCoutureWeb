@@ -100,7 +100,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     Array.isArray(state?.wishlist) ? state.wishlist : [],
   );
   const [isMobile, setIsMobile] = useState(false);
-  const [openAddon, setOpenAddon] = useState("coupon");
+  const [openAddon, setOpenAddon] = useState(null);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [noteText, setNoteText] = useState(() => {
     try {
@@ -129,10 +129,12 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   const [apiMode, setApiMode] = useState(false);
   const [recommendItems, setRecommendItems] = useState([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
+  const [addedRecommendationIds, setAddedRecommendationIds] = useState({});
   // Recommendations should open product page (no quick view in cart)
   const [countdown, setCountdown] = useState(4 * 60 + 4);
   const [recommendPage, setRecommendPage] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [removeConfirm, setRemoveConfirm] = useState(null);
 
   const wishlistIds = useMemo(() => {
     const set = new Set();
@@ -304,8 +306,29 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   // Keep legacy productsData for fallback UI only; main recommendations come from API like CartDrawer
   const products = useMemo(() => (Array.isArray(productsData) ? productsData : []), []);
 
-  // Once we attempt loading cart from API, prefer API cart even if it's empty.
-  const effectiveCartItems = apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems);
+  // Keep the live cart state in sync with the local cart while still preferring the API cart.
+  const effectiveCartItems = useMemo(() => {
+    const merged = apiMode ? [...apiCartItems, ...cartItems] : cartItems;
+    const seen = new Set();
+    return (Array.isArray(merged) ? merged : []).filter((item) => {
+      const key = [
+        item?._id,
+        item?.productId,
+        item?.variantId,
+        item?.variant_id,
+        item?.id,
+        item?.name,
+        item?.title,
+      ]
+        .filter((value) => value != null && String(value).trim() !== "")
+        .map((value) => String(value))
+        .join("|");
+      if (!key) return true;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [apiMode, apiCartItems, cartItems]);
 
   const getItemMaxStock = (item) => {
     const direct =
@@ -421,11 +444,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   const handleDecrement = (item) => {
     const current = Number(item?.quantity) || 1;
     if (current <= 1) {
-      if (apiCartItems.length) {
-        handleRemoveApi(item);
-        return;
-      }
-      removeFromCart?.(item?.variantId || item?._id);
+      setRemoveConfirm(item);
       return;
     }
 
@@ -434,6 +453,18 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
       return;
     }
     updateCartQuantity?.(item?.variantId, current - 1);
+  };
+
+  const confirmRemoveItem = async () => {
+    const item = removeConfirm;
+    setRemoveConfirm(null);
+    if (!item) return;
+
+    if (apiCartItems.length) {
+      await handleRemoveApi(item);
+      return;
+    }
+    removeFromCart?.(item?.variantId || item?._id);
   };
 
   const handleCheckoutClick = async () => {
@@ -496,16 +527,75 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     }
   };
 
+  const getRecommendationCartKeys = (product) => {
+    const values = [
+      product?._id,
+      product?.productId,
+      product?.variantId,
+      product?.variant_id,
+      product?.id,
+      product?.slug,
+      product?.title,
+      product?.name,
+    ]
+      .filter((value) => value != null && String(value).trim() !== "")
+      .map((value) => String(value));
+    return [...new Set(values)];
+  };
+
+  const getRecommendationProductKey = (product) => {
+    const keys = getRecommendationCartKeys(product);
+    return keys[0] || String(product?.name || product?.title || "").trim().toLowerCase();
+  };
+
+  const matchesRecommendationProduct = (cartItem, product) => {
+    const productKeys = getRecommendationCartKeys(product);
+    const cartKeys = [
+      cartItem?._id,
+      cartItem?.productId,
+      cartItem?.variantId,
+      cartItem?.variant_id,
+      cartItem?.id,
+      cartItem?.slug,
+      cartItem?.title,
+      cartItem?.name,
+    ]
+      .filter((value) => value != null && String(value).trim() !== "")
+      .map((value) => String(value));
+    if (productKeys.length && cartKeys.length) {
+      return productKeys.some((key) => cartKeys.includes(key));
+    }
+    const productTitle = String(product?.name || product?.title || "").trim().toLowerCase();
+    const cartTitle = String(cartItem?.name || cartItem?.title || "").trim().toLowerCase();
+    return productTitle && cartTitle && productTitle === cartTitle;
+  };
+
+  const isRecommendationAdded = (product) => {
+    const key = getRecommendationProductKey(product);
+    if (key && addedRecommendationIds[key]) return true;
+    return (effectiveCartItems || []).some((item) => matchesRecommendationProduct(item, product));
+  };
+
   const handleAddRecommendation = (product) => {
-    if (!addToCart || !product?.variantId) return;
-    const mainImage = product.mainImage?.src || product.mainImage || "";
-    addToCart(
-      {
-        ...product,
-        mainImage: typeof mainImage === "string" ? { src: mainImage } : mainImage,
-      },
-      1
-    );
+    if (!product) return;
+    const productName = product?.name || product?.title || "Product";
+    const variantId = product?.variantId ?? product?.variant_id ?? product?._id ?? product?.productId ?? product?.id;
+    const key = getRecommendationProductKey(product);
+    if (key) {
+      setAddedRecommendationIds((prev) => ({ ...prev, [key]: true }));
+    }
+    if (typeof addToCart === "function") {
+      addToCart(
+        {
+          ...product,
+          ...(variantId ? { variantId } : {}),
+          title: productName,
+          name: productName,
+        },
+        1,
+        false,
+      );
+    }
   };
 
   const openRecommendProductPage = (p) => {
@@ -693,11 +783,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                         <button
                           type="button"
                           onClick={() => {
-                            if (apiCartItems.length) {
-                              handleRemoveApi(item);
-                              return;
-                            }
-                            removeFromCart?.(item.variantId);
+                            setRemoveConfirm(item);
                           }}
                           style={{
                             marginTop: 6,
@@ -790,143 +876,33 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
           </div>
 
           {/* Checkout + Coupon (moved above recommendations) */}
-          <div style={{ marginTop: 28, display: "flex", justifyContent: "flex-start", flexWrap: "wrap", gap: 24, width: "100%", flexDirection: isMobile ? "column" : "row" }}>
-            {/* Left: subtotal + checkout button */}
-            <div style={{ flex: "1 1 320px", maxWidth: isMobile ? "100%" : 420, minWidth: isMobile ? 0 : 280, background: "#fafafa", borderRadius: 12, padding: isMobile ? 16 : 24, border: "1px solid #e5e7eb", width: isMobile ? "100%" : undefined }}>
-              <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-                {[
-                  { key: "coupon", label: "Coupon", Icon: CouponIcon },
-                ].map(({ key, label, Icon }) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => toggleAddon(key)}
-                    aria-pressed={openAddon === key}
-                    aria-label={key === "note" ? "Add note for seller" : key === "shipping" ? "Estimate shipping" : "Add discount code"}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                      padding: "12px 18px",
-                      minWidth: 68,
-                      border: openAddon === key ? "2px solid #111" : "1px solid #d1d5db",
-                      borderRadius: 8,
-                      background: openAddon === key ? "#fff" : "#f1f5f9",
-                      cursor: "pointer",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: openAddon === key ? "#111" : "#475569",
-                      boxShadow: openAddon === key ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                    }}
-                  >
-                    <Icon />
-                    <span>{label}</span>
-                  </button>
-                ))}
-              </div>
+          <div style={{ marginTop: 12, display: "block", width: "100%" }}>
+            <div style={{ width: "100%", background: "transparent", border: "none", borderRadius: 0, padding: 0 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                 <span style={{ fontSize: 17, fontWeight: 700, color: "#0f172a" }}>Subtotal</span>
                 <span style={{ fontSize: 17, fontWeight: 700, color: "#0f172a" }}>{subtotalStr}</span>
               </div>
-              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 20px" }}>Taxes and shipping calculated at checkout</p>
+              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 12px" }}>Taxes and shipping calculated at checkout</p>
               <button
                 type="button"
                 onClick={handleCheckoutClick}
-                style={{ width: "100%", padding: "15px 20px", background: "#111", color: "#fff", border: "none", borderRadius: 8, fontWeight: 600, fontSize: 15, cursor: "pointer", marginBottom: 4 }}
+                style={{ width: "100%", padding: "13px 18px", background: "#111", color: "#fff", border: "none", borderRadius: 8, fontWeight: 600, fontSize: 15, cursor: "pointer", marginBottom: 4 }}
                 aria-label="Proceed to checkout"
               >
                 CHECK OUT
               </button>
-              <p style={{ fontSize: 12, color: "#94a3b8", margin: "10px 0 0", textAlign: "center" }}>
+              <p style={{ fontSize: 12, color: "#94a3b8", margin: "8px 0 0", textAlign: "center" }}>
                 Complete address & payment on next step
               </p>
             </div>
 
-            {/* Right: Coupon panel */}
-            {openAddon && (
-              <div style={{ flex: "1 1 280px", maxWidth: isMobile ? "100%" : 380, minWidth: isMobile ? 0 : 260, background: "#fafafa", borderRadius: 12, padding: isMobile ? 16 : 24, border: "1px solid #e5e7eb", alignSelf: "flex-start", width: isMobile ? "100%" : undefined }}>
-                {openAddon === "coupon" && (
-                  <>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, fontSize: 15, fontWeight: 600, color: "#111" }}>
-                      <CouponIcon />
-                      Add a discount code
-                    </div>
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Enter discount or gift card code"
-                      aria-label="Discount code"
-                      style={{ width: "100%", padding: "14px", fontSize: 14, border: "1px solid #cbd5e1", borderRadius: 8, marginBottom: 10, boxSizing: "border-box", background: "#fff" }}
-                    />
-                    {availableCoupons.length > 0 && (
-                      <div style={{ marginBottom: 14 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", marginBottom: 8 }}>
-                          Available coupons
-                        </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                          {availableCoupons.map((c) => {
-                            const disabled = subtotal < Number(c.minSubtotal || 0);
-                            const label =
-                              c.type === "percent"
-                                ? `${c.code} • ${c.value}% OFF`
-                                : `${c.code} • ₹${c.value} OFF`;
-                            return (
-                              <button
-                                key={c._id || c.code}
-                                type="button"
-                                disabled={disabled}
-                                onClick={() => {
-                                  const next = String(c.code || "");
-                                  setCouponCode(next);
-                                }}
-                                style={{
-                                  padding: "8px 10px",
-                                  borderRadius: 999,
-                                  border: "1px solid #e5e7eb",
-                                  background: disabled ? "#f1f5f9" : "#fff",
-                                  color: disabled ? "#94a3b8" : "#0f172a",
-                                  fontWeight: 700,
-                                  fontSize: 12,
-                                  cursor: disabled ? "not-allowed" : "pointer",
-                                }}
-                                title={disabled ? `Min subtotal ₹${c.minSubtotal} required` : "Click to use at checkout"}
-                              >
-                                {label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <div style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
-                          Coupon will be applied at Checkout.
-                        </div>
-                      </div>
-                    )}
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <button type="button" onClick={() => setOpenAddon(null)} style={{ flex: 1, padding: "12px 20px", border: "1px solid #334155", borderRadius: 8, background: "#fff", color: "#334155", fontWeight: 600, cursor: "pointer", fontSize: 14 }}>Cancel</button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOpenAddon(null);
-                        }}
-                        style={{ flex: 1, padding: "12px 20px", border: "none", borderRadius: 8, background: "#111", color: "#fff", fontWeight: 600, cursor: "pointer", fontSize: 14 }}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Customers also bought - from same category via API (same as CartDrawer) */}
           {effectiveCartItems.length > 0 && recommendItems.length > 0 && (
-            <div style={{ marginTop: 32, paddingBottom: 28, borderBottom: "1px solid #e5e7eb" }}>
+            <div style={{ marginTop: 18, paddingBottom: 12, borderBottom: "1px solid #e5e7eb" }}>
               <h4 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 600, color: "#111" }}>
-                Customers also bought with "Halter neck dress"
+                Customers also bought
               </h4>
               <p style={{ margin: "0 0 20px", fontSize: 14, color: "#334155", display: "flex", alignItems: "center", gap: 8 }}>
                 <DiscountBadgeIcon />
@@ -938,13 +914,33 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                   const imgSrc =
                     firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0]
                       ? firstVariant.images[0]
-                      : "";
+                      : p?.image || p?.mainImage || "";
+                  const productName = p?.name || p?.title || "Product";
                   const priceStr = `₹${Number(p.price || 0).toFixed(2)}`;
+                  const isAdded = isRecommendationAdded(p);
+                  const handleAdd = (e) => {
+                    e?.stopPropagation();
+                    handleAddRecommendation(p);
+                  };
+                  const handleRemove = (e) => {
+                    e?.stopPropagation();
+                    const key = getRecommendationProductKey(p);
+                    if (key) {
+                      setAddedRecommendationIds((prev) => {
+                        const next = { ...prev };
+                        delete next[key];
+                        return next;
+                      });
+                    }
+                    const variantId = p?.variantId || p?.variant_id || p?._id || p?.productId || p?.id;
+                    if (variantId) {
+                      removeFromCart?.(variantId);
+                    }
+                  };
                   return (
                     <div
-                      key={p._id}
+                      key={p._id || p.productId || p.name || productName}
                       style={{
-                        display: "flex",
                         border: "1px solid #e5e7eb",
                         borderRadius: 10,
                         overflow: "hidden",
@@ -953,35 +949,62 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                         minHeight: 0,
                       }}
                     >
-                      <div style={{ width: 72, height: 72, borderRadius: 8, overflow: "hidden", background: "#f3f4f6", flexShrink: 0 }}>
-                        {imgSrc && <img src={imgSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                      <div
+                        onClick={() => openRecommendProductPage(p)}
+                        style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}
+                      >
+                        <div style={{ width: 72, height: 72, borderRadius: 8, overflow: "hidden", background: "#f3f4f6", flexShrink: 0 }}>
+                          {imgSrc && <img src={imgSrc} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a", lineHeight: 1.3, marginBottom: 6 }}>{productName}</div>
+                          <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>{priceStr}</div>
+                        </div>
                       </div>
-                      <div style={{ flex: 1, minWidth: 0, marginLeft: 12, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                        <div>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 6 }}>
-                            <span style={{ fontWeight: 600, fontSize: 14, color: "#0f172a", lineHeight: 1.3 }}>{p.title}</span>
-                            <span style={{ fontSize: 14, fontWeight: 500, color: "#0f172a", flexShrink: 0 }}>{priceStr}</span>
-                          </div>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
+                      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8, marginTop: 12 }}>
+                        {isAdded ? (
+                          <>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>Added</span>
                             <button
                               type="button"
-                              onClick={() => openRecommendProductPage(p)}
+                              aria-label={`Remove ${productName} from cart`}
+                              onClick={handleRemove}
                               style={{
-                                padding: "8px 16px",
-                                fontSize: 13,
-                                fontWeight: 600,
-                                background: "#111",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: 6,
+                                width: 24,
+                                height: 24,
+                                padding: 0,
+                                borderRadius: "50%",
+                                border: "1px solid #e2e8f0",
+                                background: "#f8fafc",
+                                color: "#0f172a",
+                                fontSize: 16,
+                                fontWeight: 700,
                                 cursor: "pointer",
-                                flexShrink: 0,
+                                lineHeight: 1,
                               }}
                             >
-                              Add
+                              ×
                             </button>
-                          </div>
-                        </div>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleAdd}
+                            style={{
+                              padding: "8px 16px",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              background: "#111",
+                              color: "#fff",
+                              border: "none",
+                              borderRadius: 6,
+                              cursor: "pointer",
+                              minWidth: 86,
+                            }}
+                          >
+                            Add
+                          </button>
+                        )}
                       </div>
                     </div>
                   );
@@ -1012,9 +1035,9 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
               .map((p, idx) => mapCatalogToCard(p, idx));
 
             return suggestedCards.length || youMayLikeCards.length ? (
-              <div style={{ marginTop: 36, paddingBottom: 18, borderBottom: "1px solid #e5e7eb" }}>
+              <div style={{ marginTop: 20, paddingBottom: 12, borderBottom: "1px solid #e5e7eb" }}>
                 {suggestedCards.length ? (
-                  <div style={{ marginBottom: 28 }}>
+                  <div style={{ marginBottom: 18 }}>
                     <div className="m-section__header m:text-left">
                       <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
                         Suggested for you
@@ -1085,6 +1108,79 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
           <ScrollTopIcon />
         </button>
       )}
+
+      {/* Remove Item Confirmation Modal */}
+      {removeConfirm && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10000,
+          }}
+          onClick={() => setRemoveConfirm(null)}
+          role="presentation"
+        >
+          <div
+            style={{
+              width: "90%",
+              maxWidth: 400,
+              background: "#fff",
+              borderRadius: 12,
+              padding: "24px",
+              boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ fontSize: "18px", fontWeight: 700, color: "#111", marginBottom: 12 }}>
+              Remove Item
+            </div>
+            <div style={{ fontSize: "14px", color: "#475569", marginBottom: 24, lineHeight: 1.5 }}>
+              Are you sure you want to remove <strong>{removeConfirm?.name || removeConfirm?.title}</strong> from your cart?
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button
+                type="button"
+                onClick={() => setRemoveConfirm(null)}
+                style={{
+                  flex: 1,
+                  padding: "12px 20px",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  border: "1px solid #334155",
+                  borderRadius: 8,
+                  background: "#fff",
+                  color: "#334155",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmRemoveItem}
+                style={{
+                  flex: 1,
+                  padding: "12px 20px",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  border: "none",
+                  borderRadius: 8,
+                  background: "#b91c1c",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* QuickViewModal intentionally disabled on Cart */}
     </main>
   );

@@ -108,6 +108,8 @@ export default function Checkout({ cartItems = [] }) {
     Boolean(buyNowItem && (buyNowItem.productId || buyNowItem.variantId));
   const checkoutTrackedRef = useRef(false);
   const errorRef = useRef(null);
+  const offersSectionRef = useRef(null);
+  const offersListRef = useRef(null);
 
   const [items, setItems] = useState(() => {
     if (isBuyNowMode) return [buyNowItem];
@@ -122,6 +124,31 @@ export default function Checkout({ cartItems = [] }) {
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [openCouponInfo, setOpenCouponInfo] = useState(null);
   const [paying, setPaying] = useState(false);
+
+  const getPaymentOfferCount = (mode) => {
+    const normalizedMode = String(mode || "").toLowerCase();
+    const targetModes = normalizedMode === "online" ? ["prepaid", "all"] : ["cod", "all"];
+    return (Array.isArray(availableCoupons) ? availableCoupons : []).filter((coupon) => {
+      const applicableOn = String(coupon?.applicableOn || "all").toLowerCase();
+      return targetModes.includes(applicableOn);
+    }).length;
+  };
+
+  const scrollToOffersSection = () => {
+    const list = offersListRef.current || document.getElementById("checkout-offers-list");
+    const section = offersSectionRef.current || document.getElementById("checkout-offers-section");
+    const lastItem = list ? list.querySelector("[data-offer-item]:last-of-type") : null;
+
+    if (!lastItem && !section) return;
+
+    const anchor = lastItem || section;
+    const rect = anchor.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const currentScrollY = window.scrollY || window.pageYOffset || 0;
+    const targetY = Math.max(0, currentScrollY + rect.bottom - viewportHeight - 8);
+
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  };
 
   const [customerName, setCustomerName] = useState("");
   const [phone, setPhone] = useState("");
@@ -138,6 +165,7 @@ export default function Checkout({ cartItems = [] }) {
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [showAddressOptions, setShowAddressOptions] = useState(false);
+  const [removeConfirmAddress, setRemoveConfirmAddress] = useState(null);
 
   const [shipPreview, setShipPreview] = useState(null); // { shipping, etaDays }
   const [shipLoading, setShipLoading] = useState(false);
@@ -222,7 +250,7 @@ export default function Checkout({ cartItems = [] }) {
 
   const discountPreview = Number(couponStatus?.discount || 0);
   const shippingPreview = Number(shipPreview?.shipping || 0);
-  const totalPreview = Math.max(0, subtotal + shippingPreview - discountPreview);
+  const totalPreview = Math.max(0, subtotal + shippingPreview);
   const FREE_SHIPPING_THRESHOLD = 500;
   const remainingForFreeShipping = Math.max(
     0,
@@ -445,6 +473,15 @@ export default function Checkout({ cartItems = [] }) {
   }
 
   async function handleDeleteAddress() {
+    // Just show confirmation, don't delete yet
+    if (!selectedAddressId) return;
+    const addressToDelete = savedAddresses.find((a) => String(a?._id) === String(selectedAddressId));
+    if (addressToDelete) {
+      setRemoveConfirmAddress(addressToDelete);
+    }
+  }
+
+  async function confirmRemoveAddress() {
     setAddrError("");
     try {
       if (!selectedAddressId) return;
@@ -459,8 +496,10 @@ export default function Checkout({ cartItems = [] }) {
         setSelectedAddressId("");
         setShowAddressForm(true);
       }
+      setRemoveConfirmAddress(null);
     } catch (e) {
       setAddrError(e?.message || "Failed to delete address");
+      setRemoveConfirmAddress(null);
     }
   }
 
@@ -802,13 +841,34 @@ export default function Checkout({ cartItems = [] }) {
   }
 
   return (
-    <main style={{ background: "#fff", padding: isMobile ? "20px 14px 72px" : "28px 32px 80px" }}>
-      <div style={{ maxWidth: 1320, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: isMobile ? "flex-start" : "baseline", justifyContent: "space-between", gap: 12, marginBottom: 16, flexDirection: isMobile ? "column" : "row" }}>
-          <h1 style={{ margin: 0, fontSize: isMobile ? 24 : 28, fontWeight: 800, color: "#0f172a" }}>Checkout</h1>
-          <Link to="/cart" style={{ color: "#0f172a", textDecoration: "underline", fontWeight: 600 }}>
-            Back to cart
+    <main style={{ background: "#f7f5f2", minHeight: "calc(100vh - 72px)", padding: isMobile ? "18px 14px 92px" : "42px 32px 96px" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", gap: 18, marginBottom: 22, flexDirection: isMobile ? "column" : "row" }}>
+          <div>
+            <div style={eyebrowStyle}>SMALCOUTURE · SECURE CHECKOUT</div>
+            <h1 style={{ margin: "6px 0 5px", fontSize: isMobile ? 28 : 38, letterSpacing: "-1px", fontWeight: 900, color: "#171717" }}>Complete your order</h1>
+            <p style={{ margin: 0, color: "#78716c", fontSize: 14 }}>A few simple steps and your new favourites are on their way.</p>
+          </div>
+          <Link to="/cart" style={backCartStyle}>
+            ← Back to cart
           </Link>
+        </div>
+
+        <div style={progressBarStyle}>
+          {[
+            ["1", "Delivery"],
+            ["2", "Payment"],
+            ["3", "Offers"],
+            ["4", "Review"],
+          ].map(([number, label], index) => (
+            <React.Fragment key={label}>
+              <div style={progressStepStyle}>
+                <span style={progressNumberStyle}>{number}</span>
+                <span>{label}</span>
+              </div>
+              {index < 3 ? <span style={progressLineStyle} /> : null}
+            </React.Fragment>
+          ))}
         </div>
 
         {loading ? (
@@ -816,11 +876,11 @@ export default function Checkout({ cartItems = [] }) {
             Loading your cart…
           </div>
           ) : (
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.6fr) minmax(0, 0.9fr) minmax(0, 0.8fr)", gap: 20, alignItems: "start" }}>
-            <section style={{ border: "1px solid #e5e7eb", borderRadius: 20, padding: 20, background: "#fff" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr) 390px", gap: isMobile ? 14 : 28, alignItems: "start" }}>
+            <section style={{ ...checkoutCardStyle, gridColumn: isMobile ? "auto" : "1", gridRow: isMobile ? "auto" : "1" }}>
               <div style={{ marginBottom: 18, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
                 <div style={{ color: "rgba(15,23,42,0.65)", fontSize: 13, fontWeight: 700, lineHeight: 1.5, minWidth: 0 }}>
-                  Delivery Addresses
+                  <span style={stepBadgeStyle}>1</span> Delivery address
                 </div>
                 <div style={{ color: "rgba(15,23,42,0.45)", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>Choose or save an address for delivery</div>
               </div>
@@ -867,14 +927,10 @@ export default function Checkout({ cartItems = [] }) {
                                 startEditAddress(String(selectedAddress._id));
                               }}
                               style={{
-                                padding: "9px 14px",
-                                borderRadius: 10,
-                                border: "1px solid #111827",
-                                background: "#fff",
-                                color: "#111827",
-                                fontWeight: 900,
-                                fontSize: 13,
-                                cursor: "pointer",
+                                ...addressActionBtnStyle,
+                                background: "#1f1a17",
+                                color: "#fff",
+                                border: "1px solid #1f1a17",
                               }}
                             >
                               Edit
@@ -884,18 +940,13 @@ export default function Checkout({ cartItems = [] }) {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                setSelectedAddressId(String(selectedAddress._id));
-                                handleDeleteAddress();
+                                setRemoveConfirmAddress(selectedAddress);
                               }}
                               style={{
-                                padding: "9px 14px",
-                                borderRadius: 10,
-                                border: "1px solid #e11d48",
-                                background: "#fff",
-                                color: "#e11d48",
-                                fontWeight: 900,
-                                fontSize: 13,
-                                cursor: "pointer",
+                                ...addressActionBtnStyle,
+                                background: "#f7f1ea",
+                                color: "#1f1a17",
+                                border: "1px solid #1f1a17",
                               }}
                             >
                               Remove
@@ -979,8 +1030,8 @@ export default function Checkout({ cartItems = [] }) {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        setRemoveConfirmAddress(a);
                                         setSelectedAddressId(String(a._id));
-                                        handleDeleteAddress();
                                       }}
                                       style={{
                                         padding: "9px 14px",
@@ -1019,6 +1070,55 @@ export default function Checkout({ cartItems = [] }) {
                   </div>
                 ) : null}
               </div>
+
+                {/* Remove Address Confirmation Modal */}
+                {removeConfirmAddress && (
+                  <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.4)", zIndex: 999999, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ background: "#fff", borderRadius: 14, padding: 20, maxWidth: 400, width: "90%", boxShadow: "0 20px 25px rgba(0,0,0,0.15)" }}>
+                      <div style={{ fontWeight: 900, fontSize: 16, color: "#0f172a", marginBottom: 8 }}>Remove Address</div>
+                      <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.5, marginBottom: 20 }}>
+                        Are you sure you want to remove this address?
+                        <div style={{ marginTop: 10, fontWeight: 700, color: "#0f172a" }}>
+                          {removeConfirmAddress.name} • {removeConfirmAddress.phone}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                        <button
+                          type="button"
+                          onClick={() => setRemoveConfirmAddress(null)}
+                          style={{
+                            padding: "10px 16px",
+                            borderRadius: 8,
+                            border: "1px solid #e5e7eb",
+                            background: "#fff",
+                            color: "#0f172a",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            fontSize: 14,
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={confirmRemoveAddress}
+                          style={{
+                            padding: "10px 16px",
+                            borderRadius: 8,
+                            border: "none",
+                            background: "#e11d48",
+                            color: "#fff",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            fontSize: 14,
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
               {showAddressForm && (
                 <div style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
@@ -1076,8 +1176,98 @@ export default function Checkout({ cartItems = [] }) {
               ) : null}
             </section>
 
-            <section style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, background: "#fff" }}>
-              <label style={labelStyle}>Offers for you</label>
+            <section style={{ ...checkoutCardStyle, gridColumn: isMobile ? "auto" : "1", gridRow: isMobile ? "auto" : "2" }}>
+              <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>2</span> Payment method</label>
+              <p style={sectionHintStyle}>Choose how you would like to pay for this order.</p>
+              <div style={{ display: "grid", gap: 10, marginBottom: 24 }}>
+                <label
+                  style={{
+                    ...radioRowStyle,
+                    ...(paymentMethod === "cod"
+                      ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
+                      : {}),
+                  }}
+                >
+                  <input type="radio" name="checkout-payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
+                  <div>
+                    <div style={{ fontWeight: 900, color: "#0f172a" }}>Cash on delivery</div>
+                    <div style={paymentHintStyle}>Pay when your order arrives</div>
+                    </div>
+                    {getPaymentOfferCount("cod") > 0 ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          scrollToOffersSection();
+                        }}
+                        style={{
+                          padding: "7px 12px",
+                          borderRadius: 999,
+                          border: "1px solid #86efac",
+                          background: "#dcfce7",
+                          color: "#166534",
+                          fontSize: 11,
+                          fontWeight: 900,
+                          letterSpacing: "0.02em",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
+                          boxShadow: "0 4px 10px rgba(34, 197, 94, 0.14)",
+                        }}
+                      >
+                        {getPaymentOfferCount("cod")} Offers
+                      </button>
+                    ) : null}
+                  </div>
+                </label>
+                <label
+                  style={{
+                    ...radioRowStyle,
+                    ...(paymentMethod === "online"
+                      ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
+                      : {}),
+                  }}
+                >
+                  <input type="radio" name="checkout-payment" checked={paymentMethod === "online"} onChange={() => setPaymentMethod("online")} />
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
+                  <div>
+                    <div style={{ fontWeight: 900, color: "#0f172a" }}>Online payment</div>
+                    <div style={paymentHintStyle}>UPI · NetBanking · cards</div>
+                    </div>
+                    {getPaymentOfferCount("online") > 0 ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          scrollToOffersSection();
+                        }}
+                        style={{
+                          padding: "7px 12px",
+                          borderRadius: 999,
+                          border: "1px solid #86efac",
+                          background: "#dcfce7",
+                          color: "#166534",
+                          fontSize: 11,
+                          fontWeight: 900,
+                          letterSpacing: "0.02em",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
+                          boxShadow: "0 4px 10px rgba(34, 197, 94, 0.14)",
+                        }}
+                      >
+                        {getPaymentOfferCount("online")} Offers
+                      </button>
+                    ) : null}
+                  </div>
+                </label>
+              </div>
+
+              <div ref={offersSectionRef} id="checkout-offers-section">
+                <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>3</span> Offers for you</label>
+                <p style={sectionHintStyle}>Apply a promo code before reviewing your order total.</p>
+              </div>
               <div style={{ display: "flex", gap: 12, flexDirection: isMobile ? "column" : "row" }}>
                 <input
                   value={couponCode}
@@ -1106,7 +1296,7 @@ export default function Checkout({ cartItems = [] }) {
                     </div>
                   )}
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div id="checkout-offers-list" ref={offersListRef} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {availableCoupons.map((c) => {
                       const minSubtotalNotMet = subtotal < Number(c.minSubtotal || 0);
                       const isApplied = couponStatus?.code === c.code;
@@ -1128,7 +1318,7 @@ export default function Checkout({ cartItems = [] }) {
                         : (Array.isArray(c.applicableCategories) ? c.applicableCategories : []);
 
                       return (
-                        <div key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div key={c._id || c.code} data-offer-item style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
                           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                             <div>
                               <div style={{ fontSize: 14, fontWeight: 950, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
@@ -1159,11 +1349,23 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               )}
             </section>
-            <aside style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 20, background: "#fafafa" }}>
-              <h2 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 800, color: "#111827" }}>Order summary</h2>
+            <aside style={{ ...summaryCardStyle, position: isMobile ? "static" : "sticky", top: 24, gridColumn: isMobile ? "auto" : "2", gridRow: isMobile ? "auto" : "1 / span 2" }}>
+              <div style={{ marginBottom: 18, paddingBottom: 12, borderBottom: "1px solid rgba(38, 28, 21, 0.12)" }}>
+                <div style={{ fontSize: 10, letterSpacing: "1.8px", textTransform: "uppercase", fontWeight: 900, color: "#8a6b4a", marginBottom: 8 }}>
+                  SMALCOUTURE
+                </div>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#1f1a17" }}>
+                  <span style={{ ...stepBadgeStyle, marginRight: 8, background: "#1f1a17" }}>4</span>
+                  Order summary
+                </h2>
+              </div>
+
+              <div style={{ marginBottom: 14, padding: "8px 10px", borderRadius: 10, background: "#f6efe7", border: "1px solid #e9dcc7", color: "#564130", fontWeight: 800, fontSize: 12 }}>
+                Free shipping on orders above ₹499
+              </div>
 
               {!items.length ? (
-                <div style={{ padding: 14, borderRadius: 10, background: "#fff", border: "1px solid #e5e7eb", color: "#64748b", fontWeight: 600 }}>
+                <div style={{ padding: 14, borderRadius: 10, background: "#fff", border: "1px solid #e7d9c7", color: "#6b5847", fontWeight: 600 }}>
                   No items in cart.
                 </div>
               ) : (
@@ -1175,23 +1377,25 @@ export default function Checkout({ cartItems = [] }) {
                         display: "flex",
                         gap: 12,
                         alignItems: "center",
-                        background: "#fff",
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 10,
+                        background: "#fffdfb",
+                        border: "1px solid rgba(130, 101, 72, 0.18)",
+                        borderRadius: 12,
                         padding: 12,
+                        boxShadow: "0 6px 18px rgba(62, 43, 31, 0.04)",
                         ...(checkoutLineMatchesOosBanner(it, outOfStockInfo)
-                          ? { borderColor: "#fb7185", background: "#fff1f2" }
+                          ? { borderColor: "#d97772", background: "#fff5f3" }
                           : {}),
                       }}
                     >
-                      <div style={{ width: 54, height: 54, borderRadius: 8, background: "#f1f5f9", overflow: "hidden", flexShrink: 0 }}>
+                      <div style={{ width: 58, height: 58, borderRadius: 10, background: "#f2ebdf", overflow: "hidden", flexShrink: 0 }}>
                         {it?.image ? <img src={it.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
                       </div>
+
                       <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ fontWeight: 800, color: "#0f172a", fontSize: 14, lineHeight: 1.2, marginBottom: 2 }}>
+                        <div style={{ fontWeight: 800, color: "#1f1a17", fontSize: 14, lineHeight: 1.3, marginBottom: 2 }}>
                           {it?.name}
                         </div>
-                        <div style={{ color: "#64748b", fontSize: 12 }}>
+                        <div style={{ color: "#6d635d", fontSize: 12, lineHeight: 1.4 }}>
                           {(() => {
                             const sizeDisp = formatSizeForCustomerDisplay(it?.size);
                             const parts = [];
@@ -1202,12 +1406,13 @@ export default function Checkout({ cartItems = [] }) {
                           })()}
                         </div>
                         {checkoutLineMatchesOosBanner(it, outOfStockInfo) ? (
-                          <div style={{ marginTop: 6, fontSize: 12, fontWeight: 900, color: "#be123c" }}>
+                          <div style={{ marginTop: 5, fontSize: 12, fontWeight: 900, color: "#b42318" }}>
                             Out of stock
                           </div>
                         ) : null}
                       </div>
-                      <div style={{ fontWeight: 900, color: "#0f172a" }}>
+
+                      <div style={{ fontWeight: 900, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
                         {formatINR(parsePrice(it?.price) * Number(it?.quantity || 1))}
                       </div>
                     </div>
@@ -1215,92 +1420,74 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               )}
 
-              <div style={{ marginTop: 16 }}>
-                <h3 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 800, color: "#111827" }}>Payment options</h3>
-                <div style={{ display: "grid", gap: 10 }}>
-                  <label
-                    style={{
-                      ...radioRowStyle,
-                      padding: 12,
-                      ...(paymentMethod === "cod"
-                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
-                        : { borderColor: "#e5e7eb", background: "#fff" }),
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="pay"
-                      checked={paymentMethod === "cod"}
-                      onChange={() => {
-                        setPaymentMethod("cod");
-                      }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 900, color: "#0f172a" }}>Cash on delivery</div>
-                      </div>
-                    </div>
-                  </label>
+              <div style={{ marginTop: 18, display: "grid", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#1f1a17", fontSize: 13 }}>
+                  <span>Subtotal</span>
+                  <span>{formatINR(subtotal)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                  <span>Shipping {shipLoading ? "(...)" : ""}</span>
+                  <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
+                </div>
 
-                  <label
+                {!shipLoading && items.length && remainingForFreeShipping > 0 && shippingPreview > 0 ? (
+                  <div
                     style={{
-                      ...radioRowStyle,
-                      padding: 12,
-                      ...(paymentMethod === "online"
-                        ? { borderColor: "#111", boxShadow: "0 0 0 3px rgba(17,17,17,0.10)", background: "#fff" }
-                        : { borderColor: "#e5e7eb", background: "#fff" }),
+                      padding: "10px 12px",
+                      borderRadius: 8,
+                      background: "#f7f1ea",
+                      border: "1px solid #e7d9c7",
+                      color: "#47372d",
+                      fontWeight: 800,
+                      fontSize: 12,
+                      lineHeight: 1.4,
                     }}
                   >
-                    <input type="radio" name="pay" checked={paymentMethod === "online"} onChange={() => {
-                      setPaymentMethod("online");
-                    }}
-                    />
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 900, color: "#0f172a" }}>Online payment</div>
-                        <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginTop: 4 }}>
-                          UPI · NetBanking · cards
-                        </div>
-                      </div>
-                    </div>
-                  </label>
+                    Add <strong>{formatINR(remainingForFreeShipping)}</strong> more for <strong>FREE shipping</strong>
+                  </div>
+                ) : null}
+
+                {discountPreview > 0 ? (
+                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                    <span>Discount</span>
+                    <span>-{formatINR(discountPreview)}</span>
+                  </div>
+                ) : null}
+
+                <div style={{ marginTop: 6, paddingTop: 12, borderTop: "1px solid rgba(38, 28, 21, 0.12)", display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#1f1a17", fontSize: 15 }}>
+                  <span>Total</span>
+                  <span>{formatINR(totalPreview)}</span>
                 </div>
               </div>
 
-              <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#0f172a", fontSize: 13 }}>
-                <span>Subtotal</span>
-                <span>{formatINR(subtotal)}</span>
-              </div>
-              <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155", fontSize: 13 }}>
-                <span>Shipping {shipLoading ? "(…)" : ""}</span>
-                <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
-              </div>
-              {!shipLoading && items.length && remainingForFreeShipping > 0 && shippingPreview > 0 ? (
-                <div
-                  style={{
-                    marginTop: 8,
-                    padding: "10px 12px",
-                    borderRadius: 8,
-                    background: "#fff",
-                    border: "1px solid #e5e7eb",
-                    color: "#0f172a",
-                    fontWeight: 800,
-                    fontSize: 12,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  Add <strong>{formatINR(remainingForFreeShipping)}</strong> for <strong>FREE shipping</strong>
+              <div style={{
+                marginTop: 18,
+                padding: "12px 14px",
+                borderRadius: 10,
+                background: "linear-gradient(135deg, #f8f1ea 0%, #f4eee8 100%)",
+                border: "1px solid #eadcc6",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                color: "#1f1a17",
+              }}>
+                <span style={{ fontSize: 16 }}>🔒</span>
+                <div style={{ lineHeight: 1.35 }}>
+                  <strong style={{ display: "block", fontSize: 12 }}>Secure checkout</strong>
+                  <small style={{ color: "#6b5847", fontSize: 11 }}>SSL secured · Easy exchanges · Support available</small>
                 </div>
-              ) : null}
-              {discountPreview > 0 ? (
-                <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#334155", fontSize: 13 }}>
-                  <span>Discount</span>
-                  <span>-{formatINR(discountPreview)}</span>
+              </div>
+
+              <div style={{ marginTop: 12, display: "flex", justifyContent: "center", fontSize: 12, color: "#5d544f" }}>
+                Need help? <a href="/contact" style={{ color: "#1f1a17", fontWeight: 700, textDecoration: "none", marginLeft: 4 }}>Chat with us</a>
+              </div>
+
+              <div style={{ ...trustStripStyle, background: "#eef4ea", border: "1px solid #dfe9d5", color: "#355b2e" }}>
+                <span>✓</span>
+                <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 6, lineHeight: 1.4 }}>
+                  <strong>Shop with confidence</strong>
+                  <small style={{ display: "inline-block" }}>Secure payments · Easy support · Quality checked</small>
                 </div>
-              ) : null}
-              <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#0f172a", fontSize: 15 }}>
-                <span>Total</span>
-                <span>{formatINR(totalPreview)}</span>
               </div>
 
               <button
@@ -1317,12 +1504,13 @@ export default function Checkout({ cartItems = [] }) {
                   border: "none",
                   borderRadius: 12,
                   cursor: items.length && !paying ? "pointer" : "not-allowed",
-                  background: items.length ? "#111" : "#9ca3af",
+                  background: "linear-gradient(135deg, #1f1a17 0%, #312d29 100%)",
                   color: "#fff",
                   fontWeight: 900,
                   letterSpacing: 0.3,
                   fontSize: 15,
                   opacity: paying ? 0.75 : 1,
+                  boxShadow: "0 12px 24px rgba(31, 26, 23, 0.14)",
                 }}
               >
                 {paymentMethod === "online"
@@ -1348,6 +1536,92 @@ const inputStyle = {
   boxSizing: "border-box",
 };
 
+const eyebrowStyle = {
+  color: "#a16207",
+  fontSize: 10,
+  fontWeight: 900,
+  letterSpacing: "1.8px",
+};
+
+const backCartStyle = {
+  color: "#292524",
+  borderBottom: "1px solid #292524",
+  fontSize: 13,
+  fontWeight: 800,
+  textDecoration: "none",
+  paddingBottom: 3,
+};
+
+const progressBarStyle = {
+  display: "flex",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: 10,
+  padding: "14px 18px",
+  marginBottom: 22,
+  border: "1px solid #e7e1da",
+  borderRadius: 14,
+  background: "#fffdfb",
+  color: "#57534e",
+  fontSize: 12,
+  fontWeight: 800,
+};
+
+const progressStepStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 7,
+  whiteSpace: "nowrap",
+};
+
+const progressNumberStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 22,
+  height: 22,
+  borderRadius: "50%",
+  background: "#292524",
+  color: "#fff",
+  fontSize: 11,
+};
+
+const progressLineStyle = {
+  height: 1,
+  flex: 1,
+  minWidth: 12,
+  background: "#d6d3d1",
+};
+
+const checkoutCardStyle = {
+  border: "1px solid #e7e1da",
+  borderRadius: 18,
+  padding: 24,
+  background: "#fff",
+  boxShadow: "0 8px 28px rgba(68, 64, 60, 0.04)",
+};
+
+const summaryCardStyle = {
+  border: "1px solid #e7d9c7",
+  borderRadius: 18,
+  padding: 22,
+  background: "linear-gradient(180deg, #fffdf9 0%, #f9f1ea 100%)",
+  boxShadow: "0 18px 40px rgba(61, 46, 35, 0.09)",
+};
+
+const trustStripStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  marginTop: 18,
+  padding: "12px 13px",
+  borderRadius: 10,
+  background: "#f1f5e9",
+  color: "#365314",
+  fontSize: 12,
+  border: "1px solid #dfe9d5",
+};
+
 const textareaStyle = {
   ...inputStyle,
   minHeight: 90,
@@ -1360,6 +1634,44 @@ const labelStyle = {
   fontWeight: 800,
   color: "#111827",
   marginBottom: 6,
+};
+
+const sectionHeadingStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  fontSize: 15,
+  fontWeight: 900,
+  color: "#111827",
+  marginBottom: 6,
+};
+
+const sectionHintStyle = {
+  margin: "0 0 14px",
+  color: "#64748b",
+  fontSize: 13,
+  lineHeight: 1.45,
+};
+
+const paymentHintStyle = {
+  marginTop: 4,
+  color: "#64748b",
+  fontSize: 12,
+  fontWeight: 600,
+};
+
+const stepBadgeStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 24,
+  height: 24,
+  borderRadius: "50%",
+  background: "#111827",
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: 900,
+  flexShrink: 0,
 };
 
 const radioRowStyle = {
@@ -1405,4 +1717,20 @@ const linkBtn = {
   fontWeight: 900,
   cursor: "pointer",
   textDecoration: "underline",
+};
+
+const addressActionBtnStyle = {
+  minWidth: 92,
+  height: 38,
+  padding: "0 16px",
+  borderRadius: 10,
+  fontWeight: 900,
+  fontSize: 13,
+  lineHeight: 1,
+  cursor: "pointer",
+  transition: "all 120ms ease",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxSizing: "border-box",
 };
