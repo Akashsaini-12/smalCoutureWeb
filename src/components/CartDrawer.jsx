@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 // QuickViewModal removed for CartDrawer: go to product page instead
@@ -98,7 +98,7 @@ function parsePrice(value) {
 const COUNTRIES = ["United States", "Canada", "United Kingdom", "India", "Australia"];
 const US_STATES = ["Alabama", "Alaska", "Arizona", "California", "Florida", "Texas", "New York", "Washington", "Other"];
 
-export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFromCart, updateCartQuantity, addToCart }) {
+export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFromCart, updateCartQuantity }) {
   const navigate = useNavigate();
   const userId = getUserId();
   const [addonModalOpen, setAddonModalOpen] = useState(null);
@@ -131,33 +131,10 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
   const [apiMode, setApiMode] = useState(false);
   const [recommendItems, setRecommendItems] = useState([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
-  const [addedRecommendationIds, setAddedRecommendationIds] = useState({});
-  const [removeConfirm, setRemoveConfirm] = useState(null);
   // Recommendations should open product page (no quick view in drawer)
 
-  // Keep the live cart state in sync with the local cart while still preferring the API cart.
-  const effectiveCartItems = useMemo(() => {
-    const merged = apiMode ? [...apiCartItems, ...cartItems] : cartItems;
-    const seen = new Set();
-    return (Array.isArray(merged) ? merged : []).filter((item) => {
-      const key = [
-        item?._id,
-        item?.productId,
-        item?.variantId,
-        item?.variant_id,
-        item?.id,
-        item?.name,
-        item?.title,
-      ]
-        .filter((value) => value != null && String(value).trim() !== "")
-        .map((value) => String(value))
-        .join("|");
-      if (!key) return true;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-  }, [apiMode, apiCartItems, cartItems]);
+  // Once we attempt loading cart from API, prefer API cart even if it's empty.
+  const effectiveCartItems = apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems);
 
   const getItemMaxStock = (item) => {
     const direct =
@@ -536,25 +513,17 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     const current = Number(item?.quantity) || 1;
     if (!key) return;
 
-    // If user tries to go below 1, show confirmation dialog
+    // If user tries to go below 1, remove the item.
     if (current <= 1) {
-      setRemoveConfirm(item);
+      if (apiCartItems.length) {
+        handleRemoveApi(item);
+        return;
+      }
+      removeFromCart?.(item?.variantId || item?._id);
       return;
     }
 
     changeQty(key, current - 1);
-  };
-
-  const confirmRemoveItem = async () => {
-    const item = removeConfirm;
-    setRemoveConfirm(null);
-    if (!item) return;
-
-    if (apiCartItems.length) {
-      await handleRemoveApi(item);
-      return;
-    }
-    removeFromCart?.(item?.variantId || item?._id);
   };
 
   const handleRemoveApi = async (item) => {
@@ -588,55 +557,6 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         .replace(/[^a-z0-9]+/g, "-");
     onClose?.();
     navigate(`/products/${encodeURIComponent(slug)}`, { state: { product: p } });
-  };
-
-  const getRecommendationKeys = (product) => {
-    const values = [
-      product?._id,
-      product?.productId,
-      product?.variantId,
-      product?.variant_id,
-      product?.id,
-      product?.slug,
-      product?.title,
-      product?.name,
-    ]
-      .filter((value) => value != null && String(value).trim() !== "")
-      .map((value) => String(value));
-    return [...new Set(values)];
-  };
-
-  const getRecommendationProductKey = (product) => {
-    const keys = getRecommendationKeys(product);
-    return keys[0] || String(product?.name || product?.title || "").trim().toLowerCase();
-  };
-
-  const matchesRecommendationProduct = (cartItem, product) => {
-    const productKeys = getRecommendationKeys(product);
-    const cartKeys = [
-      cartItem?._id,
-      cartItem?.productId,
-      cartItem?.variantId,
-      cartItem?.variant_id,
-      cartItem?.id,
-      cartItem?.slug,
-      cartItem?.title,
-      cartItem?.name,
-    ]
-      .filter((value) => value != null && String(value).trim() !== "")
-      .map((value) => String(value));
-    if (productKeys.length && cartKeys.length) {
-      return productKeys.some((key) => cartKeys.includes(key));
-    }
-    const productTitle = String(product?.name || product?.title || "").trim().toLowerCase();
-    const cartTitle = String(cartItem?.name || cartItem?.title || "").trim().toLowerCase();
-    return productTitle && cartTitle && productTitle === cartTitle;
-  };
-
-  const isRecommendationAdded = (product) => {
-    const key = getRecommendationProductKey(product);
-    if (key && addedRecommendationIds[key]) return true;
-    return (effectiveCartItems || []).some((item) => matchesRecommendationProduct(item, product));
   };
 
   if (!isOpen) return null;
@@ -757,7 +677,12 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                       <button
                         type="button"
                         onClick={() => {
-                          setRemoveConfirm(item);
+                          // Prefer API removal when API cart is present
+                          if (apiCartItems.length) {
+                            handleRemoveApi(item);
+                            return;
+                          }
+                          removeFromCart?.(item.variantId || item._id);
                         }}
                         style={styles.removeBtn}
                       >
@@ -774,7 +699,9 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
               {/* Customers also bought - from same category via API */}
               {recommendItems.length > 0 && (
                 <div style={{ marginTop: 8 }}>
-                  <h4 style={styles.sectionTitle}>Customers also bought</h4>
+                  <h4 style={styles.sectionTitle}>
+                    Customers also bought with "{effectiveCartItems[0]?.name || effectiveCartItems[0]?.title}"
+                  </h4>
                   <p style={styles.discountBadge}>
                     <DiscountCheckIcon /> You might also like these from the same category
                   </p>
@@ -784,88 +711,39 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                       const firstImage =
                         firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0]
                           ? firstVariant.images[0]
-                          : p?.image || p?.mainImage || "";
-                      const productName = p?.name || p?.title || "Product";
+                          : "";
                       const priceNumber = Number(p.price || 0);
-                      const isAdded = isRecommendationAdded(p);
-                      const handleAdd = (e) => {
-                        e?.stopPropagation();
-                        const sourceProduct = {
-                          ...p,
-                          variantId: p?.variantId ?? p?.variant_id ?? p?._id ?? p?.productId ?? p?.id,
-                          title: productName,
-                          name: productName,
-                        };
-                        const key = getRecommendationProductKey(p);
-                        if (key) {
-                          setAddedRecommendationIds((prev) => ({ ...prev, [key]: true }));
-                        }
-                        addToCart?.(sourceProduct, 1, false);
-                      };
-                      const handleRemove = (e) => {
-                        e?.stopPropagation();
-                        const key = getRecommendationProductKey(p);
-                        if (key) {
-                          setAddedRecommendationIds((prev) => {
-                            const next = { ...prev };
-                            delete next[key];
-                            return next;
-                          });
-                        }
-                        const variantId = p?.variantId ?? p?.variant_id ?? p?._id ?? p?.productId ?? p?.id;
-                        if (variantId) {
-                          removeFromCart?.(variantId);
-                        }
-                      };
                       return (
-                        <div key={p._id || p.productId || p.name || productName} style={styles.recommendCard}>
-                          <div
-                            style={{ ...styles.recommendImage, cursor: "pointer" }}
-                            onClick={() => openRecommendProductPage(p)}
-                          >
+                        <div key={p._id} style={styles.recommendCard}>
+                          <div style={styles.recommendImage}>
                             {firstImage && (
                               <img
                                 src={firstImage}
-                                alt={productName}
+                                alt={p.name}
                                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                               />
                             )}
                           </div>
                           <div style={styles.recommendInfo}>
                             <div style={styles.recommendTitleRow}>
-                              <div style={{ ...styles.recommendTitle, cursor: "pointer" }} onClick={() => openRecommendProductPage(p)}>{productName}</div>
+                              <div style={styles.recommendTitle}>{p.name}</div>
                               <div style={styles.recommendPrice}>₹{priceNumber.toFixed(2)}</div>
                             </div>
-                            <div style={{ ...styles.recommendActions, justifyContent: "flex-end", alignItems: "center", gap: 8 }}>
-                              {isAdded ? (
-                                <>
-                                  <span style={{ fontSize: 12, fontWeight: 700, color: "#0f172a" }}>Added</span>
-                                  <button
-                                    type="button"
-                                    aria-label={`Remove ${productName} from cart`}
-                                    onClick={handleRemove}
-                                    style={{
-                                      width: 24,
-                                      height: 24,
-                                      padding: 0,
-                                      borderRadius: "50%",
-                                      border: "1px solid #e2e8f0",
-                                      background: "#f8fafc",
-                                      color: "#0f172a",
-                                      fontSize: 16,
-                                      fontWeight: 700,
-                                      cursor: "pointer",
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    ×
-                                  </button>
-                                </>
-                              ) : (
-                                <button type="button" style={styles.addBtn} onClick={handleAdd}>
-                                  Add
-                                </button>
-                              )}
+                            <div style={styles.recommendActions}>
+                              {/* <Link
+                                to={`/products/${p.slug}`}
+                                style={{ fontSize: 13, color: "#0f172a", textDecoration: "underline" }}
+                                onClick={onClose}
+                              >
+                                View
+                              </Link> */}
+                              <button
+                                type="button"
+                                style={styles.addBtn}
+                                onClick={() => openRecommendProductPage(p)}
+                              >
+                                Add
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -882,6 +760,22 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         <div style={styles.footer}>
           <div style={styles.footerTopRow}>
             <div style={styles.addonGroup}>
+              {[
+                { key: "coupon", label: "Coupon", Icon: CouponIcon },
+              ].map(({ key, label, Icon }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setAddonModalOpen(key)}
+                  style={{
+                    ...styles.addonBtn,
+                    ...(addonModalOpen === key ? styles.addonBtnActive : {}),
+                  }}
+                >
+                  <Icon />
+                  {label}
+                </button>
+              ))}
             </div>
             <div style={styles.subtotalInline}>
               <span>Subtotal</span>
@@ -1026,38 +920,89 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                   </div>
                 </>
               )}
+              {addonModalOpen === "coupon" && (
+                <>
+                  <div style={styles.modalTitle}>
+                    <TagIcon />
+                    Add a discount code
+                  </div>
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setCouponCode(v);
+                    }}
+                    placeholder="Enter discount code here"
+                    style={styles.modalInput}
+                  />
+                  {availableCoupons.length > 0 && (
+                    <div style={{ marginTop: -6, marginBottom: 14 }}>
+                      <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+                        Available coupons
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                        {availableCoupons.map((c) => {
+                          const disabled = subtotal < Number(c.minSubtotal || 0);
+                          const label =
+                            c.type === "percent"
+                              ? `${c.code} • ${c.value}% OFF`
+                              : `${c.code} • ₹${c.value} OFF`;
+                          return (
+                            <button
+                              key={c._id || c.code}
+                              type="button"
+                              disabled={disabled}
+                              onClick={() => {
+                                const next = String(c.code || "");
+                                setCouponCode(next);
+                              }}
+                              style={{
+                                padding: "8px 10px",
+                                borderRadius: 999,
+                                border: "1px solid #e5e7eb",
+                                background: disabled ? "#f1f5f9" : "#fff",
+                                color: disabled ? "#94a3b8" : "#0f172a",
+                                fontWeight: 800,
+                                fontSize: 12,
+                                cursor: disabled ? "not-allowed" : "pointer",
+                              }}
+                              title={disabled ? `Min subtotal ₹${c.minSubtotal} required` : "Click to use at checkout"}
+                            >
+                              {label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div style={{ marginTop: 8, fontSize: 12, color: "#64748b", fontWeight: 600 }}>
+                        Coupon will be applied at Checkout.
+                      </div>
+                    </div>
+                  )}
+                  <div style={styles.modalActions}>
+                    <button
+                      type="button"
+                      style={styles.modalBtnCancel}
+                      onClick={() => setAddonModalOpen(null)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      style={styles.modalBtnPrimary}
+                      onClick={() => {
+                        setAddonModalOpen(null);
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
       </div>
-
-      {/* Remove Item Confirmation Modal */}
-      {removeConfirm && (
-        <div style={styles.modalOverlay} onClick={() => setRemoveConfirm(null)} role="presentation">
-          <div style={styles.confirmModalBox} onClick={(e) => e.stopPropagation()}>
-            <div style={styles.confirmTitle}>Remove Item</div>
-            <div style={styles.confirmMessage}>
-              Are you sure you want to remove <strong>{removeConfirm?.name || removeConfirm?.title}</strong> from your cart?
-            </div>
-            <div style={styles.confirmActions}>
-              <button
-                type="button"
-                style={styles.modalBtnCancel}
-                onClick={() => setRemoveConfirm(null)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                style={{ ...styles.modalBtnPrimary, background: "#b91c1c" }}
-                onClick={confirmRemoveItem}
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* QuickViewModal intentionally disabled on CartDrawer */}
     </div>,
@@ -1429,15 +1374,12 @@ const styles = {
     textDecoration: "underline",
   },
   modalOverlay: {
-    position: "fixed",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: "min(440px, 100vw)",
+    position: "absolute",
+    inset: 0,
     background: "rgba(0,0,0,0.4)",
-    zIndex: 100000,
+    zIndex: 10,
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "center",
   },
   modalBox: {
@@ -1521,29 +1463,5 @@ const styles = {
     background: "#111",
     color: "#fff",
     cursor: "pointer",
-  },
-  confirmModalBox: {
-    width: "90%",
-    maxWidth: 380,
-    background: "#fff",
-    borderRadius: 12,
-    padding: "24px",
-    boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-  },
-  confirmTitle: {
-    fontSize: "18px",
-    fontWeight: 700,
-    color: "#111",
-    marginBottom: 12,
-  },
-  confirmMessage: {
-    fontSize: "14px",
-    color: "#475569",
-    marginBottom: 24,
-    lineHeight: 1.5,
-  },
-  confirmActions: {
-    display: "flex",
-    gap: 12,
   },
 };
