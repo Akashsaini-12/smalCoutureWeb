@@ -56,6 +56,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 const AppInner = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const previousRouteRef = useRef(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
@@ -221,12 +222,63 @@ const AppInner = () => {
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  // SPA: new route should start at top (otherwise scroll position carries over from previous page).
+  // Product pages should open at the top, but browser back/forward should restore
+  // the exact previous scroll position without drifting upward.
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [location.pathname]);
+    const currentRoute = `${location.pathname}${location.search || ""}`;
+    const previousRoute = previousRouteRef.current;
+
+    const getCurrentScroll = () =>
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+
+    const saveRouteScroll = (route, value) => {
+      try {
+        sessionStorage.setItem(route, String(Math.max(0, Number(value) || 0)));
+      } catch {
+        // Ignore storage access failures.
+      }
+    };
+
+    // Save the latest exact scroll value for the route being left.
+    if (previousRoute && previousRoute !== currentRoute) {
+      saveRouteScroll(previousRoute, getCurrentScroll());
+    }
+
+    const scrollKey = currentRoute;
+    const savedScroll = (() => {
+      try {
+        const raw = sessionStorage.getItem(scrollKey);
+        return raw == null ? null : Number(raw);
+      } catch {
+        return null;
+      }
+    })();
+
+    const shouldForceTop = currentRoute.startsWith("/products/");
+    const targetScroll = Number.isFinite(savedScroll) && !shouldForceTop ? savedScroll : 0;
+
+    const restoreExactly = (attempt = 0) => {
+      const current = getCurrentScroll();
+      window.scrollTo({ top: targetScroll, left: 0, behavior: "auto" });
+
+      if (document.scrollingElement) {
+        document.scrollingElement.scrollTop = targetScroll;
+      }
+      document.documentElement.scrollTop = targetScroll;
+      document.body.scrollTop = targetScroll;
+
+      const remainingDifference = Math.abs(current - targetScroll);
+      if (attempt < 12 && remainingDifference > 2) {
+        window.requestAnimationFrame(() => restoreExactly(attempt + 1));
+      }
+    };
+
+    restoreExactly();
+    previousRouteRef.current = currentRoute;
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     if (location.pathname.startsWith("/admin")) return;
