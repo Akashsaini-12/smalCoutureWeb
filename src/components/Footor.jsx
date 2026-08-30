@@ -80,33 +80,15 @@ const socialLinks = [
 const AccordionTitle = ({ title, isOpen, onToggle }) => (
   <button
     type="button"
-    className="m-accordion--item-button m-footer--block-title"
+    className="m-accordion--item-button m-footer--block-title m-footer--accordion-trigger"
     onClick={onToggle}
     aria-expanded={isOpen ? "true" : "false"}
-    style={{
-      width: "100%",
-      textAlign: "left",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: 12,
-      background: "transparent",
-      border: "none",
-      padding: "12px 0",
-      minHeight: 44,
-      cursor: "pointer",
-      font: "inherit",
-      color: "inherit",
-      outline: "none",
-    }}
   >
     <span>{title}</span>
     <span
-      className="m-accordion--item-icon md:m:hidden"
+      className="m-accordion--item-icon md:m:hidden m-footer--accordion-icon"
       style={{
-        display: "inline-flex",
         transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-        transition: "transform 180ms ease",
       }}
     >
       <ChevronIcon />
@@ -120,11 +102,11 @@ const FooterMenuBlock = ({ title, items, isOpen, isDesktop, onToggle }) => {
     <>
       <AccordionTitle title={title} isOpen={isDesktop ? true : isOpen} onToggle={onToggle} />
       <ul
-        className="m-footer--block-content list-unstyled m-link-lists m-accodion--item-content"
+        className="m-footer--block-content list-unstyled m-link-lists m-accodion--item-content m-footer--menu-list"
         style={{ display: show ? "block" : "none" }}
       >
         {items.map((item) => (
-          <li key={item.id} className="m-link-lists--item m:block">
+          <li key={item.id} className="m-link-lists--item m:block m-footer--menu-item">
             {String(item?.href || "").startsWith("http") ? (
               <a href={item.href} className="m-link" target="_blank" rel="noreferrer">
                 {item.label}
@@ -194,77 +176,346 @@ const Footor = () => {
         >
           <link href={FOOTER_CSS} rel="stylesheet" type="text/css" media="all" />
           <m-footer
-            className="m-footer m:block"
+            className="m-footer m:block m-footer--section-shell"
             data-section-type="footer"
             data-section-id="sections--15265867989097__footer"
           >
             <style>{`
-              /* Footer text colors (clean + readable) */
-              .m-footer .m-footer--middle {
-                color: #0f172a;
+              .m-footer--section-shell {
+                background: #f6f2eb;
+                color: #1d1b1b;
+                box-shadow: inset 0 1px 0 rgba(35, 25, 18, 0.06);
               }
-              .m-footer .m-footer--middle .m-footer--block-title,
-              .m-footer .m-footer--middle .m-accordion--item-button {
-                color: #0f172a;
-                font-weight: 900;
+              .m-footer--section-shell .m-footer--middle {
+                background: transparent;
+                color: #1d1b1b;
+                padding-top: 34px;
+                padding-bottom: 28px;
+              }
+              .m-footer--section-shell .m-footer--middle .container-fluid {
+                max-width: 1400px;
+                padding-left: 28px;
+                padding-right: 28px;
+              }
+              .m-footer--accordion-grid {
+                display: grid;
+                grid-template-columns: 1.9fr 0.9fr 1fr 1.2fr;
+                gap: 24px 34px;
+                align-items: stretch;
+              }
+              .m-footer--section-shell .m-footer--block {
+                padding: 0;
+                border-radius: 20px;
+              }
+              .m-footer--section-shell .m-footer--block {
+                margin-bottom: 0;
+              }
+              .m-footer--section-shell .m-footer--block-inner {
+                padding-top: 0;
+                padding-bottom: 0;
+                border-radius: 18px;
+              }
+              .m-footer--accordion-trigger {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                background: transparent;
+                border: none;
+                padding: 12px 0 20px;
+                margin: 0;
+                min-height: 48px;
+                cursor: pointer;
+                font: inherit;
+                font-size: 1.08rem;
+                font-weight: 700;
+                color: #171413;
+                letter-spacing: -0.02em;
                 position: relative;
+                text-align: left;
               }
-              /* Highlight section titles (Get in touch / Quick link / Company / Our store) */
-              .m-footer .m-footer--middle .m-footer--block-title::after,
-              .m-footer .m-footer--middle .m-accordion--item-button::after {
+              .m-footer--accordion-trigger span:first-child {
+                display: inline-block;
+                position: relative;
+                padding-bottom: 6px;
+              }
+              .m-footer--accordion-trigger span:first-child::after {
                 content: "";
                 position: absolute;
                 left: 0;
-                bottom: 6px;
-                width: 34px;
+                bottom: 0;
+                width: 44px;
                 height: 2px;
                 border-radius: 999px;
-                background: rgba(15, 23, 42, 0.28);
+                background: rgba(28, 21, 14, 0.28);
               }
-              .m-footer .m-footer--middle .m-link,
-              .m-footer .m-footer--middle a.m-link {
-                color: rgba(15, 23, 42, 0.78);
+              .m-footer--accordion-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(23, 20, 19, 0.8);
+                transition: transform 200ms ease;
               }
-              .m-footer .m-footer--middle .m-link:hover,
-              .m-footer .m-footer--middle a.m-link:hover {
-                color: #0f172a;
+              .m-footer--section-shell .m-footer--middle .m-link,
+              .m-footer--section-shell .m-footer--middle a.m-link {
+                color: rgba(26, 22, 21, 0.78);
+                text-decoration: none;
               }
-              .m-footer .m-footer--middle .m-link-lists--item a {
-                color: rgba(15, 23, 42, 0.78);
+              .m-footer--section-shell .m-footer--middle .m-link:hover,
+              .m-footer--section-shell .m-footer--middle a.m-link:hover {
+                color: #171413;
               }
-              .m-footer .m-footer--middle .m-link-lists--item a:hover {
-                color: #0f172a;
+              .m-footer--section-shell .m-footer--menu-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: grid;
+                gap: 10px;
               }
-
-              /* Mobile: remove empty spacer block + tighten accordion layout */
+              .m-footer--section-shell .m-footer--menu-item {
+                margin: 0;
+                padding: 0;
+              }
+              .m-footer--section-shell .m-footer--menu-item a {
+                display: block;
+                padding: 2px 0;
+                font-size: 1.02rem;
+                line-height: 1.5;
+                font-weight: 500;
+                transition: color 180ms ease, transform 180ms ease;
+              }
+              .m-footer--section-shell .m-footer--menu-item a:hover {
+                transform: translateX(2px);
+              }
+              .m-footer--section-shell .m-footer--block-content {
+                margin: 0;
+                padding: 0 0 8px;
+              }
+              .m-footer--section-shell .m-footer--block-content .block-text {
+                display: grid;
+                gap: 16px;
+              }
+              .m-footer--contact-card,
+              .m-footer--contact-link,
+              .m-footer--social-pill {
+                border-radius: 999px;
+                border: 1px solid rgba(178, 149, 96, 0.9);
+                background: rgba(255, 255, 255, 0.42);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 10px 18px rgba(31, 22, 16, 0.04);
+                color: rgba(26, 22, 21, 0.8);
+              }
+              .m-footer--contact-card {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                min-height: 58px;
+                padding: 15px 20px;
+              }
+              .m-footer--contact-card span {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                min-width: 0;
+                color: rgba(26, 22, 21, 0.7);
+              }
+              .m-footer--contact-card svg {
+                color: rgba(26, 22, 21, 0.78);
+              }
+              .m-footer--contact-card-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 0.96rem;
+                font-weight: 700;
+                line-height: 1.25;
+                min-width: 0;
+              }
+              .m-footer--contact-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                min-height: 58px;
+                padding: 15px 20px;
+                text-decoration: none;
+                font-weight: 700;
+                font-size: 0.97rem;
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 12px 18px rgba(31, 22, 16, 0.05);
+              }
+              .m-footer--contact-link > span {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                width: 100%;
+                min-width: 0;
+              }
+              .m-footer--contact-link .m-footer--wa-number {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              .m-footer--contact-link .m-footer--wa-copy {
+                opacity: 0.78;
+                white-space: normal;
+              }
+              .m-footer--social-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                width: 100%;
+              }
+              .m-footer--social-pill {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
+                min-height: 56px;
+                padding: 14px 18px;
+                text-decoration: none;
+                color: rgba(26, 22, 21, 0.8);
+                font-weight: 700;
+                font-size: 0.96rem;
+              }
+              .m-footer--social-pill svg {
+                width: 18px;
+                height: 18px;
+                flex-shrink: 0;
+              }
+              .social-media-links {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+                margin-top: 8px;
+              }
+              .social-media-links--item {
+                width: 46px;
+                height: 46px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                border: 1px solid rgba(178, 149, 96, 0.9);
+                background: rgba(255, 255, 255, 0.45);
+                color: rgba(26, 22, 21, 0.75);
+                box-shadow: 0 8px 18px rgba(25, 20, 18, 0.06);
+                transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+              }
+              .social-media-links--item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 26px rgba(25, 20, 18, 0.09);
+                border-color: rgba(141, 112, 60, 1);
+                color: #171413;
+              }
+              .social-media-links--item svg {
+                width: 18px;
+                height: 18px;
+              }
+              .m-footer--connect-copy {
+                font-size: 1.1rem;
+                line-height: 1.45;
+                color: rgba(26, 22, 21, 0.8);
+                letter-spacing: -0.01em;
+              }
+              .m-footer--connect-copy strong {
+                font-weight: 700;
+                color: #171413;
+              }
+              .m-footer--bottom-bar {
+                border-top: 1px solid rgba(30, 20, 14, 0.12);
+                padding: 22px 0 30px;
+                background: transparent;
+              }
+              .m-footer--bottom-bar .container-fluid {
+                max-width: 1400px;
+                padding-left: 24px;
+                padding-right: 24px;
+              }
+              .m-footer__copyright {
+                color: rgba(26, 22, 21, 0.78);
+                font-size: 0.92rem;
+              }
+              @media (max-width: 991px) {
+                .m-footer--accordion-grid {
+                  grid-template-columns: 1fr;
+                }
+              }
               @media (max-width: 767px) {
-                .m-footer--accordion {
+                .m-footer {
+                  margin-top: 0 !important;
+                  padding-top: 0 !important;
+                }
+                .m-footer--section-shell .m-footer--middle .container-fluid,
+                .m-footer--bottom-bar .container-fluid {
+                  padding-left: 18px;
+                  padding-right: 18px;
+                }
+                .m-footer--accordion-grid {
                   display: block;
+                  gap: 0;
                 }
                 .m-footer--block-spacing {
                   display: none !important;
                 }
-                /* Some theme CSS constrains accordion content; force it to render when open */
+                .m-footer--middle {
+                  padding-top: 0 !important;
+                  padding-bottom: 0 !important;
+                  margin-top: 0 !important;
+                }
+                .m-footer--middle > .container-fluid {
+                  padding-top: 0 !important;
+                }
+                .m-footer--middle .m-footer--block {
+                  margin-bottom: 10px !important;
+                }
+                .m-footer--middle .m-footer--block-inner {
+                  padding-top: 0 !important;
+                  padding-bottom: 0 !important;
+                }
+                .m-footer--accordion-trigger {
+                  padding: 8px 0 12px;
+                  font-size: 1.02rem;
+                }
+                .m-footer--middle .m-footer--block-content,
+                .m-footer--middle .m-accordion--item-content {
+                  margin-top: 0 !important;
+                  padding-top: 0 !important;
+                  padding-bottom: 0 !important;
+                }
+                .m-footer--section-shell .m-footer--block-content .block-text {
+                  gap: 12px;
+                }
+                .m-footer--contact-card,
+                .m-footer--contact-link,
+                .m-footer--social-pill {
+                  min-height: 50px;
+                  padding: 12px 16px;
+                }
+                .m-footer--contact-card-text,
+                .m-footer--social-pill,
+                .m-footer--contact-link {
+                  font-size: 0.9rem;
+                }
+                .m-footer--contact-link > span {
+                  gap: 6px;
+                }
+                .m-footer--social-row {
+                  grid-template-columns: 1fr;
+                }
                 .m-footer--accordion .m-accordion--item.open .m-accordion--item-content {
                   display: block !important;
                   height: auto !important;
                   max-height: none !important;
                   overflow: visible !important;
                 }
-                /* Keep Instagram buttons in a single row on small screens */
-                .m-footer .insta-buttons {
-                  flex-wrap: nowrap !important;
-                }
-                .m-footer .insta-buttons > a {
-                  flex: 1 1 auto !important;
-                  min-width: 0 !important;
-                  padding: 10px 14px !important;
-                }
               }
             `}</style>
             <div className="m-footer--middle m-gradient m-color-footer">
               <div className="container-fluid">
-                <div className="m-footer--accordion">
+                <div className="m-footer--accordion m-footer--accordion-grid">
                   <div className={`m-footer--block m-footer--block-newsletter m-accordion--item order-first m:w-full lg:m:w-1/2 ${isOpen("newsletter") ? "open" : ""}`}>
                     <div
                       className="m-footer--block-inner m-scroll-trigger animate--fade-in-up"
@@ -283,20 +534,10 @@ const Footor = () => {
                         <div className="block-text" style={{ display: "grid", gap: 10 }}>
                           <div style={{ display: "grid", gap: 10, width: "100%" }}>
                             <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 10,
-                                padding: "16px 20px",
-                                borderRadius: 999,
-                                border: "1px solid rgba(176, 141, 87, 0.75)",
-                                background: "#fff",
-                                width: "100%",
-                                minWidth: 0,
-                              }}
+                              className="m-footer--contact-card"
                               aria-label="Email smalcouture@gmail.com"
                             >
-                              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                              <span>
                                 <svg
                                   width="18"
                                   height="18"
@@ -312,17 +553,7 @@ const Footor = () => {
                                   <path d="M4 6h16v12H4z" />
                                   <path d="M22 6 12 13 2 6" />
                                 </svg>
-                                <span
-                                  style={{
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "normal",
-                                    color: "rgba(15, 23, 42, 0.7)",
-                                    fontWeight: 700,
-                                    fontSize: 14,
-                                    minWidth: 0,
-                                  }}
-                                >
+                                <span className="m-footer--contact-card-text">
                                   Write us on smalcouture@gmail.com
                                 </span>
                               </span>
@@ -332,23 +563,9 @@ const Footor = () => {
                               href="https://wa.me/918199985004?text=Hi%20S-Mal%2C%20I%20came%20across%20your%20website%20and%20would%20like%20to%20connect%20regarding%20a%20query.%20Looking%20forward%20to%20your%20assistance."
                               target="_blank"
                               rel="noreferrer"
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                gap: 10,
-                                padding: "16px 20px",
-                                borderRadius: 999,
-                                border: "1px solid rgba(176, 141, 87, 0.75)",
-                                background: "#fff",
-                                color: "rgba(15, 23, 42, 0.7)",
-                                textDecoration: "none",
-                                width: "100%",
-                                minWidth: 0,
-                                fontWeight: 700,
-                              }}
+                              className="m-footer--contact-link"
                             >
-                              <span style={{ display: "inline-flex", alignItems: "center", gap: 8, minWidth: 0, flexWrap: "wrap" }}>
+                              <span>
                                 <img
                                   src={whatsappLogo}
                                   alt="WhatsApp"
@@ -357,38 +574,18 @@ const Footor = () => {
                                   style={{ width: 18, height: 18, objectFit: "contain", display: "block", flexShrink: 0 }}
                                   loading="lazy"
                                 />
-                                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13, minWidth: 0 }}>
-                                  +918199985004
-                                </span>
-                                <span style={{ whiteSpace: "normal", fontSize: 13, color: "rgba(15, 23, 42, 0.7)", minWidth: 0 }}>
-                                  - Click here to open WhatsApp
-                                </span>
+                                <span className="m-footer--wa-number">+918199985004</span>
+                                <span className="m-footer--wa-copy">- Click here to open WhatsApp</span>
                               </span>
                             </a>
                           </div>
 
-                          <div className="insta-buttons" style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginLeft: 4, width: "100%" }}>
+                          <div className="m-footer--social-row">
                             <a
-                              className="m-link"
+                              className="m-footer--social-pill"
                               href="https://www.instagram.com/smalcouture/"
                               target="_blank"
                               rel="noreferrer"
-                              style={{
-                                display: "flex",
-                                flex: 1,
-                                minWidth: 0,
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                gap: 10,
-                                padding: "16px 20px",
-                                borderRadius: 999,
-                                border: "1px solid rgba(176, 141, 87, 0.75)",
-                                background: "#fff",
-                              color: "rgba(15, 23, 42, 0.7)",
-                                textDecoration: "none",
-                                fontWeight: 700,
-                                fontSize: 15,
-                              }}
                             >
                               <svg
                                 className="m-svg-icon--medium"
@@ -402,26 +599,10 @@ const Footor = () => {
                               smalcouture
                             </a>
                             <a
-                              className="m-link"
+                              className="m-footer--social-pill"
                               href="https://www.instagram.com/smal_west/"
                               target="_blank"
                               rel="noreferrer"
-                              style={{
-                                display: "flex",
-                                flex: 1,
-                                minWidth: 0,
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                gap: 10,
-                                padding: "16px 20px",
-                                borderRadius: 999,
-                                border: "1px solid rgba(176, 141, 87, 0.75)",
-                                background: "#fff",
-                                color: "rgba(15, 23, 42, 0.7)",
-                                textDecoration: "none",
-                                fontWeight: 700,
-                                fontSize: 15,
-                              }}
                             >
                               <svg
                                 className="m-svg-icon--medium"
@@ -435,19 +616,12 @@ const Footor = () => {
                               smal_west
                             </a>
                           </div>
-                          <div style={{ color: "rgba(15, 23, 42, 0.78)", fontSize: 15, lineHeight: 1.5 }}>
+                          <div className="m-footer--connect-copy">
                             <strong>Let's Connect.</strong> Whether you need help with an order, have a product inquiry, or want to collaborate, we'd love to hear from you.
-                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="m-footer--block m-footer--block-spacing m:w-full lg:m:w-2/12">
-                    <div
-                      className="m-footer--block-inner m-scroll-trigger animate--fade-in-up"
-                      data-cascade
-                      style={{ "--animation-order": "" }}
-                    ></div>
                   </div>
                   <div className={`m-footer--block m-footer--block-menu m-accordion--item m:w-full lg:m:w-1/4 ${isOpen("quick") ? "open" : ""}`}>
                     <div
@@ -516,7 +690,7 @@ const Footor = () => {
                 </div>
               </div>
             </div>
-            <div className="m-footer--bottom m-footer--bottom-footer-1 m-gradient m-color-footer">
+            <div className="m-footer--bottom m-footer--bottom-footer-1 m-gradient m-color-footer m-footer--bottom-bar">
               <div className="container-fluid">
                 <div className="m-footer--bottom-inner m:flex m:flex-col xl:m:flex-row m:justify-between m:items-end">
                   <div className="m-footer--bottom-left m:flex-none m:text-left m:w-full xl:m:text-left">
