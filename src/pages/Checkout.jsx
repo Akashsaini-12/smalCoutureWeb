@@ -147,6 +147,7 @@ export default function Checkout({ cartItems = [] }) {
   const location = useLocation();
   const userId = getUserId();
   const [isMobile, setIsMobile] = useState(false);
+  const [isMobileKeyboardOpen, setIsMobileKeyboardOpen] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -157,6 +158,7 @@ export default function Checkout({ cartItems = [] }) {
   const checkoutTrackedRef = useRef(false);
   const errorRef = useRef(null);
   const addressSectionRef = useRef(null);
+  const addressFormRef = useRef(null);
   const paymentSectionRef = useRef(null);
 
   const [items, setItems] = useState(() => {
@@ -213,6 +215,30 @@ export default function Checkout({ cartItems = [] }) {
     if (!ref?.current) return;
     const top = ref.current.getBoundingClientRect().top + window.scrollY - 90;
     window.scrollTo({ top, behavior: "smooth" });
+  };
+
+  const scrollToOffersSection = () => {
+    if (typeof window === "undefined") return;
+    const section = paymentSectionRef.current;
+    if (!section) return;
+
+    const paymentHeader = section.querySelector('label');
+    const couponCards = Array.from(section.querySelectorAll('[data-coupon-card="true"]'));
+    const anchor = paymentHeader || couponCards[0] || section;
+
+    const rect = anchor.getBoundingClientRect();
+    const targetTop = Math.max(0, rect.top + window.scrollY - 72);
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const lastCoupon = couponCards[couponCards.length - 1];
+    if (lastCoupon) {
+      const lastBottom = lastCoupon.getBoundingClientRect().bottom + window.scrollY;
+      const lastVisible = lastBottom <= window.scrollY + viewportHeight;
+      if (lastVisible) {
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
+        return;
+      }
+    }
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
   };
 
   const handleMobileCheckoutAction = () => {
@@ -300,6 +326,19 @@ export default function Checkout({ cartItems = [] }) {
   const discountPreview = Number(couponStatus?.discount || 0);
   const shippingPreview = Number(shipPreview?.shipping || 0);
   const totalPreview = Math.max(0, subtotal + shippingPreview - discountPreview);
+  const paymentOfferCounts = useMemo(() => {
+    const counts = { cod: 0, online: 0 };
+    if (!Array.isArray(availableCoupons)) return counts;
+
+    availableCoupons.forEach((coupon) => {
+      const applicableOn = String(coupon?.applicableOn || "all").toLowerCase();
+      if (applicableOn === "all" || applicableOn === "cod") counts.cod += 1;
+      if (applicableOn === "all" || applicableOn === "prepaid") counts.online += 1;
+    });
+
+    return counts;
+  }, [availableCoupons]);
+  const getOfferCountText = (count) => `${count} ${count === 1 ? "offer" : "offers"}`;
   const FREE_SHIPPING_THRESHOLD = 500;
   const remainingForFreeShipping = Math.max(
     0,
@@ -347,11 +386,37 @@ export default function Checkout({ cartItems = [] }) {
   useEffect(() => {
     const onResize = () => {
       if (typeof window === "undefined") return;
-      setIsMobile(window.innerWidth < 768);
+      const nextIsMobile = window.innerWidth < 768;
+      setIsMobile(nextIsMobile);
+      if (!nextIsMobile) setIsMobileKeyboardOpen(false);
     };
+
+    const updateKeyboardStatus = () => {
+      if (typeof window === "undefined") return;
+      const isKeyboardOpen =
+        window.innerWidth < 768 &&
+        typeof window.visualViewport !== "undefined" &&
+        window.innerHeight - window.visualViewport.height > 80;
+      setIsMobileKeyboardOpen(isKeyboardOpen);
+    };
+
     onResize();
+    updateKeyboardStatus();
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", updateKeyboardStatus);
+      window.visualViewport.addEventListener("scroll", updateKeyboardStatus);
+    }
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", updateKeyboardStatus);
+        window.visualViewport.removeEventListener("scroll", updateKeyboardStatus);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -417,16 +482,32 @@ export default function Checkout({ cartItems = [] }) {
             return bTime - aTime;
           });
         setSavedAddresses(ordered);
-        setSelectedAddressId("");
-        setCustomerName("");
-        setPhone("");
-        setAlternatePhone("");
-        setAddress1("");
-        setCity("");
-        setState("");
-        setPincode("");
-        setAddressLabel("Home");
-        setIsDefaultAddress(list.length === 0);
+        if (ordered.length > 0) {
+          const defaultSelection = ordered[0];
+          setSelectedAddressId(String(defaultSelection?._id || ""));
+          if (defaultSelection) {
+            setCustomerName(defaultSelection.name || "");
+            setPhone(defaultSelection.phone || "");
+            setAlternatePhone(defaultSelection.alternatePhone || "");
+            setAddress1(defaultSelection.address1 || "");
+            setCity(defaultSelection.city || "");
+            setState(defaultSelection.state || "");
+            setPincode(defaultSelection.pincode || "");
+            setAddressLabel(defaultSelection.label || "Home");
+            setIsDefaultAddress(Boolean(defaultSelection.isDefault));
+          }
+        } else {
+          setSelectedAddressId("");
+          setCustomerName("");
+          setPhone("");
+          setAlternatePhone("");
+          setAddress1("");
+          setCity("");
+          setState("");
+          setPincode("");
+          setAddressLabel("Home");
+          setIsDefaultAddress(true);
+        }
       })
       .catch((e) => {
         if (!mounted) return;
@@ -511,6 +592,15 @@ export default function Checkout({ cartItems = [] }) {
     setShowAddressForm(false);
   };
 
+  const scrollToAddressForm = () => {
+    window.setTimeout(() => {
+      const formNode = addressFormRef.current || addressSectionRef.current;
+      if (!formNode) return;
+      const top = formNode.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top, behavior: "smooth" });
+    }, 120);
+  };
+
   const startNewAddress = () => {
     setSelectedAddressId("");
     setAddressLabel("Home");
@@ -524,6 +614,34 @@ export default function Checkout({ cartItems = [] }) {
     setPincode("");
     setShowAddressOptions(false);
     setShowAddressForm(true);
+    scrollToAddressForm();
+  };
+
+  const toggleEditAddress = (id) => {
+    const normalizedId = String(id || "");
+    const found = savedAddresses.find((a) => String(a?._id) === normalizedId);
+
+    if (showAddressForm && String(selectedAddressId || "") === normalizedId) {
+      setShowAddressForm(false);
+      setShowAddressOptions(false);
+      return;
+    }
+
+    setSelectedAddressId(normalizedId);
+    if (found) {
+      setCustomerName(found.name || "");
+      setPhone(found.phone || "");
+      setAlternatePhone(found.alternatePhone || "");
+      setAddress1(found.address1 || "");
+      setCity(found.city || "");
+      setState(found.state || "");
+      setPincode(found.pincode || "");
+      setAddressLabel(found.label || "Home");
+      setIsDefaultAddress(Boolean(found.isDefault));
+    }
+    setShowAddressOptions(false);
+    setShowAddressForm(true);
+    scrollToAddressForm();
   };
 
   const startEditAddress = (id) => {
@@ -543,6 +661,7 @@ export default function Checkout({ cartItems = [] }) {
     }
     setShowAddressOptions(false);
     setShowAddressForm(true);
+    scrollToAddressForm();
   };
 
   async function handleSaveAddress() {
@@ -652,6 +771,29 @@ export default function Checkout({ cartItems = [] }) {
     handleDeleteAddress(normalizedId);
   };
 
+  const showCouponSuccessToast = (code, discount) => {
+    const numericDiscount = Number(discount || 0);
+    if (!code || !numericDiscount) return;
+    toast.success(`Hurray! ${code} applied 🎉`, {
+      position: "top-center",
+      autoClose: 1800,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      theme: "light",
+      style: {
+        borderRadius: 12,
+        background: "#f5f1ea",
+        color: "#1f1a17",
+        border: "1px solid rgba(146, 110, 64, 0.25)",
+        boxShadow: "0 10px 24px rgba(31, 26, 23, 0.12)",
+        padding: "10px 14px",
+        fontWeight: 700,
+      },
+    });
+  };
+
   const applyCoupon = async (overrideCode = null) => {
     const normalizedCoupon = String(overrideCode ?? couponCode ?? "").trim();
     if (!normalizedCoupon) return;
@@ -670,6 +812,9 @@ export default function Checkout({ cartItems = [] }) {
         items,
       });
       setCouponStatus(res);
+      if (res?.valid && Number(res?.discount || 0) > 0) {
+        showCouponSuccessToast(res?.code || normalizedCoupon, res?.discount);
+      }
     } catch (err) {
       setCouponStatus(null);
       setError(err?.response?.data?.error || err?.message || "Invalid coupon");
@@ -990,8 +1135,8 @@ export default function Checkout({ cartItems = [] }) {
   }
 
   return (
-    <main style={{ background: "#fff", minHeight: "calc(100vh - 72px)", padding: isMobile ? "18px 14px 260px" : "42px 32px 96px" }}>
-      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+    <main style={{ background: "#fff", minHeight: "calc(100vh - 72px)", padding: isMobile ? "18px 14px 10px" : "42px 56px 96px" }}>
+      <div style={{ maxWidth: 1600, margin: "0 auto", paddingLeft: isMobile ? 0 : 12, paddingRight: isMobile ? 0 : 12 }}>
         <div
           style={{
             display: "flex",
@@ -1003,8 +1148,16 @@ export default function Checkout({ cartItems = [] }) {
           }}
         >
           <div style={isMobile ? { flex: 1, minWidth: 0 } : { flex: 1, minWidth: 0 }}>
+            <h1 style={{
+              margin: "0 0 6px",
+              fontSize: isMobile ? 24 : 28,
+              lineHeight: 1.15,
+              letterSpacing: "-1px",
+              fontWeight: 700,
+              color: "#171717",
+              wordBreak: "break-word",
+            }}>Complete your order</h1>
             <div style={eyebrowStyle}>SMALCOUTURE · SECURE CHECKOUT</div>
-            <h1 style={{ margin: "6px 0 5px", fontSize: 28, letterSpacing: "-1px", fontWeight: 700, color: "#171717" }}>Complete your order</h1>
           </div>
           <Link
             to="/cart"
@@ -1037,15 +1190,10 @@ export default function Checkout({ cartItems = [] }) {
           <div
             style={progressBarStyle}
           >
-            {[
-              ["1", "Delivery"],
-              ["2", "Payment"],
-              ["3", "Offers"],
-              ["4", "Review"],
-            ].map(([number, label], index) => (
+            {["Delivery", "Payment", "Offers", "Review"].map((label, index) => (
               <React.Fragment key={label}>
                 <div style={progressStepStyle}>
-                  <span style={progressNumberStyle}>{number}</span>
+                  <span style={progressNumberStyle} />
                   <span>{label}</span>
                 </div>
                 {index < 3 ? <span style={progressLineStyle} /> : null}
@@ -1059,138 +1207,158 @@ export default function Checkout({ cartItems = [] }) {
             Loading your cart…
           </div>
           ) : (
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1fr) 360px", gap: isMobile ? 14 : 18, alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 2.2fr) 360px", gap: isMobile ? 6 : 18, alignItems: "start" }}>
             <section ref={addressSectionRef} style={{ ...checkoutCardStyle, gridColumn: isMobile ? "auto" : "1", gridRow: isMobile ? "auto" : "1" }}>
-              <div style={{ marginBottom: 18, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-                <div style={{ color: "rgba(15,23,42,0.65)", fontSize: 13, fontWeight: 700, lineHeight: 1.5, minWidth: 0 }}>
-                  <span style={{ ...stepBadgeStyle, fontWeight: 700 }}>1</span> Delivery address
+              <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ color: "rgba(15,23,42,0.65)", fontSize: 13, fontWeight: 700, lineHeight: 1.5, minWidth: 0, display: "flex", alignItems: "center" }}>
+                  <span style={{ ...stepBadgeStyle, fontWeight: 700 }}></span>
+                  <span>Delivery address</span>
                 </div>
-                <div style={{ color: "rgba(15,23,42,0.45)", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>Choose or save an address for delivery</div>
               </div>
 
-              <div style={{ marginBottom: 14 }}>
+              <div style={{ marginBottom: 8 }}>
 
                 {addrLoading ? (
-                  <div style={{ padding: 10, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa", color: "#64748b", fontWeight: 800, marginTop: 10 }}>
+                  <div style={{ padding: 10, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fafafa", color: "#64748b", fontWeight: 800, marginTop: 6 }}>
                     Loading addresses…
                   </div>
                 ) : (
-                  <div style={{ display: "grid", gap: 12, marginTop: 10 }}>
+                  <div style={{ display: "grid", gap: 6, marginTop: 2, width: "100%" }}>
                   <div
                     onClick={(event) => {
                       if (event?.target && event.target.closest("button")) return;
                       if (primaryVisibleAddress?._id) handleSelectAddress(String(primaryVisibleAddress._id));
                     }}
                     style={{
-                      padding: 16,
-                      borderRadius: 16,
-                      border: `1px solid ${selectedAddress ? "rgba(17,24,39,0.18)" : "rgba(15,23,42,0.12)"}`,
-                      background: "#fff",
-                      boxShadow: "none",
+                      padding: 14,
+                     borderRadius: 12,
+                     border: `1.5px solid ${selectedAddress ? "#c9a76d" : "rgba(15,23,42,0.08)"}`,
+                     background: "#fff",
+                     boxShadow: selectedAddress ? "0 0 0 1px rgba(201, 167, 109, 0.18)" : "none",
                       cursor: "pointer",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 950, color: "#0f172a", fontSize: 15, minWidth: 0 }}>
-                        <span
-                          aria-label={selectedAddress ? "Selected address" : "Select address"}
-                          style={{
-                            width: 18,
-                            height: 18,
-                            borderRadius: "50%",
-                            border: `2px solid ${selectedAddress ? "#111827" : "#b8bec8"}`,
-                            background: selectedAddress ? "#111827" : "#fff",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#fff",
-                            fontSize: 11,
-                            fontWeight: 900,
-                            flexShrink: 0,
-                            boxSizing: "border-box",
-                            lineHeight: 1,
-                          }}
-                        >
-                          {selectedAddress ? "✓" : ""}
-                        </span>
-                        <span style={{ lineHeight: 1.2 }}>
-                          {primaryVisibleAddress ? primaryVisibleAddress.label || "Address" : "No saved address"}
-                          {primaryVisibleAddress?.isDefault ? (
-                            <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 800, fontSize: 12 }}>
-                              • Default
-                            </span>
-                          ) : null}
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%", marginBottom: 4 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 0, fontWeight: 950, color: "#0f172a", fontSize: 14, minWidth: 0, flex: 1, marginRight: 8, justifyContent: "flex-start" }}>
+                        <span style={{ lineHeight: 1.2, display: "inline-flex", alignItems: "center", flexWrap: "wrap", minWidth: 0, textAlign: "left" }}>
+                          {primaryVisibleAddress ? primaryVisibleAddress.name || "Customer" : "No saved address"}
                         </span>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ color: "rgba(15,23,42,0.65)", fontWeight: 800, fontSize: 12, lineHeight: 1.2 }}>
-                          {selectedAddress ? "Selected" : "Tap to select"}
-                        </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        <button
+                          type="button"
+                          aria-label="Edit address"
+                          title="Edit address"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleEditAddress(String(primaryVisibleAddress._id));
+                          }}
+                          style={{
+                            ...addressActionBtnStyle,
+                            width: 38,
+                            height: 38,
+                            minWidth: 38,
+                            minHeight: 38,
+                            padding: 0,
+                            borderRadius: 10,
+                            background: "#fff",
+                            color: "#1f1a17",
+                            border: "1px solid #1f1a17",
+                            fontSize: 17,
+                            lineHeight: 1,
+                            fontWeight: 800,
+                          }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Remove address"
+                          title="Remove address"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            confirmRemoveAddress(String(primaryVisibleAddress._id));
+                          }}
+                          style={{
+                            ...addressActionBtnStyle,
+                            width: 38,
+                            height: 38,
+                            minWidth: 38,
+                            minHeight: 38,
+                            padding: 0,
+                            borderRadius: 10,
+                            background: "#fff",
+                            color: "#1f1a17",
+                            border: "1px solid #1f1a17",
+                            fontSize: 21,
+                            lineHeight: 1,
+                            fontWeight: 800,
+                          }}
+                        >
+                          ×
+                        </button>
                       </div>
                     </div>
                     {primaryVisibleAddress ? (
                       <>
-                        <div style={{ marginTop: 6, color: "rgba(15,23,42,0.72)", fontWeight: 700, fontSize: 13, lineHeight: 1.4 }}>
-                          {primaryVisibleAddress.name} • {primaryVisibleAddress.phone}
-                        </div>
-                        <div style={{ marginTop: 6, color: "rgba(15,23,42,0.62)", fontSize: 13, lineHeight: 1.5 }}>
+                        <div style={{ marginTop: 6, color: "rgba(15,23,42,0.7)", fontSize: 13, lineHeight: 1.6, fontWeight: 600 }}>
                           {primaryVisibleAddress.address1}
                           <br />
                           {primaryVisibleAddress.city}, {primaryVisibleAddress.state} {primaryVisibleAddress.pincode}
                         </div>
-                        <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "nowrap", alignItems: "center" }}>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              startEditAddress(String(primaryVisibleAddress._id));
-                            }}
-                            style={{
-                              ...addressActionBtnStyle,
-                              background: "#fff",
-                              color: "#1f1a17",
-                              border: "1px solid #1f1a17",
-                              flex: "0 0 auto",
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              confirmRemoveAddress(String(primaryVisibleAddress._id));
-                            }}
-                            style={{
-                              ...addressActionBtnStyle,
-                              background: "#fff",
-                              color: "#1f1a17",
-                              border: "1px solid #1f1a17",
-                              flex: "0 0 auto",
-                            }}
-                          >
-                            Remove
-                          </button>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              startNewAddress();
-                            }}
-                            style={{
-                              ...addressActionBtnStyle,
-                              background: "#fff",
-                              color: "#1f1a17",
-                              border: "1px solid #1f1a17",
-                              flex: "0 0 auto",
-                            }}
-                          >
-                            Add new address
-                          </button>
+                        <div style={{ marginTop: 8, color: "rgba(15,23,42,0.72)", fontWeight: 800, fontSize: 13, lineHeight: 1.35 }}>
+                          {primaryVisibleAddress.phone}
                         </div>
+                        {savedAddresses.length > 0 ? (
+                          <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                startNewAddress();
+                              }}
+                              style={{
+                                ...addressActionBtnStyle,
+                                width: "100%",
+                                minWidth: 0,
+                                height: 38,
+                                padding: "0 12px",
+                                background: "#f8fafc",
+                                color: "#1f1a17",
+                                border: "1px solid #dbe2ea",
+                                fontSize: 12,
+                                fontWeight: 700,
+                              }}
+                            >
+                              + Add new
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setShowAddressOptions((value) => !value);
+                              }}
+                              style={{
+                                ...addressActionBtnStyle,
+                                width: "100%",
+                                minWidth: 0,
+                                height: 38,
+                                padding: "0 12px",
+                                background: "#f8fafc",
+                                color: "#1f1a17",
+                                border: "1px solid #dbe2ea",
+                                fontSize: 12,
+                                fontWeight: 700,
+                              }}
+                            >
+                              Show saved <span style={{ fontSize: 12, marginLeft: 4, display: "inline-block", transform: "translateY(-1px)" }}>›</span>
+                            </button>
+                          </div>
+                        ) : null}
                       </>
                     ) : (
                       <div style={{ marginTop: 8, color: "rgba(15,23,42,0.65)", fontWeight: 700 }}>
@@ -1199,29 +1367,25 @@ export default function Checkout({ cartItems = [] }) {
                     )}
                   </div>
 
-                    {savedAddresses.length > 1 && !showAddressForm ? (
-                      <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-                        <div style={{ display: "flex", gap: 10 }}>
-                          <button
-                            type="button"
-                            onClick={() => setShowAddressOptions((value) => !value)}
-                            style={{
-                              ...smallGhostBtn,
-                              flex: 1,
-                              minWidth: 0,
-                              padding: "10px 12px",
-                              background: "#fff",
-                              fontSize: 14,
-                            }}
-                          >
-                            {showAddressOptions ? "Hide addresses" : "Saved Addresses"}
-                          </button>
-                        </div>
+                    {savedAddresses.length > 0 && !showAddressForm ? (
+                      <div style={{ display: "grid", gap: 8, marginTop: 8 }}>
                         {showAddressOptions ? (
                           <div style={{ display: "grid", gap: 12 }}>
-                            {savedAddresses
-                              .filter((a) => String(a?._id) !== String(selectedAddress?._id))
-                              .map((a) => {
+                            {(() => {
+                              const otherAddresses = savedAddresses.filter((a) => {
+                                const isCurrent = String(a?._id) === String(primaryVisibleAddress?._id || selectedAddress?._id || "");
+                                return !isCurrent && String(a?._id) !== String(selectedAddress?._id || "");
+                              });
+
+                              if (!otherAddresses.length) {
+                                return (
+                                  <div style={{ padding: "12px 14px", borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", color: "#475569", fontWeight: 700, fontSize: 12 }}>
+                                    No other address found.
+                                  </div>
+                                );
+                              }
+
+                              return otherAddresses.map((a) => {
                                 const isSelected = String(selectedAddressId || "") === String(a?._id || "");
                                 return (
                                   <div
@@ -1276,7 +1440,7 @@ export default function Checkout({ cartItems = [] }) {
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
-                                          startEditAddress(String(a._id));
+                                          toggleEditAddress(String(a._id));
                                         }}
                                         style={{
                                           ...addressActionBtnStyle,
@@ -1306,7 +1470,8 @@ export default function Checkout({ cartItems = [] }) {
                                     </div>
                                   </div>
                                 );
-                              })}
+                              });
+                            })()}
                           </div>
                         ) : null}
                       </div>
@@ -1323,7 +1488,7 @@ export default function Checkout({ cartItems = [] }) {
               </div>
 
               {showAddressForm && (
-                <div style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
+                <div ref={addressFormRef} style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
                   <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                     <div style={{ fontWeight: 950, color: "#0f172a" }}>
                       {selectedAddressId ? "Edit address" : "Add new address"}
@@ -1412,8 +1577,8 @@ export default function Checkout({ cartItems = [] }) {
                    </div>
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12, marginTop: 14 }}>
-                    <button type="button" onClick={handleSaveAddress} style={{ ...smallPrimaryBtn, minHeight: 52, fontSize: 17, background: "#1f1a17" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, marginTop: 14 }}>
+                    <button type="button" onClick={handleSaveAddress} style={{ ...smallPrimaryBtn, minHeight: 46, fontSize: 15, background: "#1f1a17", padding: "10px 12px" }}>
                       {selectedAddressId ? "Update address" : "Save address"}
                     </button>
                     <button
@@ -1448,8 +1613,9 @@ export default function Checkout({ cartItems = [] }) {
                       }}
                       style={{
                         ...smallGhostBtn,
-                        minHeight: 52,
-                        fontSize: 17,
+                        minHeight: 46,
+                        fontSize: 15,
+                        padding: "10px 12px",
                         opacity: 1,
                         cursor: "pointer",
                       }}
@@ -1466,9 +1632,8 @@ export default function Checkout({ cartItems = [] }) {
 
             </section>
 
-            <section ref={paymentSectionRef} style={{ ...checkoutCardStyle, gridColumn: isMobile ? "auto" : "1", gridRow: isMobile ? "auto" : "2" }}>
-              <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>2</span> Payment method</label>
-              <p style={sectionHintStyle}>Choose how you would like to pay for this order.</p>
+            <section ref={paymentSectionRef} style={{ ...checkoutCardStyle, gridColumn: isMobile ? "auto" : "1", gridRow: isMobile ? "auto" : "2", marginTop: isMobile ? 0 : 0 }}>
+              <label style={{ ...sectionHeadingStyle, display: "flex", alignItems: "center" }}><span style={stepBadgeStyle}></span><span>Payment method</span></label>
               <div style={{ display: "grid", gap: 10, marginBottom: 24 }}>
                 {error && (!String(error).toLowerCase().includes("online") && !String(error).toLowerCase().includes("prepaid")) ? (
                   <div ref={errorRef} style={{ marginBottom: 4, padding: "10px 12px", borderRadius: 8, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b", fontWeight: 700, fontSize: 12 }}>
@@ -1489,9 +1654,36 @@ export default function Checkout({ cartItems = [] }) {
                     </div>
                   ) : null}
                   <input type="radio" name="checkout-payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-                  <div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Cash on delivery</div>
-                    <div style={{ ...paymentHintStyle, fontWeight: 500 }}>Pay when your order arrives</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, width: "100%" }}>
+                    <div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Cash on delivery</div>
+                      <div style={{ ...paymentHintStyle, fontWeight: 500 }}>Pay when your order arrives</div>
+                    </div>
+                    {paymentOfferCounts.cod > 0 ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setPaymentMethod("cod");
+                          scrollToOffersSection();
+                        }}
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                          color: "#0f8f63",
+                          whiteSpace: "nowrap",
+                          background: "#edf9f4",
+                          border: "1px solid rgba(15, 143, 99, 0.28)",
+                          borderRadius: 999,
+                          padding: "4px 8px",
+                          cursor: "pointer",
+                          outline: "none",
+                        }}
+                      >
+                        {getOfferCountText(paymentOfferCounts.cod)}
+                      </button>
+                    ) : null}
                   </div>
                 </label>
                 <label
@@ -1508,33 +1700,142 @@ export default function Checkout({ cartItems = [] }) {
                     </div>
                   ) : null}
                   <input type="radio" name="checkout-payment" checked={paymentMethod === "online"} onChange={() => setPaymentMethod("online")} />
-                  <div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Online payment</div>
-                    <div style={{ ...paymentHintStyle, fontWeight: 500 }}>UPI · NetBanking · cards</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, width: "100%" }}>
+                    <div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>Online payment</div>
+                      <div style={{ ...paymentHintStyle, fontWeight: 500 }}>UPI · NetBanking · cards</div>
+                    </div>
+                    {paymentOfferCounts.online > 0 ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setPaymentMethod("online");
+                          scrollToOffersSection();
+                        }}
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                          color: "#0f8f63",
+                          whiteSpace: "nowrap",
+                          background: "#edf9f4",
+                          border: "1px solid rgba(15, 143, 99, 0.28)",
+                          borderRadius: 999,
+                          padding: "4px 8px",
+                          cursor: "pointer",
+                          outline: "none",
+                        }}
+                      >
+                        {getOfferCountText(paymentOfferCounts.online)}
+                      </button>
+                    ) : null}
                   </div>
                 </label>
               </div>
 
-              <label style={sectionHeadingStyle}><span style={stepBadgeStyle}>3</span> Offers for you</label>
-              <p style={sectionHintStyle}>Apply a promo code before reviewing your order total.</p>
-              <div style={{ display: "flex", gap: 12, flexDirection: isMobile ? "column" : "row" }}>
-                <input
-                  value={couponCode}
-                  onChange={(e) => {
-                    const nextValue = e.target.value;
-                    setCouponCode(nextValue);
-                    setCouponStatus(null);
-                    setError("");
+              <div>
+                <label style={{ ...sectionHeadingStyle, display: "flex", alignItems: "center" }}><span style={stepBadgeStyle}></span><span>Offers for you</span></label>
+               </div>
+              <div style={{ display: "flex", gap: 10, flexDirection: "row", alignItems: "stretch", justifyContent: "flex-start" }}>
+                <div style={{ position: "relative", flex: 1, maxWidth: isMobile ? "calc(100% - 102px)" : 220, minWidth: 0 }}>
+                  <input
+                    value={couponCode}
+                    onChange={(e) => {
+                      const nextValue = e.target.value;
+                      setCouponCode(nextValue);
+                      setCouponStatus(null);
+                      setError("");
+                    }}
+                    placeholder="Enter coupon code"
+                    style={{ ...inputStyle, paddingRight: couponCode ? 36 : 12, height: 42 }}
+                  />
+                  {couponCode ? (
+                    <button
+                      type="button"
+                      aria-label="Clear coupon code"
+                      onClick={() => {
+                        setCouponCode("");
+                        setCouponStatus(null);
+                        setError("");
+                      }}
+                      style={{
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 20,
+                        height: 20,
+                        border: "none",
+                        borderRadius: "50%",
+                        background: "#e5e7eb",
+                        color: "#374151",
+                        fontSize: 14,
+                        lineHeight: 1,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 0,
+                      }}
+                    >
+                      ×
+                    </button>
+                  ) : null}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => applyCoupon()}
+                  style={{
+                    ...smallPrimaryBtn,
+                    whiteSpace: "nowrap",
+                    width: isMobile ? 92 : 92,
+                    minWidth: 92,
+                    height: 42,
+                    padding: "10px 12px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
-                  placeholder="Enter coupon code"
-                  style={inputStyle}
-                />
-                <button type="button" onClick={() => applyCoupon()} style={{ ...smallPrimaryBtn, whiteSpace: "nowrap", width: isMobile ? "100%" : "auto" }}>
+                >
                   Apply
                 </button>
               </div>
+              {couponStatus?.code ? (
+                <div style={{ marginTop: 12, display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 10px", borderRadius: 999, background: "#edf9f4", border: "1px solid #bfe2d3", color: "#0f8f63", fontSize: 12, fontWeight: 800 }}>
+                    <span>{couponStatus.code}</span>
+                    <button
+                      type="button"
+                      aria-label="Remove applied coupon"
+                      onClick={() => {
+                        setCouponCode("");
+                        setCouponStatus(null);
+                        setError("");
+                      }}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        border: "none",
+                        borderRadius: "50%",
+                        background: "rgba(15, 143, 99, 0.12)",
+                        color: "#0f8f63",
+                        fontSize: 12,
+                        lineHeight: 1,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 0,
+                      }}
+                    >
+                      ×
+                    </button>
+                  </span>
+                </div>
+              ) : null}
               {Array.isArray(availableCoupons) && availableCoupons.length > 0 && (
-                <div style={{ marginTop: 16 }}>
+                <div style={{ marginTop: 16, marginBottom: 14 }}>
                   <div style={{ fontSize: 12, fontWeight: 900, color: "#64748b", marginBottom: 12, textTransform: "uppercase", letterSpacing: 1 }}>
                     Available coupons
                   </div>
@@ -1549,7 +1850,11 @@ export default function Checkout({ cartItems = [] }) {
                     {availableCoupons.map((c) => {
                       const minSubtotalNotMet = subtotal < Number(c.minSubtotal || 0);
                       const isApplied = couponStatus?.code === c.code;
-                      const discountLabel = c.type === "percent" ? `${c.value}% OFF` : `₹${c.value} OFF`;
+                      const discountValue = Number(c.value || 0);
+                      const percentSaveAmount = c.type === "percent" && subtotal > 0 ? Math.round((subtotal * discountValue) / 100) : 0;
+                      const fixedSaveAmount = c.type !== "percent" ? Math.round(discountValue) : 0;
+                      const savingsAmount = percentSaveAmount || fixedSaveAmount;
+                      const discountLabel = c.type === "percent" ? `${discountValue}% OFF` : `₹${discountValue} OFF`;
                       const applicableOn = String(c.applicableOn || "all").toLowerCase();
                       const isApplicableToPayment = !paymentMethod || applicableOn === "all" || (applicableOn === "cod" && paymentMethod === "cod") || (applicableOn === "prepaid" && paymentMethod === "online");
                       const hasCategoryCondition = Array.isArray(c.applicableCategories) && c.applicableCategories.length > 0;
@@ -1567,14 +1872,22 @@ export default function Checkout({ cartItems = [] }) {
                         : (Array.isArray(c.applicableCategories) ? c.applicableCategories : []);
 
                       return (
-                        <div key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#10b981" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div data-coupon-card="true" key={c._id || c.code} style={{ padding: "14px 16px", borderRadius: 10, border: `1px solid ${isApplied ? "#0f8f63" : "#cbd5e1"}`, background: "#fff", display: "flex", flexDirection: "column", gap: 10 }}>
                           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                             <div>
                               <div style={{ fontSize: 14, fontWeight: 950, color: "#0f172a", marginBottom: 2 }}>{c.code}</div>
-                              <div style={{ fontSize: 12, fontWeight: 700, color: "#059669" }}>{discountLabel}</div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", fontSize: 12, fontWeight: 700, color: "#0f8f63" }}>
+                                <span>{discountLabel}</span>
+                                {savingsAmount > 0 ? (
+                                  <>
+                                    <span style={{ color: "#0f8f63" }}>•</span>
+                                    <span style={{ color: "#0f8f63" }}>Save ₹{savingsAmount}</span>
+                                  </>
+                                ) : null}
+                              </div>
                             </div>
-                            <button type="button" disabled={buttonDisabled && !isApplied} onClick={() => { const next = String(c.code || ""); applyCoupon(next); }} style={{ padding: "8px 12px", borderRadius: 8, border: "none", minWidth: 110, background: isApplied ? "#10b981" : buttonDisabled ? "#e5e7eb" : "#111", color: isApplied ? "#fff" : buttonDisabled ? "#6b7280" : "#fff", fontWeight: 700, fontSize: 12, cursor: buttonDisabled && !isApplied ? "not-allowed" : "pointer", whiteSpace: "nowrap" }} title={!paymentMethod ? "Select payment method first" : !isApplicableToCategory ? "Not applicable to products in your cart" : minSubtotalNotMet ? `Min order ₹${c.minSubtotal} required` : !isApplicableToPayment ? `Not applicable for ${paymentMethod === "cod" ? "COD" : "online payment"}` : isApplied ? "Coupon applied" : "Apply this coupon"}>
-                              {isApplied ? "✓ Applied" : "Tap to apply"}
+                            <button type="button" disabled={buttonDisabled && !isApplied} onClick={() => { const next = String(c.code || ""); applyCoupon(next); }} style={{ padding: "8px 12px", borderRadius: 8, border: "none", minWidth: 110, background: isApplied ? "#0f8f63" : buttonDisabled ? "#e5e7eb" : "#111", color: isApplied ? "#fff" : buttonDisabled ? "#6b7280" : "#fff", fontWeight: 700, fontSize: 12, cursor: buttonDisabled && !isApplied ? "not-allowed" : "pointer", whiteSpace: "nowrap" }} title={!paymentMethod ? "Select payment method first" : !isApplicableToCategory ? "Not applicable to products in your cart" : minSubtotalNotMet ? `Min order ₹${c.minSubtotal} required` : !isApplicableToPayment ? `Not applicable for ${paymentMethod === "cod" ? "COD" : "online payment"}` : isApplied ? "Coupon applied" : "Apply this coupon"}>
+                              {isApplied ? "✓ Applied" : "Apply"}
                             </button>
                           </div>
                           <div style={{ fontSize: 12, color: "#64748b", fontWeight: 600, lineHeight: 1.4 }}>
@@ -1597,6 +1910,10 @@ export default function Checkout({ cartItems = [] }) {
                   </div>
                 </div>
               )}
+
+              <div style={{ marginTop: 18, marginBottom: 18, padding: "14px 16px", borderRadius: 14, border: "1px solid #e7d9c7", background: "#ffffff", boxShadow: "0 4px 12px rgba(31, 26, 23, 0.04)", textAlign: "center", fontSize: 12, fontWeight: 800, color: "#4b433f", letterSpacing: "0.02em" }}>
+                THANK YOU FOR CHOOSING SMALCOUTURE ✦
+              </div>
             </section>
             <aside
               style={{
@@ -1612,11 +1929,8 @@ export default function Checkout({ cartItems = [] }) {
               }}
             >
               <div style={{ marginBottom: 18, paddingBottom: 12, borderBottom: "1px solid rgba(38, 28, 21, 0.12)" }}>
-                <div style={{ fontSize: 10, letterSpacing: "1.8px", textTransform: "uppercase", fontWeight: 700, color: "#8a6b4a", marginBottom: 8 }}>
-                  SMALCOUTURE
-                </div>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1f1a17" }}>
-                  <span style={{ ...stepBadgeStyle, marginRight: 8, background: "#1f1a17", fontWeight: 700 }}>4</span>
+                  <span style={{ ...stepBadgeStyle, marginRight: 8, background: "#1f1a17", fontWeight: 700 }}></span>
                   Order summary
                 </h2>
               </div>
@@ -1703,15 +2017,16 @@ export default function Checkout({ cartItems = [] }) {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, color: "#5d544f", lineHeight: 1.4 }}>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, color: "#5d544f", lineHeight: 1.4, marginTop: 14, marginBottom: 4 }}>
                   <span>Need help?</span>
                   <a
                     href="https://wa.me/918199985004?text=Hi%20S-Mal%2C%20I%20came%20across%20your%20website%20and%20would%20like%20to%20connect%20regarding%20a%20query.%20Looking%20forward%20to%20your%20assistance."
                     target="_blank"
                     rel="noreferrer"
-                    style={{ color: "#1f1a17", fontWeight: 800, textDecoration: "none", marginLeft: 6, fontSize: 15 }}
+                    style={{ color: "#1f1a17", fontWeight: 800, textDecoration: "none", marginLeft: 6, fontSize: 15, display: "inline-flex", alignItems: "center", gap: 4 }}
                   >
-                    Chat with us
+                    <span>Chat with us</span>
+                    <span aria-hidden="true" style={{ display: "inline-block", transform: "translateY(-1px)" }}>→</span>
                   </a>
                 </div>
               </div>
@@ -1788,20 +2103,56 @@ export default function Checkout({ cartItems = [] }) {
               ) : null}
 
               {isMobile ? (
-                <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, background: "#fff", borderTop: "1px solid #e7e1da", boxShadow: "0 -10px 24px rgba(31, 26, 23, 0.08)", padding: "12px 14px calc(12px + env(safe-area-inset-bottom))", zIndex: 40 }}>
+                <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, background: "#fff", borderTop: "1px solid #e7e1da", boxShadow: "0 -10px 24px rgba(31, 26, 23, 0.08)", padding: "12px 14px calc(12px + env(safe-area-inset-bottom))", zIndex: 40, visibility: isMobileKeyboardOpen ? "hidden" : "visible", pointerEvents: isMobileKeyboardOpen ? "none" : "auto" }}>
                   <div style={{ display: "grid", gap: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 900, color: "#1f1a17", fontSize: 13 }}>
-                      <span>Subtotal</span>
-                      <span>{formatINR(subtotal)}</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
-                      <span>Shipping {shipLoading ? "(...)" : ""}</span>
-                      <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#1f1a17", fontSize: 15 }}>
-                      <span>Total</span>
-                      <span>{formatINR(totalPreview)}</span>
-                    </div>
+                   {couponStatus?.code ? (
+                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13, alignItems: "center" }}>
+                       <span>Promo</span>
+                       <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 8px", borderRadius: 999, background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46", fontSize: 11, fontWeight: 800 }}>
+                         <span>{couponStatus.code}</span>
+                         <button
+                           type="button"
+                           aria-label="Remove applied coupon"
+                           onClick={() => {
+                             setCouponCode("");
+                             setCouponStatus(null);
+                             setError("");
+                           }}
+                           style={{
+                             width: 16,
+                             height: 16,
+                             border: "none",
+                             borderRadius: "50%",
+                             background: "rgba(6, 95, 70, 0.12)",
+                             color: "#065f46",
+                             fontSize: 12,
+                             lineHeight: 1,
+                             cursor: "pointer",
+                             display: "inline-flex",
+                             alignItems: "center",
+                             justifyContent: "center",
+                             padding: 0,
+                           }}
+                         >
+                           ×
+                         </button>
+                       </span>
+                     </div>
+                   ) : null}
+                   {discountPreview > 0 ? (
+                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                       <span>Discount</span>
+                       <span>-{formatINR(discountPreview)}</span>
+                     </div>
+                   ) : null}
+                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, color: "#574d46", fontSize: 13 }}>
+                     <span>Shipping {shipLoading ? "(...)" : ""}</span>
+                     <span>{shippingPreview === 0 ? "Free" : formatINR(shippingPreview)}</span>
+                   </div>
+                   <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 950, color: "#1f1a17", fontSize: 15 }}>
+                     <span>Total</span>
+                     <span>{formatINR(totalPreview)}</span>
+                   </div>
                     <button
                       type="button"
                       onClick={handleMobileCheckoutAction}
@@ -1883,7 +2234,7 @@ fontSize: 14,
 };
 
 const eyebrowStyle = {
-  color: "#475569",
+  color: "#8a6b4a",
   fontSize: 10,
   fontWeight: 700,
   letterSpacing: "1.8px",
@@ -1924,19 +2275,21 @@ const progressNumberStyle = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  width: 22,
-  height: 22,
-  borderRadius: "50%",
+  width: 8,
+  height: 8,
+  borderRadius: "2px",
   background: "#292524",
-  color: "#fff",
-  fontSize: 11,
+  transform: "rotate(45deg)",
+  boxShadow: "0 0 0 4px rgba(41, 37, 36, 0.08)",
+  flexShrink: 0,
 };
 
 const progressLineStyle = {
-  height: 1,
+  height: 2,
   flex: 1,
-  minWidth: 12,
-  background: "#d6d3d1",
+  minWidth: 16,
+  borderRadius: 999,
+  background: "linear-gradient(90deg, rgba(41,37,36,0.26), rgba(41,37,36,0.08))",
 };
 
 const checkoutCardStyle = {
@@ -2010,14 +2363,17 @@ const stepBadgeStyle = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  width: 22,
-  height: 22,
-  borderRadius: "50%",
+  width: 12,
+  height: 12,
+  borderRadius: "3px",
   background: "#111827",
   color: "#fff",
   fontSize: 11,
   fontWeight: 700,
+  transform: "rotate(45deg)",
   flexShrink: 0,
+  verticalAlign: "middle",
+  marginRight: 8,
 };
 
 const radioRowStyle = {
