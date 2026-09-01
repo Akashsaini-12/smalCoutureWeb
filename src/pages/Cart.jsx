@@ -21,6 +21,7 @@ import {
 } from "../redux/actions";
 import productsData from "../data/productsData";
 import { getUserId } from "../utils/userId";
+import { formatPrice } from "../utils/formatPrice";
 import {
   formatSizeForCustomerDisplay,
   isInternalFreeSizeLabel,
@@ -123,6 +124,14 @@ const BreadcrumbArrow = () => (
 
 const containerStyle = { maxWidth: 1200, margin: "0 auto", padding: "0 16px" };
 const gridCols = "minmax(0, 2.4fr) minmax(80px, 0.8fr) minmax(120px, 0.9fr) minmax(80px, 0.8fr)";
+const backShoppingStyle = {
+  color: "#292524",
+  borderBottom: "1px solid #292524",
+  fontSize: 13,
+  fontWeight: 700,
+  textDecoration: "none",
+  paddingBottom: 3,
+};
 const cartItemEntranceStyle = `
   @keyframes cartItemFadeIn {
     0% {
@@ -488,7 +497,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     return Number.isFinite(stockNum) ? Math.max(0, stockNum) : null;
   };
   const subtotal = effectiveCartItems.reduce((sum, i) => sum + parsePrice(i.price) * (i.quantity || 1), 0);
-  const subtotalStr = `₹${subtotal.toFixed(2)}`;
+  const subtotalStr = `₹${formatPrice(subtotal)}`;
   const needMore = Math.max(0, FREE_SHIPPING_GOAL - subtotal);
   const progressPct = Math.min(100, (subtotal / FREE_SHIPPING_GOAL) * 100);
 
@@ -1011,8 +1020,29 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
               </div>
             ) : effectiveCartItems.length === 0 ? (
               <div style={{ padding: "48px 24px", textAlign: "center" }}>
-                <h3 style={{ fontSize: 20, fontWeight: 600, color: "#334155", marginBottom: 12 }}>Your cart is currently empty.</h3>
-                <Link to="/" style={{ color: "#0f172a", textDecoration: "underline", fontWeight: 500 }}>
+                <h3 style={{ fontSize: 20, fontWeight: 600, color: "#334155", marginBottom: 12 }}>Your cart is currently empty</h3>
+                <Link
+                  to="/"
+                  style={
+                    isMobile
+                      ? {
+                          ...backShoppingStyle,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          minHeight: 36,
+                          padding: "0 14px",
+                          border: "1px solid #1f1a17",
+                          borderRadius: 999,
+                          background: "#fff",
+                          boxShadow: "0 6px 14px rgba(31, 26, 23, 0.08)",
+                          fontSize: 13,
+                          marginTop: 8,
+                          whiteSpace: "nowrap",
+                        }
+                      : backShoppingStyle
+                  }
+                >
                   Back to shopping
                 </Link>
               </div>
@@ -1146,7 +1176,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                             </button>
                           </div>
                           <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a", overflowWrap: "anywhere" }}>
-                            ₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}
+                            ₹{formatPrice(parsePrice(item.price) * (item.quantity || 1))}
                           </div>
                         </div>
                       </div>
@@ -1252,7 +1282,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                           </div>
                         </div>
                         <div style={{ textAlign: "right", fontWeight: 700, fontSize: 15, color: "#0f172a", display: "flex", justifyContent: "space-between", alignItems: "center", minWidth: 0, width: undefined }}>
-                          <span style={{ overflowWrap: "anywhere" }}>₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}</span>
+                          <span style={{ overflowWrap: "anywhere" }}>₹{formatPrice(parsePrice(item.price) * (item.quantity || 1))}</span>
                         </div>
                       </>
                     )}
@@ -1312,7 +1342,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                  const firstVariant = Array.isArray(p.variants) && p.variants[0] ? p.variants[0] : null;
                  const imgSrc = getProductImageUrl(p) || (firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0] ? firstVariant.images[0] : "");
                  const productName = p?.name || p?.title || "Product";
-                 const priceStr = `₹${Number(p.price || 0).toFixed(2)}`;
+                 const priceStr = `₹${formatPrice(p.price || 0)}`;
                  const recommendationKey = getRecommendationKey(p);
                  const isInCart = effectiveCartItems.some((item) => recommendationMatchesCartItem(item, p));
                  const isAdded = isInCart || Boolean(recommendationKey && addedRecommendIds.includes(recommendationKey));
