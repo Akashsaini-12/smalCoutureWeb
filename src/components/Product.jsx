@@ -241,6 +241,14 @@ const Product = ({ addToCart, cartItems = [] }) => {
   // ── Product detail page (same UI as former quick view) ───────────────
   const goToProduct = (product) => {
     if (!product) return;
+    try {
+      sessionStorage.setItem(
+        "aka_home_scroll_position",
+        JSON.stringify({ top: window.scrollY, left: window.scrollX }),
+      );
+    } catch {
+      // Scroll restoration is best effort when storage is unavailable.
+    }
     dispatch(addToRecentlyViewedMongo(userId, product));
     const slug =
       product.handle ||
