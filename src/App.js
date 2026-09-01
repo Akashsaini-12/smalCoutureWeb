@@ -343,22 +343,43 @@ const AppInner = () => {
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  // Every route navigation should open at the top of the page.
+  // Every route navigation should open at the top of the page, except when
+  // returning home after opening a product from the home page.
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const forceTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      if (document.scrollingElement) {
-        document.scrollingElement.scrollTop = 0;
+    let homeScrollPosition = null;
+    if (location.pathname === "/") {
+      try {
+        const storedPosition = JSON.parse(
+          sessionStorage.getItem("aka_home_scroll_position") || "null",
+        );
+        if (storedPosition && Number.isFinite(Number(storedPosition.top))) {
+          homeScrollPosition = {
+            top: Math.max(0, Number(storedPosition.top)),
+            left: Math.max(0, Number(storedPosition.left) || 0),
+          };
+          sessionStorage.removeItem("aka_home_scroll_position");
+        }
+      } catch {
+        // Ignore unavailable or malformed scroll state.
       }
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+    }
+
+    const setScrollPosition = () => {
+      const position = homeScrollPosition || { top: 0, left: 0 };
+      window.scrollTo({ top: position.top, left: position.left, behavior: "auto" });
+      if (document.scrollingElement) {
+        document.scrollingElement.scrollTop = position.top;
+      }
+      document.documentElement.scrollTop = position.top;
+      document.body.scrollTop = position.top;
     };
 
-    forceTop();
-    window.requestAnimationFrame(forceTop);
-    window.setTimeout(forceTop, 60);
+    setScrollPosition();
+    window.requestAnimationFrame(setScrollPosition);
+    window.setTimeout(setScrollPosition, homeScrollPosition ? 100 : 60);
+    window.setTimeout(setScrollPosition, homeScrollPosition ? 350 : 0);
   }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
