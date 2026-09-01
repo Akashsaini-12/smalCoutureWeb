@@ -94,7 +94,7 @@ function mapCatalogProduct(p, index) {
   };
 }
 
-const Product = ({ addToCart }) => {
+const Product = ({ addToCart, cartItems = [] }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
