@@ -150,7 +150,7 @@ const BREADCRUMB_SEP = (
   </span>
 );
 
-function ProductDetailPageContent({ handleParam, addToCart }) {
+function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -539,6 +539,7 @@ function ProductDetailPageContent({ handleParam, addToCart }) {
             product={product}
             onClose={goBack}
             onAddToCart={addToCart}
+            cartItems={cartItems}
           />
         </div>
 
@@ -555,6 +556,7 @@ function ProductDetailPageContent({ handleParam, addToCart }) {
                 <ProductGrid
                   products={suggestedCards}
                   addToCart={addToCart}
+                  cartItems={cartItems}
                   columns={isMobileView ? 2 : 4}
                   wishlistIds={wishlistIds}
                   wishlistLoading={wishlistLoading}
@@ -580,6 +582,7 @@ function ProductDetailPageContent({ handleParam, addToCart }) {
                 <ProductGrid
                   products={recCards}
                   addToCart={addToCart}
+                  cartItems={cartItems}
                   columns={isMobileView ? 2 : 4}
                   wishlistIds={wishlistIds}
                   wishlistLoading={wishlistLoading}

@@ -13,6 +13,7 @@ function ProductGrid({
   products = [],
   totalPages = 18,
   addToCart,
+  cartItems = [],
   wishlistIds,
   wishlistLoading,
   onToggleWishlist,
@@ -41,6 +42,7 @@ function ProductGrid({
             key={pid}
             product={product}
             onAddToCart={addToCart}
+            cartItems={cartItems}
             onQuickView={onQuickView}
             isWishlisted={isWishlisted}
             wishlistLoading={Boolean(wishlistLoading)}

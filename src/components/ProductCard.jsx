@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { IMAGE_SIZES } from "../data/productsData";
-import { addToCartMongo } from "../redux/actions";
-import { getUserId } from "../utils/userId";
 import { ensureHttpsUrl, productImageSrc } from "../utils/ensureHttpsUrl";
 
 const SpinnerIcon = () => (
@@ -33,11 +32,13 @@ const EyeIcon = () => (
 function ProductCard({
   product,
   onAddToCart,
+  cartItems = [],
   onQuickView,
   isWishlisted = false,
   wishlistLoading = false,
   onToggleWishlist,
 }) {
+  const navigate = useNavigate();
   const {
     productId,
     variantId,
@@ -91,6 +92,25 @@ function ProductCard({
   }
 
   const isAddToCart = atcLabel === "Add to cart";
+  const normalizeKey = (value) => String(value ?? "").trim().toLowerCase();
+  const normalizedProductId = normalizeKey(product?.productId ?? product?._id ?? product?.id ?? productId);
+  const normalizedVariantId = normalizeKey(variantId);
+  const normalizedTitle = normalizeKey(product?.title ?? product?.name ?? title);
+  const normalizedHandle = normalizeKey(product?.handle ?? product?.slug ?? handle);
+  const isAlreadyInCart = Array.isArray(cartItems)
+    ? cartItems.some((item) => {
+        const itemProductId = normalizeKey(item?.productId ?? item?._id ?? item?.id);
+        const itemVariantId = normalizeKey(item?.variantId ?? item?.variant_id);
+        const itemTitle = normalizeKey(item?.title ?? item?.name ?? item?.productName);
+        const itemHandle = normalizeKey(item?.slug ?? item?.handle ?? item?.productSlug);
+
+        if (normalizedVariantId && itemVariantId && normalizedVariantId === itemVariantId) return true;
+        if (normalizedProductId && itemProductId && normalizedProductId === itemProductId) return true;
+        if (normalizedTitle && itemTitle && normalizedTitle === itemTitle) return true;
+        if (normalizedHandle && itemHandle && normalizedHandle === itemHandle) return true;
+        return false;
+      })
+    : false;
   const cardClass = `m-product-card m-product-card--style-1 m-product-card--show-second-img m-scroll-trigger animate--fade-in-up${onSale ? " m-product-card--onsale" : ""}`;
   const [isMobileView, setIsMobileView] = useState(false);
 
@@ -110,42 +130,15 @@ function ProductCard({
       e.stopPropagation();
     }
 
-    // Persist to Mongo cart (same idea as QuickViewModal), then update local drawer state.
-    // If user is not logged-in, the parent `addToCart` will redirect to /login.
-    (async () => {
-      try {
-        const userId = getUserId();
-        const pid = String(product?.productId ?? product?._id ?? product?.id ?? "").trim();
-        const vid = String(product?.variantId ?? product?.variant_id ?? "").trim();
-        if (!userId || !pid || !vid) {
-          // Fall back to local handler (may redirect to login).
-          if (onAddToCart) onAddToCart(product, 1);
-          return;
-        }
+    if (isAlreadyInCart) {
+      navigate("/cart");
+      return;
+    }
 
-        const numericPrice = Number(
-          String(product?.priceSale || product?.priceRegular || product?.price || "")
-            .replace(/[^\d.]/g, ""),
-        );
-        const safeName = String(product?.title || product?.name || "").trim() || "Product";
-        await addToCartMongo({
-          userId,
-          productId: pid,
-          variantId: vid,
-          name: safeName,
-          slug: product?.handle || product?.slug || "",
-          price: Number.isFinite(numericPrice) ? numericPrice : 0,
-          color: product?.color ?? null,
-          size: product?.size ?? null,
-          quantity: 1,
-          image: productImageSrc(product),
-        });
-      } catch {
-        // ignore: local drawer still updates via onAddToCart below
-      } finally {
-        if (onAddToCart) onAddToCart(product, 1);
-      }
-    })();
+    if (onAddToCart) {
+      onAddToCart(product, 1, { openDrawer: true });
+      return;
+    }
   };
 
   const handleOpenQuickViewFromCard = (e) => {
@@ -170,13 +163,20 @@ function ProductCard({
     isAddToCart ? (
       <div className={`m-product-form ${extraClass}`.trim()} data-product-id={productId}>
         <div className="product-card-form" data-product-id={productId}>
-          <button type="button" className="m-tooltip m-spinner-button m-button--icon m-add-to-cart m-tooltip--top m-product-card__atc-button m-tooltip--style-1"  name="add" aria-label="Add to cart" onClick={handleAddToCart}>
+          <button
+            type="button"
+            className="m-tooltip m-spinner-button m-button--icon m-add-to-cart m-tooltip--top m-product-card__atc-button m-tooltip--style-1"
+            name="add"
+            aria-label={isAlreadyInCart ? "Go to cart" : "Add to cart"}
+            onClick={handleAddToCart}
+          >
             <span className="m-spinner-ico"><SpinnerIcon /></span>
             <span><CartIcon /></span>
-            <span className="m-tooltip__content " data-atc-text data-revert-text>Add to cart</span>
+            <span className="m-tooltip__content " data-atc-text data-revert-text>
+              {isAlreadyInCart ? "Go to cart" : "Add to cart"}
+            </span>
           </button>
         </div>
-        
       </div>
     ) : (
       <button
@@ -185,8 +185,14 @@ function ProductCard({
         data-product-handle={handle}
         data-product-url={productUrl}
         data-product-id={productId}
-        aria-label={atcLabel}
+        aria-label={isAlreadyInCart ? "Go to cart" : atcLabel}
         onClick={(e) => {
+          if (isAlreadyInCart) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate("/cart");
+            return;
+          }
           if (!onQuickView) return;
           e.preventDefault();
           e.stopPropagation();
@@ -195,7 +201,9 @@ function ProductCard({
       >
         <span className="m-spinner-icon"><SpinnerIcon /></span>
         <span className="m-tooltip-icon quick-add" data-product-handle={handle}><CartIcon /></span>
-        <span className="m-tooltip__content " data-atc-text data-revert-text>{atcLabel}</span>
+        <span className="m-tooltip__content " data-atc-text data-revert-text>
+          {isAlreadyInCart ? "Go to cart" : atcLabel}
+        </span>
       </button>
     );
 

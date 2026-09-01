@@ -122,7 +122,7 @@ const BreadcrumbArrow = () => (
 );
 
 const containerStyle = { maxWidth: 1200, margin: "0 auto", padding: "0 16px" };
-const gridCols = "minmax(0, 2fr) minmax(80px, 1fr) minmax(120px, 1fr) minmax(80px, 1fr)";
+const gridCols = "minmax(0, 2.4fr) minmax(80px, 0.8fr) minmax(120px, 0.9fr) minmax(80px, 0.8fr)";
 const cartItemEntranceStyle = `
   @keyframes cartItemFadeIn {
     0% {
@@ -226,7 +226,7 @@ const cartItemEntranceStyle = `
  }
 `;
 
-export default function Cart({ cartItems = [], removeFromCart, updateCartQuantity, addToCart }) {
+export default function Cart({ cartItems = [], removeFromCart, updateCartQuantity, addToCart, refreshCartState }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userId = getUserId();
@@ -814,6 +814,9 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
       if (recommendationKey) {
         setAddedRecommendIds((prev) => (prev.includes(recommendationKey) ? prev : [...prev, recommendationKey]));
       }
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      }
 
       toast.dismiss();
       toast.success("Added", {
@@ -859,6 +862,11 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
       const res = await fetchCartMongo(userId);
       const items = Array.isArray(res?.items) ? res.items : [];
       setApiCartItems(items);
+      try {
+        await refreshCartState?.(userId);
+      } catch {
+        // ignore; product surfaces will still refresh from the next cart fetch attempt
+      }
     } catch (e) {
       setApiError(e?.message || "Failed to remove item");
     }
@@ -888,12 +896,18 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
 
     try {
       await updateCartQtyMongo({ userId, cartItemId: String(id), quantity: qty });
+      try {
+        await refreshCartState?.(userId);
+      } catch {
+        // ignore; app cart will remain consistent via the next server refresh
+      }
     } catch (e) {
       setApiError(e?.message || "Failed to update quantity");
       try {
         const res = await fetchCartMongo(userId);
         const items = Array.isArray(res?.items) ? res.items : [];
         setApiCartItems(items);
+        await refreshCartState?.(userId);
       } catch {
         // ignore
       }
@@ -1017,14 +1031,17 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                     data-cart-item-row="true"
                     data-cart-item-key={String(item?._id || item?.variantId || item?.productId || item?.id || "")}
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: isMobile ? "1fr" : gridCols,
-                      gap: 16,
-                      alignItems: "center",
-                      padding: isRemoving ? "0 0 0" : "20px 0",
+                      display: isMobile ? "flex" : "grid",
+                      flexDirection: isMobile ? "column" : undefined,
+                      gridTemplateColumns: isMobile ? undefined : gridCols,
+                      gap: isMobile ? 12 : 16,
+                      alignItems: isMobile ? "stretch" : "center",
+                      width: "100%",
+                      minWidth: 0,
+                      padding: isRemoving ? "0 0 0" : isMobile ? "18px 0 22px" : "18px 0 20px",
                       borderBottom: isRemoving ? "0 solid transparent" : "1px solid #e5e7eb",
-                      maxHeight: isRemoving ? 0 : 180,
-                      overflow: "hidden",
+                      maxHeight: isRemoving ? 0 : undefined,
+                      overflow: isRemoving ? "hidden" : "visible",
                       margin: isRemoving ? 0 : undefined,
                       opacity: isRemoving ? 0 : 1,
                       transform: isRemoving ? "translateY(-12px) scale(0.985)" : "translateY(0) scale(1)",
@@ -1033,119 +1050,212 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                       animation: isRemoving ? "none" : "cartItemFadeIn 0.42s ease-out",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-                      <div className="cart-page-card" style={{ width: isMobile ? 72 : 80, height: isMobile ? 72 : 80, borderRadius: 8, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
-                        {item.image && <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                      </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a", marginBottom: 4 }}>
-                          {item.name || item.title}
-                        </div>
-                        {(() => {
-                          const sizeDisp = formatSizeForCustomerDisplay(item.size);
-                          if (!item.color && !sizeDisp) return null;
-                          return (
-                            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 6 }}>
-                              {item.color && `Color: ${item.color}`}
-                              {item.color && sizeDisp && " · "}
-                              {sizeDisp && `Size: ${sizeDisp}`}
+                    {isMobile ? (
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, width: "100%" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0, flex: 1 }}>
+                          <div className="cart-page-card" style={{ width: 72, height: 72, borderRadius: 8, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
+                            {item.image && <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                          </div>
+                          <div style={{ minWidth: 0, flex: 1, overflowWrap: "anywhere" }}>
+                            <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a", marginBottom: 4, wordBreak: "break-word" }}>
+                              {item.name || item.title}
                             </div>
-                          );
-                        })()}
-                        <button
-                          type="button"
-                          className="cart-page-button"
-                          onClick={() => {
-                            setRemoveConfirm(item);
-                          }}
-                          style={{
-                            marginTop: 6,
-                            background: "rgba(185, 28, 28, 0.08)",
-                            border: "1px solid rgba(185, 28, 28, 0.22)",
-                            color: "#b91c1c",
-                            cursor: "pointer",
-                            fontSize: 13,
-                            fontWeight: 700,
-                            padding: "6px 10px",
-                            borderRadius: 999,
-                            width: "fit-content",
-                            boxShadow: "0 8px 20px rgba(185, 28, 28, 0.06)",
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                    <div style={{ fontSize: 14, color: "#334155", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      {isMobile ? <span style={{ color: "#64748b", fontWeight: 700 }}>Price</span> : null}
-                      <span>{item.price}</span>
-                    </div>
-                    <div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                        {isMobile ? <span style={{ color: "#64748b", fontWeight: 700 }}>Quantity</span> : null}
-                        <div className="cart-page-qty" style={{ display: "inline-flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: 6, overflow: "hidden", boxShadow: "0 6px 18px rgba(15, 23, 42, 0.04)" }}>
-                        <button
-                          type="button"
-                          className="cart-page-button"
-                          onClick={() => handleDecrement(item)}
-                          style={{ width: 36, height: 36, border: "none", background: "#f8fafc", cursor: "pointer", fontSize: 16, transition: "all 0.22s ease" }}
-                          aria-label="Decrease"
-                        >
-                          −
-                        </button>
-                        <span style={{ minWidth: 40, textAlign: "center", fontSize: 14, fontWeight: 500 }}>{item.quantity || 1}</span>
-                        <button
-                          type="button"
-                          className="cart-page-button"
-                          onClick={() => {
-                            if (apiCartItems.length) {
-                              changeQtyApi(item, (item.quantity || 1) + 1);
-                              return;
-                            }
-                            const max = getItemMaxStock(item);
-                            const next = (item.quantity || 1) + 1;
-                            if (max != null && next > max) return;
-                            updateCartQuantity?.(item.variantId, next);
-                          }}
-                          disabled={
-                            (() => {
-                              const max = getItemMaxStock(item);
-                              return max != null && (item.quantity || 1) >= max;
-                            })()
-                          }
-                          style={{
-                            width: 36,
-                            height: 36,
-                            border: "none",
-                            background: "#f8fafc",
-                            cursor:
-                              (() => {
+                            {(() => {
+                              const sizeDisp = formatSizeForCustomerDisplay(item.size);
+                              if (!item.color && !sizeDisp) return null;
+                              return (
+                                <div style={{ fontSize: 12, color: "#64748b", marginBottom: 6 }}>
+                                  {item.color && `Color: ${item.color}`}
+                                  {item.color && sizeDisp && " · "}
+                                  {sizeDisp && `Size: ${sizeDisp}`}
+                                </div>
+                              );
+                            })()}
+                            <div style={{ fontSize: 13, color: "#334155", fontWeight: 600, marginBottom: 6 }}>{item.price}</div>
+                            <button
+                              type="button"
+                              className="cart-page-button"
+                              onClick={() => {
+                                setRemoveConfirm(item);
+                              }}
+                              style={{
+                                background: "rgba(185, 28, 28, 0.08)",
+                                border: "1px solid rgba(185, 28, 28, 0.22)",
+                                color: "#b91c1c",
+                                cursor: "pointer",
+                                fontSize: 12,
+                                fontWeight: 700,
+                                padding: "5px 10px",
+                                borderRadius: 999,
+                                width: "fit-content",
+                                boxShadow: "0 8px 20px rgba(185, 28, 28, 0.06)",
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, minWidth: 84, flexShrink: 0 }}>
+                          <div className="cart-page-qty" style={{ display: "inline-flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: 6, overflow: "hidden", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.03)" }}>
+                            <button
+                              type="button"
+                              className="cart-page-button"
+                              onClick={() => handleDecrement(item)}
+                              style={{ width: 28, height: 28, border: "none", background: "#f8fafc", cursor: "pointer", fontSize: 16, transition: "all 0.22s ease" }}
+                              aria-label="Decrease"
+                            >
+                              −
+                            </button>
+                            <span style={{ minWidth: 26, textAlign: "center", fontSize: 13, fontWeight: 600 }}>{item.quantity || 1}</span>
+                            <button
+                              type="button"
+                              className="cart-page-button"
+                              onClick={() => {
+                                if (apiCartItems.length) {
+                                  changeQtyApi(item, (item.quantity || 1) + 1);
+                                  return;
+                                }
+                                const max = getItemMaxStock(item);
+                                const next = (item.quantity || 1) + 1;
+                                if (max != null && next > max) return;
+                                updateCartQuantity?.(item.variantId, next);
+                              }}
+                              disabled={(() => {
                                 const max = getItemMaxStock(item);
                                 return max != null && (item.quantity || 1) >= max;
-                              })()
-                                ? "not-allowed"
-                                : "pointer",
-                            fontSize: 16,
-                            opacity:
-                              (() => {
-                                const max = getItemMaxStock(item);
-                                return max != null && (item.quantity || 1) >= max;
-                              })()
-                                ? 0.45
-                                : 1,
-                            transition: "all 0.22s ease",
-                          }}
-                          aria-label="Increase"
-                        >
-                          +
-                        </button>
+                              })()}
+                              style={{
+                                width: 28,
+                                height: 28,
+                                border: "none",
+                                background: "#f8fafc",
+                                cursor: (() => {
+                                  const max = getItemMaxStock(item);
+                                  return max != null && (item.quantity || 1) >= max;
+                                })() ? "not-allowed" : "pointer",
+                                fontSize: 16,
+                                opacity: (() => {
+                                  const max = getItemMaxStock(item);
+                                  return max != null && (item.quantity || 1) >= max;
+                                })() ? 0.45 : 1,
+                                transition: "all 0.22s ease",
+                              }}
+                              aria-label="Increase"
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div style={{ fontWeight: 700, fontSize: 13, color: "#0f172a", overflowWrap: "anywhere" }}>
+                            ₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div style={{ textAlign: isMobile ? "left" : "right", fontWeight: 700, fontSize: 15, color: "#0f172a", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      {isMobile ? <span style={{ color: "#64748b", fontWeight: 700 }}>Total</span> : null}
-                      <span>₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}</span>
-                    </div>
+                    ) : (
+                      <>
+                        <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0, width: "100%" }}>
+                          <div className="cart-page-card" style={{ width: 80, height: 80, borderRadius: 8, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
+                            {item.image && <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                          </div>
+                          <div style={{ minWidth: 0, width: "100%", overflowWrap: "anywhere", flex: 1 }}>
+                            <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a", marginBottom: 4, wordBreak: "break-word" }}>
+                              {item.name || item.title}
+                            </div>
+                            {(() => {
+                              const sizeDisp = formatSizeForCustomerDisplay(item.size);
+                              if (!item.color && !sizeDisp) return null;
+                              return (
+                                <div style={{ fontSize: 13, color: "#64748b", marginBottom: 6 }}>
+                                  {item.color && `Color: ${item.color}`}
+                                  {item.color && sizeDisp && " · "}
+                                  {sizeDisp && `Size: ${sizeDisp}`}
+                                </div>
+                              );
+                            })()}
+                            <button
+                              type="button"
+                              className="cart-page-button"
+                              onClick={() => {
+                                setRemoveConfirm(item);
+                              }}
+                              style={{
+                                marginTop: 6,
+                                background: "rgba(185, 28, 28, 0.08)",
+                                border: "1px solid rgba(185, 28, 28, 0.22)",
+                                color: "#b91c1c",
+                                cursor: "pointer",
+                                fontSize: 13,
+                                fontWeight: 700,
+                                padding: "6px 10px",
+                                borderRadius: 999,
+                                width: "fit-content",
+                                boxShadow: "0 8px 20px rgba(185, 28, 28, 0.06)",
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 14, color: "#334155", display: "flex", justifyContent: "space-between", alignItems: "center", minWidth: 0, width: undefined }}>
+                          <span style={{ overflowWrap: "anywhere" }}>{item.price}</span>
+                        </div>
+                        <div style={{ minWidth: 0, width: undefined }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, minWidth: 0, width: "100%" }}>
+                            <div className="cart-page-qty" style={{ display: "inline-flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: 6, overflow: "hidden", boxShadow: "0 6px 18px rgba(15, 23, 42, 0.04)" }}>
+                              <button
+                                type="button"
+                                className="cart-page-button"
+                                onClick={() => handleDecrement(item)}
+                                style={{ width: 36, height: 36, border: "none", background: "#f8fafc", cursor: "pointer", fontSize: 16, transition: "all 0.22s ease" }}
+                                aria-label="Decrease"
+                              >
+                                −
+                              </button>
+                              <span style={{ minWidth: 40, textAlign: "center", fontSize: 14, fontWeight: 500 }}>{item.quantity || 1}</span>
+                              <button
+                                type="button"
+                                className="cart-page-button"
+                                onClick={() => {
+                                  if (apiCartItems.length) {
+                                    changeQtyApi(item, (item.quantity || 1) + 1);
+                                    return;
+                                  }
+                                  const max = getItemMaxStock(item);
+                                  const next = (item.quantity || 1) + 1;
+                                  if (max != null && next > max) return;
+                                  updateCartQuantity?.(item.variantId, next);
+                                }}
+                                disabled={(() => {
+                                  const max = getItemMaxStock(item);
+                                  return max != null && (item.quantity || 1) >= max;
+                                })()}
+                                style={{
+                                  width: 36,
+                                  height: 36,
+                                  border: "none",
+                                  background: "#f8fafc",
+                                  cursor: (() => {
+                                    const max = getItemMaxStock(item);
+                                    return max != null && (item.quantity || 1) >= max;
+                                  })() ? "not-allowed" : "pointer",
+                                  fontSize: 16,
+                                  opacity: (() => {
+                                    const max = getItemMaxStock(item);
+                                    return max != null && (item.quantity || 1) >= max;
+                                  })() ? 0.45 : 1,
+                                  transition: "all 0.22s ease",
+                                }}
+                                aria-label="Increase"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "right", fontWeight: 700, fontSize: 15, color: "#0f172a", display: "flex", justifyContent: "space-between", alignItems: "center", minWidth: 0, width: undefined }}>
+                          <span style={{ overflowWrap: "anywhere" }}>₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                   );
                 })}

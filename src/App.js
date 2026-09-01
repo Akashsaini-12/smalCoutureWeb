@@ -48,6 +48,7 @@ import BrandValues from "./pages/BrandValues";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DeliveryInfo from "./pages/DeliveryInfo";
+import { addToCartMongo, fetchCartMongo } from "./redux/actions";
 
 import AdminPanel from "./components/AdminPanel";
 import AdminMixMatchListPage from "./pages/AdminMixMatchListPage";
@@ -59,6 +60,56 @@ const AppInner = () => {
   const previousRouteRef = useRef(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+
+  const getActiveUserId = () => {
+    try {
+      const userIdFromStorage = localStorage.getItem("userId");
+      if (userIdFromStorage && String(userIdFromStorage).trim()) {
+        return String(userIdFromStorage).trim();
+      }
+
+      const rawUser = localStorage.getItem("user");
+      if (!rawUser) return "";
+      const parsed = JSON.parse(rawUser);
+      if (parsed && parsed._id) {
+        return String(parsed._id).trim();
+      }
+    } catch {
+      // ignore malformed localStorage state and fall back to empty user id
+    }
+    return "";
+  };
+
+  const sortCartItemsByInsertion = (items) => {
+    if (!Array.isArray(items)) return [];
+    return [...items].sort((a, b) => {
+      const aTime = a && (a.createdAt || a.addedAt || a.updatedAt)
+        ? new Date(a.createdAt || a.addedAt || a.updatedAt).getTime()
+        : 0;
+      const bTime = b && (b.createdAt || b.addedAt || b.updatedAt)
+        ? new Date(b.createdAt || b.addedAt || b.updatedAt).getTime()
+        : 0;
+
+      if (aTime !== bTime) return aTime - bTime;
+      return 0;
+    });
+  };
+
+  const syncCartFromServer = async (userIdOverride) => {
+    const activeUserId = String(userIdOverride || getActiveUserId() || "").trim();
+    if (!activeUserId) {
+      setCartItems([]);
+      return;
+    }
+
+    try {
+      const res = await fetchCartMongo(activeUserId);
+      const serverItems = Array.isArray(res?.items) ? res.items : [];
+      setCartItems(sortCartItemsByInsertion(serverItems));
+    } catch {
+      // Keep existing local cart if server sync fails so the customer is not blocked.
+    }
+  };
 
   const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState(null);
@@ -81,9 +132,15 @@ const AppInner = () => {
 
   useEffect(() => {
     clearStaleStoredPurchaseMetadata();
+    const activeUserId = getActiveUserId();
+    if (activeUserId) {
+      syncCartFromServer(activeUserId);
+    } else {
+      setCartItems([]);
+    }
   }, []);
 
-  const addToCart = (product, quantity = 1, options = {}) => {
+  const addToCart = async (product, quantity = 1, options = {}) => {
     if (!product) return;
 
     const { openDrawer = location.pathname !== "/cart" } = options;
@@ -119,11 +176,49 @@ const AppInner = () => {
       return;
     }
 
+    const variantId = product.variantId ?? product.variant_id;
+    const activeUserId = getActiveUserId();
+
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+
+    if (variantId != null && activeUserId) {
+      try {
+        const priceValue = Number(
+          String(product.priceSale || product.priceRegular || product.price || "0").replace(/[^\d.]/g, "") || "0",
+        );
+
+        await addToCartMongo({
+          userId: activeUserId,
+          productId: product.productId ?? product.id,
+          variantId,
+          name: product.title || product.name || "Product",
+          slug: product.slug || product.handle || "",
+          price: Number.isFinite(priceValue) ? priceValue : 0,
+          color: product.color || null,
+          size: product.size || null,
+          quantity: Math.max(1, Number(quantity) || 1),
+          image:
+            typeof product.mainImage === "string"
+              ? product.mainImage
+              : product.mainImage?.src || "",
+        });
+
+        await syncCartFromServer(activeUserId);
+        if (openDrawer) {
+          setCartDrawerOpen(true);
+        }
+        trackAddToCart(product, quantity);
+        return;
+      } catch {
+        // Fall back to the existing in-memory cart if the server call fails.
+      }
+    }
+
     if (openDrawer) {
       setCartDrawerOpen(true);
     }
-    const variantId = product.variantId ?? product.variant_id;
-    if (variantId == null) return;
 
     const deriveMaxStockFromProduct = (p) => {
       if (!p) return null;
@@ -200,13 +295,35 @@ const AppInner = () => {
     trackAddToCart(product, quantity);
   };
 
-  const removeFromCart = (variantId) => {
-    setCartItems((prev) => prev.filter((i) => i.variantId !== variantId));
+  const removeFromCart = (variantId, options = {}) => {
+    const { localOnly = false } = options;
+    const nextCart = cartItems.filter((i) => i.variantId !== variantId);
+    if (localOnly || !getActiveUserId()) {
+      setCartItems(nextCart);
+      return;
+    }
+    setCartItems(nextCart);
   };
 
-  const updateCartQuantity = (variantId, quantity) => {
+  const updateCartQuantity = (variantId, quantity, options = {}) => {
+    const { localOnly = false } = options;
     if (quantity < 1) {
-      removeFromCart(variantId);
+      removeFromCart(variantId, { localOnly });
+      return;
+    }
+    if (localOnly || !getActiveUserId()) {
+      setCartItems((prev) =>
+        prev.map((i) => {
+          if (i.variantId !== variantId) return i;
+          const maxStock =
+            i.maxStock != null && Number.isFinite(Number(i.maxStock))
+              ? Math.max(0, Number(i.maxStock))
+              : null;
+          const next = Math.max(1, Number(quantity) || 1);
+          const clamped = maxStock != null ? Math.min(next, maxStock) : next;
+          return { ...i, quantity: clamped };
+        }),
+      );
       return;
     }
     setCartItems((prev) =>
@@ -226,62 +343,22 @@ const AppInner = () => {
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  // Product pages should open at the top, but browser back/forward should restore
-  // the exact previous scroll position without drifting upward.
+  // Every route navigation should open at the top of the page.
   useEffect(() => {
-    const currentRoute = `${location.pathname}${location.search || ""}`;
-    const previousRoute = previousRouteRef.current;
+    if (typeof window === "undefined") return;
 
-    const getCurrentScroll = () =>
-      window.scrollY ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      0;
-
-    const saveRouteScroll = (route, value) => {
-      try {
-        sessionStorage.setItem(route, String(Math.max(0, Number(value) || 0)));
-      } catch {
-        // Ignore storage access failures.
-      }
-    };
-
-    // Save the latest exact scroll value for the route being left.
-    if (previousRoute && previousRoute !== currentRoute) {
-      saveRouteScroll(previousRoute, getCurrentScroll());
-    }
-
-    const scrollKey = currentRoute;
-    const savedScroll = (() => {
-      try {
-        const raw = sessionStorage.getItem(scrollKey);
-        return raw == null ? null : Number(raw);
-      } catch {
-        return null;
-      }
-    })();
-
-    const shouldForceTop = currentRoute.startsWith("/products/");
-    const targetScroll = Number.isFinite(savedScroll) && !shouldForceTop ? savedScroll : 0;
-
-    const restoreExactly = (attempt = 0) => {
-      const current = getCurrentScroll();
-      window.scrollTo({ top: targetScroll, left: 0, behavior: "auto" });
-
+    const forceTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       if (document.scrollingElement) {
-        document.scrollingElement.scrollTop = targetScroll;
+        document.scrollingElement.scrollTop = 0;
       }
-      document.documentElement.scrollTop = targetScroll;
-      document.body.scrollTop = targetScroll;
-
-      const remainingDifference = Math.abs(current - targetScroll);
-      if (attempt < 12 && remainingDifference > 2) {
-        window.requestAnimationFrame(() => restoreExactly(attempt + 1));
-      }
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
     };
 
-    restoreExactly();
-    previousRouteRef.current = currentRoute;
+    forceTop();
+    window.requestAnimationFrame(forceTop);
+    window.setTimeout(forceTop, 60);
   }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
@@ -845,10 +922,10 @@ const AppInner = () => {
               <>
                 <Slider />
                 <ShopCatogries />
-                <Product addToCart={addToCart} />
+                <Product addToCart={addToCart} cartItems={cartItems} />
                 {/* <NewCollection /> */}
                 <MixMatch addToCart={addToCart} />
-                <HomeSuggestions addToCart={addToCart} />
+                <HomeSuggestions addToCart={addToCart} cartItems={cartItems} />
                 {/* <ScrollingPromotion /> */}
                 {/* <HotWeek /> */}
                 {/* <FeaturedPress /> */}
@@ -869,6 +946,7 @@ const AppInner = () => {
                   removeFromCart={removeFromCart}
                   updateCartQuantity={updateCartQuantity}
                   addToCart={addToCart}
+                  refreshCartState={syncCartFromServer}
                 />
               </RequireAuth>
             }
@@ -936,14 +1014,14 @@ const AppInner = () => {
             element={
               <>
                 <CollectionHeader />
-                <AllProducts addToCart={addToCart} />
+                <AllProducts addToCart={addToCart} cartItems={cartItems} />
               </>
             }
           />
           <Route
             path="/products/:handle"
             element={
-              <ProductDetailPage addToCart={addToCart} />
+              <ProductDetailPage addToCart={addToCart} cartItems={cartItems} />
             }
           />
         </Routes>
@@ -965,19 +1043,36 @@ const AppInner = () => {
 
         .Toastify__toast {
           width: fit-content !important;
-          max-width: 220px !important;
+          max-width: 320px !important;
           min-height: 42px !important;
           background: transparent !important;
           box-shadow: none !important;
           border-radius: 999px !important;
           padding: 0 !important;
           margin: 0 !important;
-          overflow: hidden !important;
+          overflow: visible !important;
         }
 
         .Toastify__toast-theme--dark,
         .Toastify__toast-theme--dark.Toastify__toast--default,
-        .Toastify__toast-theme--dark.Toastify__toast--success {
+        .Toastify__toast-theme--dark.Toastify__toast--success,
+        .Toastify__toast-theme--dark.Toastify__toast--error,
+        .Toastify__toast-theme--dark.Toastify__toast--warning,
+        .Toastify__toast-theme--dark.Toastify__toast--info,
+        .Toastify__toast-theme--light,
+        .Toastify__toast-theme--light.Toastify__toast--default,
+        .Toastify__toast-theme--light.Toastify__toast--success,
+        .Toastify__toast-theme--light.Toastify__toast--error,
+        .Toastify__toast-theme--light.Toastify__toast--warning,
+        .Toastify__toast-theme--light.Toastify__toast--info,
+        .Toastify__toast-theme--colored,
+        .Toastify__toast-theme--colored.Toastify__toast--default,
+        .Toastify__toast-theme--colored.Toastify__toast--success,
+        .Toastify__toast-theme--colored.Toastify__toast--error,
+        .Toastify__toast-theme--colored.Toastify__toast--warning,
+        .Toastify__toast-theme--colored.Toastify__toast--info {
+          display: flex !important;
+          align-items: center !important;
           background: linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(30, 41, 59, 0.96)) !important;
           color: #ffffff !important;
           border-radius: 999px !important;
@@ -985,6 +1080,8 @@ const AppInner = () => {
           padding: 7px 12px !important;
           min-height: 32px !important;
           max-height: 32px !important;
+          white-space: nowrap !important;
+          line-height: 1.2 !important;
         }
 
         .Toastify__close-button {
@@ -992,6 +1089,9 @@ const AppInner = () => {
         }
 
         .Toastify__toast-body {
+          display: flex !important;
+          align-items: center !important;
+          gap: 6px !important;
           padding: 0 !important;
           margin: 0 !important;
           color: #ffffff !important;
@@ -999,6 +1099,15 @@ const AppInner = () => {
           font-weight: 600 !important;
           letter-spacing: 0.01em !important;
           line-height: 1.1 !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        }
+
+        .Toastify__toast-body > div {
+          display: inline-flex !important;
+          align-items: center !important;
+          white-space: nowrap !important;
         }
 
         .Toastify__toast--enter {

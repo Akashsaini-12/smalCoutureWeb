@@ -162,8 +162,23 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
   // Recommendations should open product page (no quick view in drawer)
 
   // Once we attempt loading cart from API, prefer API cart even if it's empty.
+  const sortCartItemsByInsertion = (items) => {
+    if (!Array.isArray(items)) return [];
+    return [...items].sort((a, b) => {
+      const aTime = a && (a.createdAt || a.addedAt || a.updatedAt)
+        ? new Date(a.createdAt || a.addedAt || a.updatedAt).getTime()
+        : 0;
+      const bTime = b && (b.createdAt || b.addedAt || b.updatedAt)
+        ? new Date(b.createdAt || b.addedAt || b.updatedAt).getTime()
+        : 0;
+
+      if (aTime !== bTime) return aTime - bTime;
+      return 0;
+    });
+  };
+
   const effectiveCartItems = useMemo(
-    () => (apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems)),
+    () => sortCartItemsByInsertion(apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems)),
     [apiMode, apiCartItems, cartItems],
   );
 
@@ -232,7 +247,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
             );
             const refreshed = await fetchCartMongo(userId);
             const refreshedItems = Array.isArray(refreshed?.items) ? refreshed.items : [];
-            setApiCartItems(refreshedItems);
+            setApiCartItems(sortCartItemsByInsertion(refreshedItems));
           }
           setApiError("Some items are out of stock / quantity too high. Cart updated—please review.");
           return;
@@ -443,8 +458,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       .then((res) => {
         if (!mounted) return;
         const items = Array.isArray(res?.items) ? res.items : [];
-        // Use direct API response (no mapping)
-        setApiCartItems(items);
+        setApiCartItems(sortCartItemsByInsertion(items));
       })
       .catch((e) => {
         if (!mounted) return;
@@ -533,7 +547,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         try {
           const res = await fetchCartMongo(userId);
           const items = Array.isArray(res?.items) ? res.items : [];
-          setApiCartItems(items);
+          setApiCartItems(sortCartItemsByInsertion(items));
         } catch {
           // ignore
         }
@@ -607,7 +621,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       setApiError("");
       const res = await fetchCartMongo(userId);
       const items = Array.isArray(res?.items) ? res.items : [];
-      setApiCartItems(items);
+      setApiCartItems(sortCartItemsByInsertion(items));
       setApiLoading(false);
     } catch (e) {
       setApiError(e?.message || "Failed to remove item");
@@ -756,7 +770,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         },
       });
       const res = await fetchCartMongo(activeUserId);
-      setApiCartItems(Array.isArray(res?.items) ? res.items : []);
+      setApiCartItems(sortCartItemsByInsertion(Array.isArray(res?.items) ? res.items : []));
       setApiMode(true);
       // auto-scroll disabled on cart drawer per user request
     } catch (e) {
@@ -811,8 +825,10 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         <div
           style={{
             ...styles.body,
-            overflow: "hidden",
-            maxHeight: "1400px",
+            overflowY: "auto",
+            overflowX: "hidden",
+            WebkitOverflowScrolling: "touch",
+            maxHeight: "none",
             transition: "max-height 0.8s ease, opacity 0.8s ease, transform 0.8s ease",
             willChange: "max-height, opacity, transform",
           }}
@@ -830,6 +846,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
               )}
               {effectiveCartItems.map((item) => {
                 const isRemoving = removingItemIds.includes(item?._id || item?.variantId || item?.productId || item?.id);
+                const itemSizeDisplay = formatSizeForCustomerDisplay(item.size);
+                const hasMeta = Boolean(item.color || itemSizeDisplay);
                 return (
                 <div
                   key={item._id || item.variantId}
@@ -842,34 +860,47 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                     transform: isRemoving ? "translateY(-12px) scale(0.985)" : "translateY(0) scale(1)",
                     transformOrigin: "center",
                     maxHeight: isRemoving ? 0 : 220,
-                  overflow: "hidden",
-                  paddingTop: isRemoving ? 0 : undefined,
-                  paddingBottom: isRemoving ? 0 : undefined,
-                  borderBottom: isRemoving ? "none" : undefined,
-                  transition: "max-height 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, transform 0.42s ease, padding 0.42s ease",
-                }}>
+                    overflow: "hidden",
+                    paddingTop: isRemoving ? 0 : undefined,
+                    paddingBottom: isRemoving ? 0 : undefined,
+                    borderBottom: isRemoving ? "none" : undefined,
+                    transition: "max-height 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, transform 0.42s ease, padding 0.42s ease",
+                  }}
+                >
                   <div style={styles.cartItemImage}>
                     {item.image && (
                       <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     )}
                   </div>
+
                   <div style={styles.cartItemInfo}>
-                    <div style={styles.cartItemTitle}>{item.name || item.title}</div>
-                    {(() => {
-                      const sizeDisp = formatSizeForCustomerDisplay(item.size);
-                      if (!item.color && !sizeDisp) return null;
-                      return (
-                        <div style={styles.cartItemMeta}>
-                          {item.color && `Color: ${item.color}`}
-                          {item.color && sizeDisp && " · "}
-                          {sizeDisp && `Size: ${sizeDisp}`}
-                        </div>
-                      );
-                    })()}
-                    <div style={styles.cartItemPrice}>
-                      ₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}
+                    <div style={styles.cartItemTopRow}>
+                      <div style={styles.cartItemNameWrap}>
+                        <div style={styles.cartItemTitle}>{item.name || item.title}</div>
+                        {(() => {
+                          const sizeDisp = formatSizeForCustomerDisplay(item.size);
+                          if (!item.color && !sizeDisp) return null;
+                          return (
+                            <div style={styles.cartItemMeta}>
+                              {item.color && `Color: ${item.color}`}
+                              {item.color && sizeDisp && " · "}
+                              {sizeDisp && `Size: ${sizeDisp}`}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      <div style={styles.cartItemTotal}>
+                        ₹{(parsePrice(item.price) * (item.quantity || 1)).toLocaleString('en-IN', { maximumFractionDigits: 0, useGrouping: false })}
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 4 }}>
+
+                    <div
+                      style={{
+                        ...styles.cartItemControlRow,
+                        marginTop: hasMeta ? -14 : 0,
+                        alignItems: "flex-start",
+                      }}
+                    >
                       <div style={styles.qtyRow}>
                         <button
                           type="button"
@@ -921,9 +952,6 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                         Remove
                       </button>
                     </div>
-                  </div>
-                  <div style={styles.cartItemTotal}>
-                    ₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}
                   </div>
                 </div>
                 );
@@ -1301,14 +1329,16 @@ const styles = {
   },
   cartItem: {
     display: "flex",
-    gap: 14,
-    padding: "16px 0",
+    alignItems: "flex-start",
+    gap: 10,
+    padding: "12px 0 14px",
+    marginBottom: 8,
     borderBottom: "1px solid #e5e7eb",
   },
   cartItemImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+    width: 74,
+    height: 74,
+    borderRadius: 10,
     overflow: "hidden",
     background: "#f1f5f9",
     flexShrink: 0,
@@ -1316,70 +1346,87 @@ const styles = {
   cartItemInfo: {
     flex: 1,
     minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+  cartItemTopRow: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  cartItemNameWrap: {
+    flex: 1,
+    minWidth: 0,
   },
   cartItemTitle: {
     fontWeight: 600,
     fontSize: "15px",
     color: "#0f172a",
-    marginBottom: 4,
-    lineHeight: 1.3,
+    lineHeight: 1.35,
+    marginBottom: 2,
   },
   cartItemMeta: {
-    fontSize: "13px",
+    fontSize: "12px",
     color: "#64748b",
-    marginBottom: 6,
+    lineHeight: 1.4,
   },
-  cartItemPrice: {
-    fontSize: "14px",
-    color: "#334155",
-    fontWeight: 500,
-    marginBottom: 8,
+  cartItemControlRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 8,
+    flexWrap: "wrap",
   },
   qtyRow: {
     display: "flex",
     alignItems: "center",
     gap: 0,
     width: "fit-content",
-    border: "1px solid #cbd5e1",
-    borderRadius: 6,
+    border: "1px solid #d7dfe8",
+    borderRadius: 7,
     overflow: "hidden",
+    background: "#f8fafc",
   },
   qtyBtn: {
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
     border: "none",
-    background: "#f8fafc",
+    background: "transparent",
     cursor: "pointer",
-    fontSize: "16px",
+    fontSize: "18px",
     color: "#475569",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   qtyNum: {
-    minWidth: 36,
+    minWidth: 34,
     textAlign: "center",
     fontSize: "14px",
-    fontWeight: 500,
+    fontWeight: 600,
     color: "#0f172a",
+    background: "rgba(255,255,255,0.5)",
   },
   removeBtn: {
-    marginLeft: 12,
     background: "rgba(185, 28, 28, 0.08)",
-    border: "1px solid rgba(185, 28, 28, 0.22)",
+    border: "1px solid rgba(185, 28, 28, 0.2)",
     color: "#b91c1c",
     cursor: "pointer",
-    fontSize: "13px",
+    fontSize: "12px",
     fontWeight: 700,
-    textDecoration: "none",
-    padding: "6px 10px",
+    padding: "6px 12px",
     borderRadius: 999,
+    lineHeight: 1.2,
+    minHeight: 30,
   },
   cartItemTotal: {
-    fontWeight: 700,
+    fontWeight: 500,
     fontSize: "15px",
     color: "#0f172a",
-    alignSelf: "flex-start",
+    whiteSpace: "nowrap",
+    paddingTop: 2,
   },
   sectionTitle: {
     margin: "20px 0 4px",
