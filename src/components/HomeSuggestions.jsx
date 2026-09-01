@@ -88,7 +88,7 @@ const toPriceNumber = (v) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-export default function HomeSuggestions({ addToCart }) {
+export default function HomeSuggestions({ addToCart, cartItems = [] }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = getUserId();
@@ -215,6 +215,7 @@ export default function HomeSuggestions({ addToCart }) {
         <ProductGrid
           products={cards}
           addToCart={addToCart}
+          cartItems={cartItems}
           columns={isMobileView ? 2 : 4}
           wishlistIds={wishlistIds}
           wishlistLoading={wishlistLoading}
