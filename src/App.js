@@ -9,7 +9,7 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderSection from "./components/HeaderSection/HeaderSection";
 import CartDrawer from "./components/CartDrawer";
@@ -83,8 +83,10 @@ const AppInner = () => {
     clearStaleStoredPurchaseMetadata();
   }, []);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, options = {}) => {
     if (!product) return;
+
+    const { openDrawer = location.pathname !== "/cart" } = options;
 
     // If user is not logged in, show login page instead of adding to cart.
     // (Cart is currently tied to Mongo `userId` so we must not create "guest" cart rows.)
@@ -117,7 +119,9 @@ const AppInner = () => {
       return;
     }
 
-    setCartDrawerOpen(true);
+    if (openDrawer) {
+      setCartDrawerOpen(true);
+    }
     const variantId = product.variantId ?? product.variant_id;
     if (variantId == null) return;
 
@@ -944,7 +948,104 @@ const AppInner = () => {
           />
         </Routes>
       </div>
-      <ToastContainer position="top-right" autoClose={2500} />
+      <style>{`
+        .Toastify__toast-container {
+          width: auto !important;
+          max-width: 200px !important;
+          pointer-events: none !important;
+          top: 74px !important;
+          right: 16px !important;
+          left: auto !important;
+          z-index: 9999 !important;
+        }
+
+        .Toastify__toast-container > * {
+          margin-bottom: 0 !important;
+        }
+
+        .Toastify__toast {
+          width: fit-content !important;
+          max-width: 220px !important;
+          min-height: 42px !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          border-radius: 999px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: hidden !important;
+        }
+
+        .Toastify__toast-theme--dark,
+        .Toastify__toast-theme--dark.Toastify__toast--default,
+        .Toastify__toast-theme--dark.Toastify__toast--success {
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.97), rgba(30, 41, 59, 0.96)) !important;
+          color: #ffffff !important;
+          border-radius: 999px !important;
+          box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18) !important;
+          padding: 7px 12px !important;
+          min-height: 32px !important;
+          max-height: 32px !important;
+        }
+
+        .Toastify__close-button {
+          display: none !important;
+        }
+
+        .Toastify__toast-body {
+          padding: 0 !important;
+          margin: 0 !important;
+          color: #ffffff !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.01em !important;
+          line-height: 1.1 !important;
+        }
+
+        .Toastify__toast--enter {
+          animation: cart-toast-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+        }
+
+        .Toastify__toast--exit {
+          animation: cart-toast-exit 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+        }
+
+        @keyframes cart-toast-enter {
+          0% {
+            opacity: 0;
+           transform: translate3d(0, -14px, 0) scale(0.96);
+          }
+          100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+        }
+
+        @keyframes cart-toast-exit {
+          0% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+          100% {
+            opacity: 0;
+           transform: translate3d(0, -14px, 0) scale(0.96);
+          }
+        }
+      `}</style>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        closeOnClick={false}
+        pauseOnHover={false}
+        draggable={false}
+        theme="dark"
+        transition={Slide}
+        newestOnTop
+        closeButton={false}
+        limit={1}
+        toastClassName="cart-toast"
+        style={{ top: 74, right: 16 }}
+      />
       {!isAdminRoute && <Footor />}
       </div>
     </>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { toast, Slide } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 // QuickViewModal removed for Cart: go to product page instead
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ import {
   addToWishlistMongo,
   removeWishlistMongo,
   addToRecentlyViewedMongo,
+  addToCartMongo,
 } from "../redux/actions";
 import productsData from "../data/productsData";
 import { getUserId } from "../utils/userId";
@@ -35,6 +37,39 @@ function parsePrice(str) {
   if (!str || typeof str !== "string") return 0;
   const num = parseFloat(str.replace(/[^0-9.]/g, ""));
   return isNaN(num) ? 0 : num;
+}
+
+function getProductImageUrl(product) {
+  if (!product) return "";
+  const direct =
+    product?.mainImage?.src ||
+    product?.mainImage ||
+    product?.imageSrc ||
+    product?.image ||
+    product?.imageUrl ||
+    "";
+  if (typeof direct === "string" && direct.trim()) return direct;
+  if (Array.isArray(product?.images) && product.images.length) {
+    const first = product.images[0];
+    if (typeof first === "string" && first.trim()) return first;
+    if (first && typeof first === "object" && typeof first.src === "string" && first.src.trim()) return first.src;
+  }
+  const firstVariant = Array.isArray(product?.variants) && product.variants[0] ? product.variants[0] : null;
+  const variantImages = Array.isArray(firstVariant?.images) ? firstVariant.images : [];
+  const variantImage = variantImages.find((img) => typeof img === "string" && img.trim()) ||
+    (typeof firstVariant?.image === "string" ? firstVariant.image : "") ||
+    (firstVariant?.image && typeof firstVariant.image === "object" && typeof firstVariant.image.src === "string" ? firstVariant.image.src : "");
+  return typeof variantImage === "string" ? variantImage : "";
+}
+
+function sortCartItems(items) {
+  if (!Array.isArray(items)) return [];
+  return [...items].sort((a, b) => {
+    const aTime = a && (a.createdAt || a.addedAt) ? new Date(a.createdAt || a.addedAt).getTime() : 0;
+    const bTime = b && (b.createdAt || b.addedAt) ? new Date(b.createdAt || b.addedAt).getTime() : 0;
+    if (aTime !== bTime) return aTime - bTime;
+    return 0;
+  });
 }
 
 const NoteIcon = () => (
@@ -88,6 +123,108 @@ const BreadcrumbArrow = () => (
 
 const containerStyle = { maxWidth: 1200, margin: "0 auto", padding: "0 16px" };
 const gridCols = "minmax(0, 2fr) minmax(80px, 1fr) minmax(120px, 1fr) minmax(80px, 1fr)";
+const cartItemEntranceStyle = `
+  @keyframes cartItemFadeIn {
+    0% {
+      opacity: 0;
+     transform: translateY(18px) scale(0.985);
+    }
+   55% {
+     opacity: 0.85;
+   }
+   100% {
+     opacity: 1;
+     transform: translateY(0) scale(1);
+   }
+ }
+
+ @keyframes cartSectionShift {
+   0% {
+     transform: translateY(14px);
+     opacity: 0.96;
+   }
+   100% {
+     transform: translateY(0);
+     opacity: 1;
+   }
+ }
+
+ @keyframes recommendationsSlideDown {
+   0% {
+     opacity: 0.55;
+     transform: translateY(18px);
+   }
+   100% {
+     opacity: 1;
+     transform: translateY(0);
+   }
+ }
+
+ .cart-page-surface {
+   scroll-behavior: smooth;
+   -webkit-tap-highlight-color: transparent;
+ }
+
+ .cart-page-surface * {
+   box-sizing: border-box;
+ }
+
+ .cart-page-button,
+ .cart-page-link,
+ .cart-page-qty,
+ .cart-page-card,
+ .cart-page-section {
+   transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+     box-shadow 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+     opacity 0.34s ease,
+     background-color 0.34s ease,
+     border-color 0.34s ease,
+     filter 0.34s ease;
+   will-change: transform, opacity, box-shadow, filter;
+ }
+
+ .cart-page-button:hover,
+ .cart-page-link:hover,
+ .cart-page-card:hover {
+   transform: translateY(-1px) scale(1.005);
+   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+ }
+
+ .cart-page-button:active,
+ .cart-page-link:active {
+   transform: translateY(0) scale(0.985);
+ }
+
+ .cart-page-card {
+   backface-visibility: hidden;
+   transform-origin: center center;
+ }
+
+ .cart-page-qty:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+ }
+
+ .cart-page-card img,
+ .cart-page-button,
+ .cart-page-qty {
+   transform-origin: center;
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+   .cart-page-surface,
+   .cart-page-surface *,
+   .cart-page-button,
+   .cart-page-link,
+   .cart-page-card,
+   .cart-page-section,
+   .cart-page-qty {
+     transition: none !important;
+     animation: none !important;
+     scroll-behavior: auto !important;
+   }
+ }
+`;
 
 export default function Cart({ cartItems = [], removeFromCart, updateCartQuantity, addToCart }) {
   const navigate = useNavigate();
@@ -129,11 +266,14 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   const [apiMode, setApiMode] = useState(false);
   const [recommendItems, setRecommendItems] = useState([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
+  const [addedRecommendIds, setAddedRecommendIds] = useState([]);
+  const [removingItemIds, setRemovingItemIds] = useState([]);
   // Recommendations should open product page (no quick view in cart)
   const [countdown, setCountdown] = useState(4 * 60 + 4);
   const [recommendPage, setRecommendPage] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [removeConfirm, setRemoveConfirm] = useState(null);
+  const recommendationSectionRef = React.useRef(null);
 
   const wishlistIds = useMemo(() => {
     const set = new Set();
@@ -147,14 +287,11 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   // Map catalog product doc → ProductCard shape for ProductGrid (Add-to-cart enabled)
   const mapCatalogToCard = (p, index = 0) => {
     const firstVariant = Array.isArray(p?.variants) && p.variants[0] ? p.variants[0] : null;
-    const firstImage =
-      firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0]
-        ? firstVariant.images[0]
-        : p?.image || "";
+    const firstImage = getProductImageUrl(p) || (firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0] ? firstVariant.images[0] : "");
     const secondImage =
-      firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[1]
+      (firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[1]
         ? firstVariant.images[1]
-        : firstImage;
+        : firstImage) || firstImage;
 
     const priceNumber = Number(p?.price || 0);
     const discountNumber = p?.discountPrice != null ? Number(p.discountPrice) : null;
@@ -306,7 +443,11 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   const products = useMemo(() => (Array.isArray(productsData) ? productsData : []), []);
 
   // Once we attempt loading cart from API, prefer API cart even if it's empty.
-  const effectiveCartItems = apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems);
+  // Preserve original insertion order when timestamps are unavailable and sort by oldest-first for API items.
+  const effectiveCartItems = useMemo(
+    () => sortCartItems(apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems)),
+    [apiMode, apiCartItems, cartItems],
+  );
 
   const getItemMaxStock = (item) => {
     const direct =
@@ -388,24 +529,31 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     const first = effectiveCartItems[0];
     if (!first || !first.productId) {
       setRecommendItems([]);
+      setRecommendLoading(false);
       return;
     }
+
     let mounted = true;
-    setRecommendLoading(true);
+    const hadExistingItems = recommendItems.length > 0;
+    setRecommendLoading(!hadExistingItems);
+
     fetchRecommendations(first.productId, 6)
       .then((res) => {
         if (!mounted) return;
         const items = Array.isArray(res?.items) ? res.items : [];
-        setRecommendItems(items);
+        setRecommendItems((prev) => (items.length ? items : prev));
       })
       .catch(() => {
         if (!mounted) return;
-        setRecommendItems([]);
+        if (!hadExistingItems) {
+          setRecommendItems([]);
+        }
       })
       .finally(() => {
         if (!mounted) return;
         setRecommendLoading(false);
       });
+
     return () => {
       mounted = false;
     };
@@ -433,16 +581,39 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     updateCartQuantity?.(item?.variantId, current - 1);
   };
 
+  const triggerAnimatedRemove = (item, removeAction) => {
+    const key = item?._id || item?.variantId || item?.productId || item?.id;
+    if (!key) {
+      Promise.resolve(removeAction?.()).catch(() => null);
+      return;
+    }
+
+    setRemovingItemIds((prev) => (prev.includes(key) ? prev : [...prev, key]));
+    window.setTimeout(() => {
+      const result = removeAction?.();
+      Promise.resolve(result)
+        .finally(() => {
+          setRemovingItemIds((prev) => prev.filter((id) => id !== key));
+        })
+        .catch(() => null);
+    }, 520);
+  };
+
   const confirmRemoveItem = async () => {
     const item = removeConfirm;
     setRemoveConfirm(null);
     if (!item) return;
 
     if (apiCartItems.length) {
-      await handleRemoveApi(item);
+      triggerAnimatedRemove(item, async () => {
+        await handleRemoveApi(item);
+      });
       return;
     }
-    removeFromCart?.(item?.variantId || item?._id);
+
+    triggerAnimatedRemove(item, () => {
+      removeFromCart?.(item?.variantId || item?._id);
+    });
   };
 
   const handleCheckoutClick = async () => {
@@ -505,16 +676,164 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     }
   };
 
-  const handleAddRecommendation = (product) => {
-    if (!addToCart || !product?.variantId) return;
-    const mainImage = product.mainImage?.src || product.mainImage || "";
-    addToCart(
-      {
-        ...product,
-        mainImage: typeof mainImage === "string" ? { src: mainImage } : mainImage,
-      },
-      1
+  const getRecommendationKey = (product) => {
+    const parts = [
+      String(product?._id || product?.productId || product?.id || "").trim(),
+      String(product?.variantId || product?.variant_id || product?.variant?.id || "").trim(),
+      String(product?.slug || product?.handle || product?.name || product?.title || "").trim(),
+    ];
+    return parts.filter(Boolean).join("|");
+  };
+
+  const restoreScrollAfterAction = () => {
+    if (typeof window === "undefined") return;
+    const currentY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    window.setTimeout(() => {
+      window.scrollTo({ top: currentY, left: 0, behavior: "smooth" });
+    }, 40);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: currentY, left: 0, behavior: "smooth" });
+    });
+  };
+
+  const recommendationMatchesCartItem = (cartItem, product) => {
+    const itemProduct = String(cartItem?.productId || cartItem?._id || cartItem?.id || "").trim();
+    const itemVariant = String(cartItem?.variantId || cartItem?.variant_id || "").trim();
+    const productKey = String(product?._id || product?.productId || product?.id || "").trim();
+    const variantKey = String(product?.variantId || product?.variant_id || product?.variant?.id || "").trim();
+    const productNameKey = String(product?.name || product?.title || "").trim().toLowerCase();
+    const cartNameKey = String(cartItem?.name || cartItem?.title || "").trim().toLowerCase();
+
+    return Boolean(
+      (productKey && itemProduct && productKey === itemProduct) ||
+      (variantKey && itemVariant && variantKey === itemVariant) ||
+      (productNameKey && cartNameKey && productNameKey === cartNameKey && !itemVariant && !variantKey),
     );
+  };
+
+  useEffect(() => {
+    if (!recommendItems.length) {
+      setAddedRecommendIds((prev) => prev.filter((id) => !recommendItems.some((p) => getRecommendationKey(p) === id)));
+      return;
+    }
+
+    const activeKeys = new Set(
+      recommendItems
+        .filter((product) => effectiveCartItems.some((item) => recommendationMatchesCartItem(item, product)))
+        .map((product) => getRecommendationKey(product))
+        .filter(Boolean),
+    );
+
+    setAddedRecommendIds((prev) =>
+      prev.filter((id) => {
+        const productExists = recommendItems.some((product) => getRecommendationKey(product) === id);
+        return productExists && activeKeys.has(id);
+      }),
+    );
+  }, [effectiveCartItems, recommendItems]);
+
+  const removeRecommendationFromCart = async (product) => {
+    if (!product) return;
+    const recommendationKey = getRecommendationKey(product);
+    const match = effectiveCartItems.find((item) => recommendationMatchesCartItem(item, product));
+
+    if (!match) {
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => prev.filter((id) => id !== recommendationKey));
+      }
+      return;
+    }
+
+    const cartItemId = match?._id;
+    const productId = String(match?.productId || product?._id || product?.productId || product?.id || "").trim();
+    const variantId = String(match?.variantId || product?.variantId || product?.variant_id || product?.variant?.id || "").trim();
+
+    try {
+      if (apiMode || apiCartItems.length) {
+        await removeCartMongo({
+          userId,
+          cartItemId: cartItemId ? String(cartItemId) : undefined,
+          productId: productId || undefined,
+          variantId: variantId || undefined,
+        });
+        const res = await fetchCartMongo(userId);
+        const items = sortCartItems(Array.isArray(res?.items) ? res.items : []);
+        setApiCartItems(items);
+      } else {
+        removeFromCart?.(variantId || match?._id || productId);
+      }
+
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => prev.filter((id) => id !== recommendationKey));
+      }
+    } catch (e) {
+      setApiError(e?.message || "Failed to remove item");
+    }
+  };
+
+  const handleAddRecommendation = async (product, quantity = 1) => {
+    if (!product) return;
+
+    const normalizedQty = Math.max(1, Number(quantity) || 1);
+    const activeUserId = userId || getUserId();
+    const recommendationKey = getRecommendationKey(product);
+
+    if (!activeUserId) {
+      if (typeof addToCart === "function") {
+        addToCart(product, normalizedQty, { openDrawer: false });
+      }
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => (prev.includes(recommendationKey) ? prev : [...prev, recommendationKey]));
+      }
+      return;
+    }
+
+    const productId = String(product?.productId ?? product?._id ?? product?.id ?? "").trim();
+    const variantId = String(product?.variantId ?? product?.variant_id ?? product?.variant?.id ?? "").trim();
+    const safeName = String(product?.name || product?.title || "Product").trim() || "Product";
+    const slug = product?.slug || product?.handle || "";
+    const imageValue = getProductImageUrl(product);
+
+    try {
+      await addToCartMongo({
+        userId: activeUserId,
+        productId: productId || undefined,
+        variantId: variantId || undefined,
+        name: safeName,
+        slug,
+        price: Number(
+          String(product?.priceSale || product?.priceRegular || product?.price || "0")
+            .replace(/[^\d.]/g, "") || "0",
+        ) || 0,
+        color: product?.color ?? null,
+        size: product?.size ?? null,
+        quantity: normalizedQty,
+        image: imageValue,
+      });
+
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => (prev.includes(recommendationKey) ? prev : [...prev, recommendationKey]));
+      }
+
+      toast.dismiss();
+      toast.success("Added", {
+        transition: Slide,
+        autoClose: 2000,
+        toastStyle: {
+          animationDuration: "500ms",
+          borderRadius: "12px",
+          boxShadow: "0 18px 48px rgba(15, 23, 42, 0.18)",
+        },
+      });
+
+      const res = await fetchCartMongo(activeUserId);
+      const items = sortCartItems(Array.isArray(res?.items) ? res.items : []);
+      setApiCartItems(items);
+      setApiMode(true);
+      // auto-scroll disabled on cart page per user request
+    } catch (e) {
+      setApiError(e?.message || "Failed to add item to cart");
+    }
   };
 
   const openRecommendProductPage = (p) => {
@@ -583,8 +902,12 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
+  const scrollPageStep = () => {};
+
   return (
-    <main role="main" id="MainContent" style={{ paddingBottom: 80, background: "#fff" }}>
+    <>
+      <style>{cartItemEntranceStyle}</style>
+      <main role="main" id="MainContent" className="cart-page-surface" style={{ paddingBottom: 80, background: "#fff" }}>
       {/* Page header */}
       <div style={{ padding: isMobile ? "20px 0 14px" : "28px 0 20px", textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>
         <div style={containerStyle}>
@@ -623,8 +946,17 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
         </div>
       </div>
 
-      <div style={{ ...containerStyle, paddingTop: 24 }}>
-        <form onSubmit={(e) => e.preventDefault()} style={{ width: "100%" }}>
+      <div style={{ ...containerStyle, paddingTop: 24, transition: "transform 0.7s ease, opacity 0.7s ease" }}>
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          style={{
+            width: "100%",
+            transition: "transform 0.7s ease, opacity 0.7s ease, margin-top 0.7s ease",
+            animation: "cartSectionShift 0.7s ease-out",
+            overflow: "hidden",
+            willChange: "transform, opacity",
+          }}
+        >
           {/* Cart table header */}
           {cartItems.length > 0 && (
             <div
@@ -649,7 +981,16 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
           )}
 
           {/* Cart body */}
-          <div id="MinimogCartBody" style={{ borderBottom: cartItems.length > 0 ? "1px solid #e5e7eb" : "none" }}>
+          <div
+            id="MinimogCartBody"
+            style={{
+              borderBottom: cartItems.length > 0 ? "1px solid #e5e7eb" : "none",
+              overflow: "hidden",
+              maxHeight: "1800px",
+              transition: "max-height 0.8s ease, opacity 0.8s ease, transform 0.8s ease",
+              willChange: "max-height, opacity, transform",
+            }}
+          >
             {apiLoading ? (
               <div style={{ padding: "48px 24px", textAlign: "center", color: "#64748b", fontWeight: 600 }}>
                 Loading cart…
@@ -668,20 +1009,32 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                     {apiError}
                   </div>
                 ) : null}
-                {effectiveCartItems.map((item) => (
+                {effectiveCartItems.map((item) => {
+                  const isRemoving = removingItemIds.includes(item?._id || item?.variantId || item?.productId || item?.id);
+                  return (
                   <div
                     key={item._id || item.variantId}
+                    data-cart-item-row="true"
+                    data-cart-item-key={String(item?._id || item?.variantId || item?.productId || item?.id || "")}
                     style={{
                       display: "grid",
                       gridTemplateColumns: isMobile ? "1fr" : gridCols,
                       gap: 16,
                       alignItems: "center",
-                      padding: "20px 0",
-                      borderBottom: "1px solid #e5e7eb",
+                      padding: isRemoving ? "0 0 0" : "20px 0",
+                      borderBottom: isRemoving ? "0 solid transparent" : "1px solid #e5e7eb",
+                      maxHeight: isRemoving ? 0 : 180,
+                      overflow: "hidden",
+                      margin: isRemoving ? 0 : undefined,
+                      opacity: isRemoving ? 0 : 1,
+                      transform: isRemoving ? "translateY(-12px) scale(0.985)" : "translateY(0) scale(1)",
+                      transformOrigin: "center",
+                      transition: "max-height 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, transform 0.42s ease, padding 0.42s ease, border-color 0.42s ease",
+                      animation: isRemoving ? "none" : "cartItemFadeIn 0.42s ease-out",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-                      <div style={{ width: isMobile ? 72 : 80, height: isMobile ? 72 : 80, borderRadius: 8, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
+                      <div className="cart-page-card" style={{ width: isMobile ? 72 : 80, height: isMobile ? 72 : 80, borderRadius: 8, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
                         {item.image && <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                       </div>
                       <div style={{ minWidth: 0 }}>
@@ -701,6 +1054,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                         })()}
                         <button
                           type="button"
+                          className="cart-page-button"
                           onClick={() => {
                             setRemoveConfirm(item);
                           }}
@@ -715,6 +1069,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                             padding: "6px 10px",
                             borderRadius: 999,
                             width: "fit-content",
+                            boxShadow: "0 8px 20px rgba(185, 28, 28, 0.06)",
                           }}
                         >
                           Remove
@@ -728,11 +1083,12 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                     <div>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
                         {isMobile ? <span style={{ color: "#64748b", fontWeight: 700 }}>Quantity</span> : null}
-                        <div style={{ display: "inline-flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: 6, overflow: "hidden" }}>
+                        <div className="cart-page-qty" style={{ display: "inline-flex", alignItems: "center", border: "1px solid #cbd5e1", borderRadius: 6, overflow: "hidden", boxShadow: "0 6px 18px rgba(15, 23, 42, 0.04)" }}>
                         <button
                           type="button"
+                          className="cart-page-button"
                           onClick={() => handleDecrement(item)}
-                          style={{ width: 36, height: 36, border: "none", background: "#f8fafc", cursor: "pointer", fontSize: 16 }}
+                          style={{ width: 36, height: 36, border: "none", background: "#f8fafc", cursor: "pointer", fontSize: 16, transition: "all 0.22s ease" }}
                           aria-label="Decrease"
                         >
                           −
@@ -740,6 +1096,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                         <span style={{ minWidth: 40, textAlign: "center", fontSize: 14, fontWeight: 500 }}>{item.quantity || 1}</span>
                         <button
                           type="button"
+                          className="cart-page-button"
                           onClick={() => {
                             if (apiCartItems.length) {
                               changeQtyApi(item, (item.quantity || 1) + 1);
@@ -776,6 +1133,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                               })()
                                 ? 0.45
                                 : 1,
+                            transition: "all 0.22s ease",
                           }}
                           aria-label="Increase"
                         >
@@ -789,7 +1147,8 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
                       <span>₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}</span>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -819,7 +1178,18 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
 
           {/* Customers also bought - from same category via API (same as CartDrawer) */}
           {effectiveCartItems.length > 0 && recommendItems.length > 0 && (
-            <div style={{ marginTop: 32, paddingBottom: 28, borderBottom: "1px solid #e5e7eb" }}>
+            <div
+              ref={recommendationSectionRef}
+              style={{
+                marginTop: 32,
+                paddingBottom: 28,
+                borderBottom: "1px solid #e5e7eb",
+                animation: "recommendationsSlideDown 0.7s ease-out",
+                transition: "transform 0.8s ease, opacity 0.8s ease, margin-top 0.8s ease",
+                overflow: "hidden",
+                willChange: "transform, opacity, margin-top",
+              }}
+            >
               <h4 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 600, color: "#111" }}>
                 Customers also bought
               </h4>
@@ -829,67 +1199,89 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
               </p>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 20 }}>
                 {(recommendItems || []).slice(0, 6).map((p) => {
-                  const firstVariant = Array.isArray(p.variants) && p.variants[0] ? p.variants[0] : null;
-                  const imgSrc =
-                    firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0]
-                      ? firstVariant.images[0]
-                      : p?.image || p?.mainImage || "";
-                  const productName = p?.name || p?.title || "Product";
-                  const priceStr = `₹${Number(p.price || 0).toFixed(2)}`;
-                  const handleAdd = (e) => {
-                    e?.stopPropagation();
-                    if (typeof addToCart === "function") {
-                      addToCart({ ...p, variantId: p?.variantId || p?._id || p?.productId, title: productName, name: productName }, 1);
-                    }
-                  };
-                  return (
-                    <div
-                      key={p._id || p.productId || p.name || productName}
-                      style={{
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 10,
-                        overflow: "hidden",
-                        padding: 14,
-                        background: "#fff",
-                        minHeight: 0,
-                      }}
-                    >
-                      <div
-                        onClick={() => openRecommendProductPage(p)}
-                        style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}
-                      >
-                        <div style={{ width: 72, height: 72, borderRadius: 8, overflow: "hidden", background: "#f3f4f6", flexShrink: 0 }}>
-                          {imgSrc && <img src={imgSrc} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a", lineHeight: 1.3, marginBottom: 6 }}>{productName}</div>
-                          <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>{priceStr}</div>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
-                        <button
-                          type="button"
-                          onClick={handleAdd}
-                          style={{
-                            padding: "8px 16px",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            background: "#111",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 6,
-                            cursor: "pointer",
-                            minWidth: 86,
-                          }}
-                        >
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  );
+                 const firstVariant = Array.isArray(p.variants) && p.variants[0] ? p.variants[0] : null;
+                 const imgSrc = getProductImageUrl(p) || (firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0] ? firstVariant.images[0] : "");
+                 const productName = p?.name || p?.title || "Product";
+                 const priceStr = `₹${Number(p.price || 0).toFixed(2)}`;
+                 const recommendationKey = getRecommendationKey(p);
+                 const isInCart = effectiveCartItems.some((item) => recommendationMatchesCartItem(item, p));
+                 const isAdded = isInCart || Boolean(recommendationKey && addedRecommendIds.includes(recommendationKey));
+                 const buttonText = isAdded ? "Remove" : "Add";
+                 const handleAdd = async (e) => {
+                   e?.preventDefault?.();
+                   e?.stopPropagation?.();
+                   if (isAdded) {
+                     await removeRecommendationFromCart(p);
+                     return;
+                   }
+                   await handleAddRecommendation(p, 1);
+                 };
+                 const resolvedButtonLabel = isAdded ? "Remove" : "Add";
+                 return (
+                   <div
+                     key={p._id || p.productId || p.name || productName}
+                     className="cart-page-card cart-page-section"
+                     style={{
+                       border: "1px solid #e5e7eb",
+                       borderRadius: 10,
+                       overflow: "hidden",
+                       padding: 14,
+                       background: "#fff",
+                       minHeight: 0,
+                       boxShadow: "0 10px 30px rgba(15, 23, 42, 0.03)",
+                     }}
+                   >
+                     <div
+                       onClick={() => openRecommendProductPage(p)}
+                       style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}
+                     >
+                       <div style={{ width: 72, height: 72, borderRadius: 8, overflow: "hidden", background: "#f3f4f6", flexShrink: 0 }}>
+                         {imgSrc && <img src={imgSrc} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                       </div>
+                       <div style={{ flex: 1, minWidth: 0 }}>
+                         <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a", lineHeight: 1.3, marginBottom: 6 }}>{productName}</div>
+                         <div style={{ fontSize: 14, fontWeight: 500, color: "#0f172a" }}>{priceStr}</div>
+                       </div>
+                     </div>
+                     <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
+                       <button
+                         type="button"
+                         className="cart-page-button"
+                         onClick={handleAdd}
+                         onTouchStart={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                         }}
+                         onPointerDown={(e) => {
+                           e.preventDefault();
+                           e.stopPropagation();
+                         }}
+                         onTouchMove={(e) => e.preventDefault()}
+                         style={{
+                           padding: "8px 16px",
+                           fontSize: 13,
+                           fontWeight: 600,
+                           background: isAdded ? "#e5e7eb" : "#111",
+                           color: isAdded ? "#0f172a" : "#fff",
+                           border: "none",
+                           borderRadius: 6,
+                           cursor: "pointer",
+                           minWidth: 86,
+                           opacity: 1,
+                           touchAction: "manipulation",
+                           WebkitTapHighlightColor: "transparent",
+                           boxShadow: isAdded ? "0 8px 20px rgba(15, 23, 42, 0.06)" : "0 12px 24px rgba(17, 17, 17, 0.12)",
+                           transition: "transform 0.30s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.30s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.30s ease, opacity 0.30s ease",
+                         }}
+                       >
+                         {resolvedButtonLabel}
+                       </button>
+                     </div>
+                   </div>
+                 );
                 })}
               </div>
-              {recommendLoading ? (
+              {recommendLoading && recommendItems.length === 0 ? (
                 <div style={{ marginTop: 16, textAlign: "center", color: "#64748b", fontWeight: 600 }}>
                   Loading recommendations…
                 </div>
@@ -1061,6 +1453,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
       )}
 
       {/* QuickViewModal intentionally disabled on Cart */}
-    </main>
+      </main>
+    </>
   );
 }
