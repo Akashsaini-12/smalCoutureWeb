@@ -901,12 +901,6 @@ const QuickViewModal = ({
       return;
     }
 
-    const ok = await runAddToCartPipeline({ openDrawer: false });
-    if (!ok) return;
-    if (ok) {
-      try { setShowFixedFooter(false); } catch (err) { }
-    }
-    if (!isPage) onClose();
     // Single-item checkout: pass the selected variant as navigation state.
     // Checkout will use this when present (without affecting normal cart checkout).
     const numericPrice = Number(
@@ -931,6 +925,7 @@ const QuickViewModal = ({
         },
       },
     });
+    if (!isPage) onClose();
   };
 
   // ─── MODERN CLOSE ICON ───────────────────────────────────────────────────────
