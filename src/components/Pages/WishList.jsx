@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWishlistMongo, removeWishlistMongo } from "../../redux/actions";
 import { getUserId } from "../../utils/userId";
+import { formatPrice as formatCurrency } from "../../utils/formatPrice";
 const WishList = () => {
   const navigate = useNavigate();
   const userId = getUserId();
@@ -27,7 +28,7 @@ const WishList = () => {
     if (v == null) return "";
     const n = typeof v === "number" ? v : Number(String(v).match(/-?\d+(\.\d+)?/)?.[0]);
     if (!Number.isFinite(n)) return "";
-    return `₹${n.toFixed(2)}`;
+    return `₹${formatCurrency(n)}`;
   };
 
   const placeholderImg = (seed) =>

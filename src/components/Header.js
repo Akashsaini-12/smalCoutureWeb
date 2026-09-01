@@ -920,6 +920,26 @@ const Header = () => {
             position: 'fixed', // explicit (same as above), also acts as positioning context
             boxSizing: 'border-box',
           }}>
+            <button
+              type="button"
+              aria-label="Go back"
+              title="Go back"
+              onClick={() => navigate(-1)}
+              style={{
+                width: 32,
+                height: 32,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#333',
+                borderRadius: 8,
+              }}
+            >
+              <BackArrowIcon />
+            </button>
             <button onClick={() => setIsMenuOpen(v => !v)} style={{
               width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: 'transparent', border: 'none', cursor: 'pointer', color: '#333', borderRadius: 8,

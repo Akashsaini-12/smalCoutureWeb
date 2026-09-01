@@ -13,6 +13,7 @@ import {
   listAvailableCoupons,
   validateCartStock,
   updateCartQtyMongo,
+  removeCartMongo,
 } from "../redux/actions";
 import { getUserId } from "../utils/userId";
 import {
@@ -188,6 +189,7 @@ export default function Checkout({ cartItems = [] }) {
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [addrLoading, setAddrLoading] = useState(false);
   const [addrError, setAddrError] = useState("");
+  const [removingItemKey, setRemovingItemKey] = useState("");
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [showAddressForm, setShowAddressForm] = useState(true);
   const [showAddressOptions, setShowAddressOptions] = useState(false);
@@ -312,6 +314,35 @@ export default function Checkout({ cartItems = [] }) {
     } catch {
       // If validation endpoint fails, allow server-side enforcement later (but block Razorpay to avoid pay-then-fail)
       return false;
+    }
+  };
+
+  const handleRemoveCheckoutItem = async (item) => {
+    const itemName = String(item?.name || "this item");
+    if (!window.confirm(`Remove ${itemName} from your order?`)) return;
+
+    const itemKey = String(item?._id || item?.variantId || item?.productId || "");
+    setRemovingItemKey(itemKey);
+    try {
+      if (isBuyNowMode) {
+        setItems([]);
+        return;
+      }
+
+      await removeCartMongo({
+        userId,
+        cartItemId: item?._id ? String(item._id) : undefined,
+        productId: item?.productId || undefined,
+        variantId: item?.variantId || undefined,
+      });
+      setItems((currentItems) =>
+        currentItems.filter((currentItem) => currentItem !== item),
+      );
+    } catch (removeError) {
+      setError(removeError?.message || "Failed to remove item");
+      toast.error(removeError?.message || "Failed to remove item");
+    } finally {
+      setRemovingItemKey("");
     }
   };
 
@@ -2012,8 +2043,29 @@ export default function Checkout({ cartItems = [] }) {
                         ) : null}
                       </div>
 
-                      <div style={{ fontWeight: 700, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, fontWeight: 700, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
                         {formatINR(parsePrice(it?.price) * Number(it?.quantity || 1))}
+                        {items.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCheckoutItem(it)}
+                            disabled={removingItemKey === String(it?._id || it?.variantId || it?.productId || "")}
+                            style={{
+                              border: "1px solid #d6c5b5",
+                              borderRadius: 999,
+                              background: "#fff",
+                              color: "#8a463b",
+                              fontSize: 11,
+                              fontWeight: 700,
+                              lineHeight: 1,
+                              padding: "5px 9px",
+                              cursor: "pointer",
+                              opacity: removingItemKey === String(it?._id || it?.variantId || it?.productId || "") ? 0.6 : 1,
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { formatPrice } from "../utils/formatPrice";
 
 export default function PaymentHistory() {
   const userId = useSelector((s) => s?.userId) || "";
@@ -94,7 +95,7 @@ export default function PaymentHistory() {
               <tbody>
                 {rows.map((it) => {
                   const amountInr =
-                    it?.currency === "INR" ? (Number(it?.amount || 0) / 100).toFixed(2) : String(it?.amount || 0);
+                    it?.currency === "INR" ? formatPrice(Number(it?.amount || 0) / 100) : String(it?.amount || 0);
                   return (
                     <tr key={it?._id || `${it?.createdAt}_${it?.razorpayOrderId}`}>
                       <td style={{ padding: "12px 12px", borderBottom: "1px solid #f1f5f9", color: "#334155", fontWeight: 800, whiteSpace: "nowrap" }}>
@@ -132,4 +133,3 @@ export default function PaymentHistory() {
     </main>
   );
 }
-
