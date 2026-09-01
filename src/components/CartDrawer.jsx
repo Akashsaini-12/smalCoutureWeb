@@ -14,6 +14,7 @@ import {
   addToCartMongo,
 } from "../redux/actions";
 import { getUserId } from "../utils/userId";
+import { formatPrice } from "../utils/formatPrice";
 import {
   formatSizeForCustomerDisplay,
   isInternalFreeSizeLabel,
@@ -221,7 +222,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     return Number.isFinite(stockNum) ? Math.max(0, stockNum) : null;
   };
   const subtotal = effectiveCartItems.reduce((sum, i) => sum + parsePrice(i.price) * (i.quantity || 1), 0);
-  const subtotalStr = `₹${subtotal.toFixed(2)}`;
+  const subtotalStr = `₹${formatPrice(subtotal)}`;
   const needMore = Math.max(0, FREE_SHIPPING_GOAL - subtotal);
   const progressPct = Math.min(100, (subtotal / FREE_SHIPPING_GOAL) * 100);
 
@@ -808,7 +809,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
           </p> */}
           {needMore > 0 && (
             <p style={styles.shippingGoal}>
-              Buy <strong>₹{needMore.toFixed(2)}</strong> more to enjoy <strong>FREE Shipping</strong>
+              Buy <strong>₹{formatPrice(needMore)}</strong> more to enjoy <strong>FREE Shipping</strong>
             </p>
           )}
           <div style={styles.progressWrap}>
@@ -836,7 +837,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
           {apiLoading ? (
             <p style={styles.emptyCart}>Loading cart...</p>
           ) : effectiveCartItems.length === 0 ? (
-            <p style={styles.emptyCart}>Your cart is currently empty.</p>
+            <p style={styles.emptyCart}>Your cart is currently empty</p>
           ) : (
             <>
               {apiError && (
@@ -1003,7 +1004,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                          <div style={styles.recommendInfo}>
                            <div style={styles.recommendTitleRow}>
                              <div style={styles.recommendTitle}>{p.name}</div>
-                             <div style={styles.recommendPrice}>₹{priceNumber.toFixed(2)}</div>
+                             <div style={styles.recommendPrice}>₹{formatPrice(priceNumber)}</div>
                            </div>
                            <div style={styles.recommendActions}>
                              <button
@@ -1538,6 +1539,9 @@ const styles = {
     padding: "20px 24px 24px",
     background: "#fff",
     flexShrink: 0,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   addonRow: {
     display: "flex",
@@ -1613,12 +1617,21 @@ const styles = {
     cursor: "pointer",
   },
   viewCartLink: {
-    display: "block",
-    textAlign: "center",
-    marginTop: 12,
-    color: "#64748b",
-    fontSize: "14px",
-    textDecoration: "underline",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "12px auto 0",
+    minHeight: 36,
+    padding: "0 14px",
+    border: "1px solid #1f1a17",
+    borderRadius: 999,
+    background: "#fff",
+    boxShadow: "0 6px 14px rgba(31, 26, 23, 0.08)",
+    color: "#292524",
+    fontSize: 13,
+    fontWeight: 700,
+    textDecoration: "none",
+    whiteSpace: "nowrap",
   },
   modalOverlay: {
     position: "fixed",
