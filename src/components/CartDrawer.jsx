@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { toast, Slide } from "react-toastify";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 // QuickViewModal removed for CartDrawer: go to product page instead
@@ -10,6 +11,7 @@ import {
   updateCartQtyMongo,
   listAvailableCoupons,
   validateCartStock,
+  addToCartMongo,
 } from "../redux/actions";
 import { getUserId } from "../utils/userId";
 import {
@@ -97,6 +99,29 @@ function parsePrice(value) {
 
 const COUNTRIES = ["United States", "Canada", "United Kingdom", "India", "Australia"];
 const US_STATES = ["Alabama", "Alaska", "Arizona", "California", "Florida", "Texas", "New York", "Washington", "Other"];
+const drawerCartItemEntranceStyle = `
+  @keyframes drawerCartItemFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px) scale(0.985);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes drawerSectionShift {
+    0% {
+      transform: translateY(8px);
+      opacity: 0.96;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+`;
 
 export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFromCart, updateCartQuantity }) {
   const navigate = useNavigate();
@@ -131,11 +156,16 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
   const [apiMode, setApiMode] = useState(false);
   const [recommendItems, setRecommendItems] = useState([]);
   const [recommendLoading, setRecommendLoading] = useState(false);
+  const [addedRecommendIds, setAddedRecommendIds] = useState([]);
   const [removeConfirm, setRemoveConfirm] = useState(null);
+  const [removingItemIds, setRemovingItemIds] = useState([]);
   // Recommendations should open product page (no quick view in drawer)
 
   // Once we attempt loading cart from API, prefer API cart even if it's empty.
-  const effectiveCartItems = apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems);
+  const effectiveCartItems = useMemo(
+    () => (apiMode ? apiCartItems : (apiCartItems.length ? apiCartItems : cartItems)),
+    [apiMode, apiCartItems, cartItems],
+  );
 
   const getItemMaxStock = (item) => {
     const direct =
@@ -436,19 +466,25 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     const first = effectiveCartItems[0];
     if (!first || !first.productId) {
       setRecommendItems([]);
+      setRecommendLoading(false);
       return;
     }
+
     let mounted = true;
-    setRecommendLoading(true);
+    const hadExistingItems = recommendItems.length > 0;
+    setRecommendLoading(!hadExistingItems);
+
     fetchRecommendations(first.productId, 6)
       .then((res) => {
         if (!mounted) return;
         const items = Array.isArray(res?.items) ? res.items : [];
-        setRecommendItems(items);
+        setRecommendItems((prev) => (items.length ? items : prev));
       })
       .catch(() => {
         if (!mounted) return;
-        setRecommendItems([]);
+        if (!hadExistingItems) {
+          setRecommendItems([]);
+        }
       })
       .finally(() => {
         if (!mounted) return;
@@ -523,16 +559,38 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     changeQty(key, current - 1);
   };
 
+  const triggerAnimatedRemove = (item, removeAction) => {
+    const key = item?._id || item?.variantId || item?.productId || item?.id;
+    if (!key) {
+      Promise.resolve(removeAction?.()).catch(() => null);
+      return;
+    }
+
+    setRemovingItemIds((prev) => (prev.includes(key) ? prev : [...prev, key]));
+    window.setTimeout(() => {
+      const result = removeAction?.();
+      Promise.resolve(result)
+        .finally(() => {
+          setRemovingItemIds((prev) => prev.filter((id) => id !== key));
+        })
+        .catch(() => null);
+    }, 520);
+  };
+
   const confirmRemoveItem = async () => {
     const item = removeConfirm;
     setRemoveConfirm(null);
     if (!item) return;
 
     if (apiCartItems.length) {
-      await handleRemoveApi(item);
+      triggerAnimatedRemove(item, async () => {
+        await handleRemoveApi(item);
+      });
       return;
     }
-    removeFromCart?.(item?.variantId || item?._id);
+    triggerAnimatedRemove(item, () => {
+      removeFromCart?.(item?.variantId || item?._id);
+    });
   };
 
   const handleRemoveApi = async (item) => {
@@ -568,17 +626,161 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     navigate(`/products/${encodeURIComponent(slug)}`, { state: { product: p } });
   };
 
+  const getRecommendationKey = (product) => {
+    const parts = [
+      String(product?._id || product?.productId || product?.id || "").trim(),
+      String(product?.variantId || product?.variant_id || product?.variant?.id || "").trim(),
+      String(product?.slug || product?.handle || product?.name || product?.title || "").trim(),
+    ];
+    return parts.filter(Boolean).join("|");
+  };
+
+  const scrollDrawerPageStep = () => {};
+
+  const recommendationMatchesCartItem = (cartItem, product) => {
+    const itemProduct = String(cartItem?.productId || cartItem?._id || cartItem?.id || "").trim();
+    const itemVariant = String(cartItem?.variantId || cartItem?.variant_id || "").trim();
+    const productKey = String(product?._id || product?.productId || product?.id || "").trim();
+    const variantKey = String(product?.variantId || product?.variant_id || product?.variant?.id || "").trim();
+    const productNameKey = String(product?.name || product?.title || "").trim().toLowerCase();
+    const cartNameKey = String(cartItem?.name || cartItem?.title || "").trim().toLowerCase();
+
+    return Boolean(
+      (productKey && itemProduct && productKey === itemProduct) ||
+      (variantKey && itemVariant && variantKey === itemVariant) ||
+      (productNameKey && cartNameKey && productNameKey === cartNameKey && !itemVariant && !variantKey),
+    );
+  };
+
+  useEffect(() => {
+    if (!recommendItems.length) {
+      setAddedRecommendIds((prev) => prev.filter((id) => !recommendItems.some((p) => getRecommendationKey(p) === id)));
+      return;
+    }
+
+    const activeKeys = new Set(
+      recommendItems
+        .filter((product) => effectiveCartItems.some((item) => recommendationMatchesCartItem(item, product)))
+        .map((product) => getRecommendationKey(product))
+        .filter(Boolean),
+    );
+
+    setAddedRecommendIds((prev) =>
+      prev.filter((id) => {
+        const productExists = recommendItems.some((product) => getRecommendationKey(product) === id);
+        return productExists && activeKeys.has(id);
+      }),
+    );
+  }, [effectiveCartItems, recommendItems]);
+
+  const removeRecommendationFromCart = async (p) => {
+    if (!p) return;
+    const recommendationKey = getRecommendationKey(p);
+    const match = effectiveCartItems.find((item) => recommendationMatchesCartItem(item, p));
+
+    if (!match) {
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => prev.filter((id) => id !== recommendationKey));
+      }
+      return;
+    }
+
+    const cartItemId = match?._id;
+    const productId = String(match?.productId || p?._id || p?.productId || p?.id || "").trim();
+    const variantId = String(match?.variantId || p?.variantId || p?.variant_id || p?.variant?.id || "").trim();
+
+    try {
+      if (apiCartItems.length || apiMode) {
+        await removeCartMongo({
+          userId,
+          cartItemId: cartItemId ? String(cartItemId) : undefined,
+          productId: productId || undefined,
+          variantId: variantId || undefined,
+        });
+        const res = await fetchCartMongo(userId);
+        setApiCartItems(Array.isArray(res?.items) ? res.items : []);
+      } else {
+        removeFromCart?.(variantId || match?._id || productId);
+      }
+
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => prev.filter((id) => id !== recommendationKey));
+      }
+    } catch (e) {
+      setApiError(e?.message || "Failed to remove item");
+    }
+  };
+
+  const addRecommendToCart = async (p) => {
+    if (!p) return;
+    const activeUserId = userId || getUserId();
+    const recommendationKey = getRecommendationKey(p);
+    if (!activeUserId) {
+      openRecommendProductPage(p);
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => (prev.includes(recommendationKey) ? prev : [...prev, recommendationKey]));
+      }
+      return;
+    }
+    const payload = {
+      userId: activeUserId,
+      productId: String(p?.productId || p?._id || p?.id || "") || undefined,
+      variantId: String(p?.variantId || p?.variant_id || "") || undefined,
+      name: String(p?.name || p?.title || "Product").trim() || "Product",
+      slug: p?.slug || p?.handle || "",
+      price: Number(String(p?.priceSale || p?.priceRegular || p?.price || "0").replace(/[^\d.]/g, "") || "0") || 0,
+      color: p?.color ?? null,
+      size: p?.size ?? null,
+      quantity: 1,
+      image:
+        p?.mainImage?.src ||
+        p?.mainImage ||
+        p?.imageSrc ||
+        p?.image ||
+        (Array.isArray(p?.variants) && p.variants[0] && Array.isArray(p.variants[0].images) ? p.variants[0].images[0] : "") ||
+        "",
+    };
+    try {
+      await addToCartMongo(payload);
+      if (recommendationKey) {
+        setAddedRecommendIds((prev) => (prev.includes(recommendationKey) ? prev : [...prev, recommendationKey]));
+      }
+      toast.dismiss();
+      toast.success("Added", {
+        transition: Slide,
+        autoClose: 2000,
+        toastStyle: {
+          animationDuration: "500ms",
+          borderRadius: "12px",
+          boxShadow: "0 18px 48px rgba(15, 23, 42, 0.18)",
+        },
+      });
+      const res = await fetchCartMongo(activeUserId);
+      setApiCartItems(Array.isArray(res?.items) ? res.items : []);
+      setApiMode(true);
+      // auto-scroll disabled on cart drawer per user request
+    } catch (e) {
+      setApiError(e?.message || "Failed to add item to cart");
+    }
+  };
+
   if (!isOpen) return null;
 
   const countdownStr = `${Math.floor(countdown / 60)} m ${countdown % 60} s`;
 
   return createPortal(
-    <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
+    <>
+      <style>{drawerCartItemEntranceStyle}</style>
+      <div style={{ position: "fixed", inset: 0, zIndex: 99999, transition: "all 0.6s ease" }}>
       <div style={styles.overlay} onClick={handleClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-label="Shopping Cart"
-        style={styles.drawer}
+        style={{
+          ...styles.drawer,
+          animation: "drawerSectionShift 0.6s ease-out",
+          transformOrigin: "right center",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -606,7 +808,15 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
         </div>
 
         {/* Body */}
-        <div style={styles.body}>
+        <div
+          style={{
+            ...styles.body,
+            overflow: "hidden",
+            maxHeight: "1400px",
+            transition: "max-height 0.8s ease, opacity 0.8s ease, transform 0.8s ease",
+            willChange: "max-height, opacity, transform",
+          }}
+        >
           {apiLoading ? (
             <p style={styles.emptyCart}>Loading cart...</p>
           ) : effectiveCartItems.length === 0 ? (
@@ -618,8 +828,26 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                   {apiError}
                 </p>
               )}
-              {effectiveCartItems.map((item) => (
-                <div key={item._id || item.variantId} style={styles.cartItem}>
+              {effectiveCartItems.map((item) => {
+                const isRemoving = removingItemIds.includes(item?._id || item?.variantId || item?.productId || item?.id);
+                return (
+                <div
+                  key={item._id || item.variantId}
+                  data-cart-drawer-item-row="true"
+                  data-cart-drawer-item-key={String(item?._id || item?.variantId || item?.productId || item?.id || "")}
+                  style={{
+                    ...styles.cartItem,
+                    animation: isRemoving ? "none" : "drawerCartItemFadeIn 0.4s ease-out",
+                    opacity: isRemoving ? 0 : 1,
+                    transform: isRemoving ? "translateY(-12px) scale(0.985)" : "translateY(0) scale(1)",
+                    transformOrigin: "center",
+                    maxHeight: isRemoving ? 0 : 220,
+                  overflow: "hidden",
+                  paddingTop: isRemoving ? 0 : undefined,
+                  paddingBottom: isRemoving ? 0 : undefined,
+                  borderBottom: isRemoving ? "none" : undefined,
+                  transition: "max-height 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, transform 0.42s ease, padding 0.42s ease",
+                }}>
                   <div style={styles.cartItemImage}>
                     {item.image && (
                       <img src={item.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -698,11 +926,20 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                     ₹{(parsePrice(item.price) * (item.quantity || 1)).toFixed(2)}
                   </div>
                 </div>
-              ))}
+                );
+              })}
 
               {/* Customers also bought - from same category via API */}
               {recommendItems.length > 0 && (
-                <div style={{ marginTop: 8 }}>
+                <div
+                  style={{
+                    marginTop: 8,
+                    animation: "drawerSectionShift 0.7s ease-out",
+                    transition: "transform 0.8s ease, opacity 0.8s ease, margin-top 0.8s ease",
+                    overflow: "hidden",
+                    willChange: "transform, opacity, margin-top",
+                  }}
+                >
                   <h4 style={styles.sectionTitle}>
                     Customers also bought with "{effectiveCartItems[0]?.name || effectiveCartItems[0]?.title}"
                   </h4>
@@ -710,49 +947,74 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
                     <DiscountCheckIcon /> You might also like these from the same category
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    {recommendItems.slice(0, 6).map((p) => {
-                      const firstVariant = Array.isArray(p.variants) && p.variants[0] ? p.variants[0] : null;
-                      const firstImage =
-                        firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0]
-                          ? firstVariant.images[0]
-                          : "";
-                      const priceNumber = Number(p.price || 0);
-                      return (
-                        <div key={p._id} style={styles.recommendCard}>
-                          <div style={styles.recommendImage}>
-                            {firstImage && (
-                              <img
-                                src={firstImage}
-                                alt={p.name}
-                                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                              />
-                            )}
-                          </div>
-                          <div style={styles.recommendInfo}>
-                            <div style={styles.recommendTitleRow}>
-                              <div style={styles.recommendTitle}>{p.name}</div>
-                              <div style={styles.recommendPrice}>₹{priceNumber.toFixed(2)}</div>
-                            </div>
-                            <div style={styles.recommendActions}>
-                              {/* <Link
-                                to={`/products/${p.slug}`}
-                                style={{ fontSize: 13, color: "#0f172a", textDecoration: "underline" }}
-                                onClick={onClose}
-                              >
-                                View
-                              </Link> */}
-                              <button
-                                type="button"
-                                style={styles.addBtn}
-                                onClick={() => openRecommendProductPage(p)}
-                              >
-                                Add
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                   {recommendItems.slice(0, 6).map((p) => {
+                     const firstVariant = Array.isArray(p.variants) && p.variants[0] ? p.variants[0] : null;
+                     const firstImage =
+                       p?.mainImage?.src ||
+                       p?.mainImage ||
+                       p?.imageSrc ||
+                       p?.image ||
+                       (firstVariant && Array.isArray(firstVariant.images) && firstVariant.images[0] ? firstVariant.images[0] : "") ||
+                       "";
+                     const priceNumber = Number(p.price || 0);
+                     const recommendationKey = getRecommendationKey(p);
+                     const isInCart = effectiveCartItems.some((item) => recommendationMatchesCartItem(item, p));
+                     const isAdded = isInCart || Boolean(recommendationKey && addedRecommendIds.includes(recommendationKey));
+                     const resolvedButtonLabel = isAdded ? "Remove" : "Add";
+                     return (
+                       <div key={p._id || p.productId || p.name || p.title} style={styles.recommendCard}>
+                         <div style={styles.recommendImage}>
+                           {firstImage && (
+                             <img
+                               src={firstImage}
+                               alt={p.name || p.title}
+                               style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                             />
+                           )}
+                         </div>
+                         <div style={styles.recommendInfo}>
+                           <div style={styles.recommendTitleRow}>
+                             <div style={styles.recommendTitle}>{p.name}</div>
+                             <div style={styles.recommendPrice}>₹{priceNumber.toFixed(2)}</div>
+                           </div>
+                           <div style={styles.recommendActions}>
+                             <button
+                               type="button"
+                               style={{
+                                 ...styles.addBtn,
+                                 background: isAdded ? "#e5e7eb" : styles.addBtn.background,
+                                 color: isAdded ? "#0f172a" : styles.addBtn.color,
+                                 cursor: "pointer",
+                                 opacity: 1,
+                                 touchAction: "manipulation",
+                                 WebkitTapHighlightColor: "transparent",
+                               }}
+                               onTouchStart={(e) => {
+                                 e.preventDefault();
+                                 e.stopPropagation();
+                               }}
+                               onPointerDown={(e) => {
+                                 e.preventDefault();
+                                 e.stopPropagation();
+                               }}
+                               onTouchMove={(e) => e.preventDefault()}
+                               onClick={(e) => {
+                                 e?.preventDefault?.();
+                                 e?.stopPropagation?.();
+                                 if (isAdded) {
+                                   removeRecommendationFromCart(p);
+                                   return;
+                                 }
+                                 addRecommendToCart(p);
+                               }}
+                             >
+                               {resolvedButtonLabel}
+                             </button>
+                           </div>
+                         </div>
+                       </div>
+                     );
+                   })}
                   </div>
                 </div>
               )}
@@ -942,7 +1204,8 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
       )}
 
       {/* QuickViewModal intentionally disabled on CartDrawer */}
-    </div>,
+    </div>
+    </>,
     document.body
   );
 }
