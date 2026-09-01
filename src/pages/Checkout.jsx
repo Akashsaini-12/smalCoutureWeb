@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, Slide } from "react-toastify";
 import {
   createCheckout,
   createBuyNowCheckout,
@@ -779,21 +779,18 @@ export default function Checkout({ cartItems = [] }) {
     const numericDiscount = Number(discount || 0);
     if (!code || !numericDiscount) return;
     toast.success(`Hurray! ${code} applied 🎉`, {
-      position: "top-center",
-      autoClose: 1800,
+      position: "top-right",
+      autoClose: 2000,
       hideProgressBar: true,
-      closeOnClick: true,
+      closeOnClick: false,
       pauseOnHover: false,
-      draggable: true,
-      theme: "light",
-      style: {
-        borderRadius: 12,
-        background: "#f5f1ea",
-        color: "#1f1a17",
-        border: "1px solid rgba(146, 110, 64, 0.25)",
-        boxShadow: "0 10px 24px rgba(31, 26, 23, 0.12)",
-        padding: "10px 14px",
-        fontWeight: 700,
+      draggable: false,
+      transition: Slide,
+      theme: "dark",
+      toastStyle: {
+        animationDuration: "500ms",
+        borderRadius: "12px",
+        boxShadow: "0 18px 48px rgba(15, 23, 42, 0.18)",
       },
     });
   };
