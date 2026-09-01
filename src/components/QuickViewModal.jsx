@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
-  addToCartMongo,
   addToWishlistMongo,
   fetchWishlistList,
   fetchRecentlyViewedMongo,
@@ -31,6 +30,7 @@ const QuickViewModal = ({
   product,
   onClose,
   onAddToCart,
+  cartItems = [],
   variant = "modal",
 }) => {
   const dispatch = useDispatch();
@@ -76,37 +76,26 @@ const QuickViewModal = ({
   });
 
   // Show a fixed footer only when the inline action buttons are out of view (page variant)
-  const [showFixedFooter, setShowFixedFooter] = useState(false);
+  const [showFixedFooter, setShowFixedFooter] = useState(true);
   const actionRef = useRef(null);
-  const footerTimerRef = useRef(null);
-  const DEBOUNCE_MS = 140; // Prevent flicker on quick interactions
 
   useEffect(() => {
     if (!isPage) return undefined;
 
-    // Helper to set with debounce
-    const setDebounced = (value) => {
-      if (footerTimerRef.current) {
-        clearTimeout(footerTimerRef.current);
-        footerTimerRef.current = null;
-      }
-      footerTimerRef.current = setTimeout(() => {
-        setShowFixedFooter(Boolean(value));
-        footerTimerRef.current = null;
-      }, DEBOUNCE_MS);
+    const setImmediateVisibility = (value) => {
+      setShowFixedFooter(Boolean(value));
     };
 
-    // Fallback for environments without IntersectionObserver
     if (typeof IntersectionObserver === "undefined") {
       const check = () => {
         const el = actionRef.current;
         if (!el) {
-          setDebounced(false);
+          setImmediateVisibility(true);
           return;
         }
         const rect = el.getBoundingClientRect();
         const inView = rect.top < window.innerHeight && rect.bottom > 0;
-        setDebounced(!inView);
+        setImmediateVisibility(!inView);
       };
       check();
       window.addEventListener("scroll", check, { passive: true });
@@ -114,27 +103,18 @@ const QuickViewModal = ({
       return () => {
         window.removeEventListener("scroll", check);
         window.removeEventListener("resize", check);
-        if (footerTimerRef.current) {
-          clearTimeout(footerTimerRef.current);
-          footerTimerRef.current = null;
-        }
       };
     }
 
     const obs = new IntersectionObserver((entries) => {
       const e = entries[0];
       if (!e) return;
-      // When the inline buttons are NOT intersecting, show fixed footer (debounced)
-      setDebounced(!e.isIntersecting);
+      setImmediateVisibility(!e.isIntersecting);
     }, { root: null, threshold: 0.05 });
 
     if (actionRef.current) obs.observe(actionRef.current);
     return () => {
       obs.disconnect();
-      if (footerTimerRef.current) {
-        clearTimeout(footerTimerRef.current);
-        footerTimerRef.current = null;
-      }
     };
   }, [isPage]);
 
@@ -142,7 +122,7 @@ const QuickViewModal = ({
   useEffect(() => {
     const path = String(location?.pathname || "").toLowerCase();
     if (path.includes('/cart') || path.includes('/checkout')) {
-      try { setShowFixedFooter(false); } catch (err) { }
+      try { setShowFixedFooter(true); } catch (err) { }
     }
   }, [location?.pathname]);
 
@@ -368,12 +348,36 @@ const QuickViewModal = ({
     setShowSizeChart(false);
     setImageLightboxOpen(false);
 
-    // When product changes (navigating to another product), ensure footer visibility recomputes
-    try { setShowFixedFooter(false); } catch (err) { }
+    // Keep the sticky footer visible immediately on product changes and refreshes.
+    try { setShowFixedFooter(true); } catch (err) { }
   }, [product]);
 
   const resolveProductId = (p) =>
     String(p?.productId ?? p?._id ?? p?.id ?? p?.handle ?? "");
+
+  const normalizeCartIdentity = (value) => String(value ?? "").trim().toLowerCase();
+
+  const isAlreadyInCart = (() => {
+    if (!Array.isArray(cartItems) || !product) return false;
+
+    const productIdKey = normalizeCartIdentity(product.productId ?? product._id ?? product.id ?? product.handle ?? product.slug);
+    const variantIdKey = normalizeCartIdentity(product.variantId ?? product.variant_id);
+    const titleKey = normalizeCartIdentity(product.title ?? product.name);
+    const handleKey = normalizeCartIdentity(product.handle ?? product.slug);
+
+    return cartItems.some((item) => {
+      const itemProductIdKey = normalizeCartIdentity(item?.productId ?? item?._id ?? item?.id);
+      const itemVariantIdKey = normalizeCartIdentity(item?.variantId ?? item?.variant_id);
+      const itemTitleKey = normalizeCartIdentity(item?.title ?? item?.name ?? item?.productName);
+      const itemHandleKey = normalizeCartIdentity(item?.handle ?? item?.slug ?? item?.productSlug);
+
+      if (variantIdKey && itemVariantIdKey && variantIdKey === itemVariantIdKey) return true;
+      if (productIdKey && itemProductIdKey && productIdKey === itemProductIdKey) return true;
+      if (titleKey && itemTitleKey && titleKey === itemTitleKey) return true;
+      if (handleKey && itemHandleKey && handleKey === itemHandleKey) return true;
+      return false;
+    });
+  })();
 
   const toPriceNumber = (v) => {
     if (v == null) return 0;
@@ -839,56 +843,27 @@ const QuickViewModal = ({
       toast.error("Missing product id — cannot add to cart");
       return false;
     }
-    try {
-      const numericPrice = Number(
-        String(product.priceSale || product.priceRegular || product.price || "")
-          .replace(/[^\d.]/g, ""),
-      );
-      const payload = {
-        userId,
-        productId: pidForVariant,
-        variantId: effectiveVariantId,
-        name: String(product.title || product.name || "").trim() || "Product",
-        slug: product.handle || product.slug || "",
-        price: Number.isFinite(numericPrice) ? numericPrice : 0,
-        color: resolvedColor || null,
-        size: cartLineSize ?? null,
-        quantity,
-        image: mainSrc || (Array.isArray(images) && images[0]) || "",
-      };
-
-      await addToCartMongo(payload);
-      // Hide the fixed footer once the item is successfully added to cart to avoid UI glitches on mobile
+    // The shared app-level add-to-cart handler is the single source of truth for the customer cart.
+    // Calling the Mongo API here as well caused duplicate quantity increments on a single click.
+    if (openDrawer && onAddToCart && cartProduct.productId && cartProduct.variantId) {
+      await onAddToCart(cartProduct, quantity, { openDrawer });
       try {
         setShowFixedFooter(false);
       } catch (err) {
         // ignore
       }
-    } catch (e) {
-      const msg = String(e?.message || "");
-      // If user already has the max qty in cart, treat as non-fatal UX (no error toast).
-      if (/only\s+\d+\s+left in stock/i.test(msg)) {
-        // If user already has max qty (or stock is limited), treat as "already in cart".
-        // UX requested: if they click "Add to cart" again, send them to checkout.
-        if (openDrawer) {
-          if (!isPage) onClose?.();
-          navigate("/checkout");
-          return true;
-        }
-        // "Buy now" can still proceed to cart since the item is already there.
-        return true;
-      }
-      toast.error(e?.message || "Could not add to cart");
-      return false;
+      return true;
     }
 
-    if (openDrawer && onAddToCart && cartProduct.productId && cartProduct.variantId) {
-      onAddToCart(cartProduct, quantity);
-    }
-    return true;
+    return false;
   };
 
   const handleAddToCart = async () => {
+    if (isAlreadyInCart) {
+      navigate("/cart");
+      return;
+    }
+
     const ok = await runAddToCartPipeline({ openDrawer: true });
     if (ok) {
       // hide fixed footer after adding to cart to prevent mobile flicker
@@ -1931,6 +1906,7 @@ const QuickViewModal = ({
                         <ProductGrid
                           products={items}
                           addToCart={onAddToCart}
+                          cartItems={cartItems}
                           wishlistIds={new Set()}
                           wishlistLoading={false}
                           onToggleWishlist={null}
@@ -2146,20 +2122,20 @@ const QuickViewModal = ({
                       <button
                         type="button"
                         onClick={handleAddToCart}
-                        disabled={isOutOfStock}
+                        disabled={isOutOfStock && !isAlreadyInCart}
                         className="qv-atc-btn"
                         style={{
                           flex: 1,
                           minWidth: 0,
                           borderRadius: isMobileView ? 12 : 10,
-                          background: isOutOfStock ? "#e5e7eb" : "#ffffff",
-                          color: isOutOfStock ? "#94a3b8" : "#111827",
+                          background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
+                          color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
                           border: "1px solid #111827",
                           whiteSpace: "nowrap",
                         }}
                         // style={{ flex: 1, borderRadius: isMobileView ? 12 : 10 }}
                       >
-                        {isOutOfStock ? "Out of stock" : "Add to cart"}
+                        {isOutOfStock ? "Out of stock" : isAlreadyInCart ? "Go to cart" : "Add to cart"}
                       </button>
                       <button
                         type="button"
@@ -2199,19 +2175,19 @@ const QuickViewModal = ({
                         <button
                           type="button"
                           onClick={handleAddToCart}
-                          disabled={isOutOfStock}
+                          disabled={isOutOfStock && !isAlreadyInCart}
                           className="qv-atc-btn"
                           style={{
                             flex: 1,
                             minWidth: 0,
                             borderRadius: isMobileView ? 12 : 10,
-                            background: isOutOfStock ? "#e5e7eb" : "#ffffff",
-                            color: isOutOfStock ? "#94a3b8" : "#111827",
+                            background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
+                            color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
                             border: "1px solid #111827",
                             whiteSpace: "nowrap",
                           }}
                         >
-                          {isOutOfStock ? "Out of stock" : "Add to cart"}
+                          {isOutOfStock ? "Out of stock" : isAlreadyInCart ? "Go to cart" : "Add to cart"}
                         </button>
                         <button
                           type="button"
@@ -2258,20 +2234,20 @@ const QuickViewModal = ({
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={isOutOfStock}
+                disabled={isOutOfStock && !isAlreadyInCart}
                 className="qv-atc-btn"
                 style={{
                   flex: 1,
                   minWidth: 0,
                   borderRadius: 12,
-                  background: isOutOfStock ? "#e5e7eb" : "#ffffff",
-                  color: isOutOfStock ? "#94a3b8" : "#111827",
+                  background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
+                  color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
                   border: "1px solid #111827",
                   whiteSpace: "nowrap",
                   padding: "12px 16px",
                 }}
               >
-                {isOutOfStock ? "Out of stock" : "Add to cart"}
+                {isOutOfStock ? "Out of stock" : isAlreadyInCart ? "Go to cart" : "Add to cart"}
               </button>
               <button
                 type="button"
