@@ -118,10 +118,11 @@ export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }
       order_id: id,
     },
     user_data: {
-      em: [],
-      ph: [],
-      client_ip_address: "",
-      client_user_agent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+      ...(getMetaCookie("_fbp") ? { fbp: getMetaCookie("_fbp") } : {}),
+      ...(getMetaCookie("_fbc") ? { fbc: getMetaCookie("_fbc") } : {}),
+      ...(typeof navigator !== "undefined" && navigator.userAgent
+        ? { client_user_agent: navigator.userAgent }
+        : {}),
     },
   };
 
@@ -156,6 +157,14 @@ function productIdFrom(item) {
   return String(
     item?.productId ?? item?.id ?? item?._id ?? item?.variantId ?? "",
   ).trim();
+}
+
+function getMetaCookie(name) {
+  if (typeof document === "undefined") return "";
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=([^;]*)`),
+  );
+  return match ? decodeURIComponent(match[1]) : "";
 }
 
 export function trackAddToCart(product, quantity = 1) {
