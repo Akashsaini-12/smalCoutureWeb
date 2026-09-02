@@ -11,10 +11,12 @@ const META_PIXEL_IDS = (() => {
 const META_PIXEL_ID =
   process.env.REACT_APP_META_PIXEL_ID || META_PIXEL_IDS[0] || DEFAULT_META_PIXEL_IDS[0];
 const PAGE_VIEW_DEDUPE_KEY = "meta_pixel_page_view:";
-const META_CAPI_ENDPOINT = process.env.REACT_APP_META_CAPI_ENDPOINT || "";
+const META_CAPI_ENDPOINT =
+  process.env.REACT_APP_META_CAPI_ENDPOINT ||
+  "https://api.smalcouture.com/api/meta/purchase";
 const META_CAPI_PIXEL_ID =
   process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || "";
-const MIN_PURCHASE_TRIGGER_VALUE = 100;
+const MIN_PURCHASE_TRIGGER_VALUE = 0.01;
 
 function normalizePurchaseValue(value) {
   if (typeof value === "number") {
@@ -192,7 +194,7 @@ export function trackInitiateCheckout({ items, value }) {
   });
 }
 
-export function trackPurchase({ orderId, items, value }) {
+export function trackPurchase({ orderId, items, value, currency = "INR" }) {
   const id = orderId ? String(orderId).trim() : "";
   const lines = Array.isArray(items) ? items : [];
   const contents = cartLinesToMetaContents(lines);
@@ -238,12 +240,13 @@ export function trackPurchase({ orderId, items, value }) {
     window.__metaAllowPurchase = true;
     trackMetaEvent("Purchase", {
       value: normalizePurchaseValue(value),
-      currency: "INR",
+      currency,
       num_items: numItems,
       content_ids: contents.map((c) => c.id),
       contents,
       order_id: id,
     });
+    return true;
   } finally {
     window.__metaAllowPurchase = false;
   }
@@ -253,13 +256,18 @@ const PURCHASE_TRACKED_PREFIX = "meta_pixel_purchase_tracked:";
 const PURCHASE_META_PREFIX = "meta_pixel_purchase_meta:";
 
 /** Stash order totals before redirecting to /order-success (read once on that page). */
-export function stashPurchaseMetaForSuccess({ orderId, items, value }) {
+export function stashPurchaseMetaForSuccess({ orderId, items, value, currency = "INR" }) {
   const id = orderId ? String(orderId).trim() : "";
   if (!id) return;
   try {
     sessionStorage.setItem(
       `${PURCHASE_META_PREFIX}${id}`,
-      JSON.stringify({ orderId: id, items, value: normalizePurchaseValue(value) }),
+      JSON.stringify({
+        orderId: id,
+        items,
+        value: normalizePurchaseValue(value),
+        currency,
+      }),
     );
   } catch {
     // ignore
@@ -286,7 +294,12 @@ export function readStashedPurchaseMeta(orderId) {
 }
 
 /** Purchase standard event — call only from the order success / thank-you page. */
-export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
+export function trackPurchaseOnOrderSuccess({
+  orderId,
+  items,
+  value,
+  currency = "INR",
+}) {
   const id = orderId ? String(orderId).trim() : "";
   if (!id) {
     if (process.env.NODE_ENV === "development") {
@@ -326,8 +339,9 @@ export function trackPurchaseOnOrderSuccess({ orderId, items, value }) {
     );
   }
 
-  trackPurchase({ orderId: id, items, value });
-  sendMetaCapiPurchase({ orderId: id, items, value, currency: "INR" });
+  const browserEventSent = trackPurchase({ orderId: id, items, value, currency });
+  const capiEventSent = sendMetaCapiPurchase({ orderId: id, items, value, currency });
+  if (!browserEventSent && !capiEventSent) return;
   try {
     sessionStorage.setItem(dedupeKey, "1");
   } catch {
