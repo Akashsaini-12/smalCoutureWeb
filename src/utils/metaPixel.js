@@ -46,6 +46,13 @@ function getPageViewDedupeKey() {
   return `${PAGE_VIEW_DEDUPE_KEY}${pathname}${search}${hash}`;
 }
 
+function isOrderSuccessPage() {
+  if (typeof window === "undefined") return false;
+  const pathname = window.location?.pathname || "";
+  const hashPath = window.location?.hash?.split("?")[0] || "";
+  return pathname === "/order-success" || hashPath.endsWith("/order-success");
+}
+
 export function trackMetaEvent(eventName, params) {
   if (!fbqReady()) return;
   try {
@@ -219,10 +226,7 @@ export function trackPurchase({ orderId, items, value, currency = "INR" }) {
     return;
   }
 
-  const isOrderSuccessPage =
-    typeof window !== "undefined" &&
-    window.location?.pathname === "/order-success";
-  if (!isOrderSuccessPage) {
+  if (!isOrderSuccessPage()) {
     if (process.env.NODE_ENV === "development") {
       console.log(
         "[Meta Pixel] trackPurchase blocked - not on order-success page. Current:",
@@ -311,10 +315,7 @@ export function trackPurchaseOnOrderSuccess({
     return;
   }
 
-  const isOrderSuccessPage =
-    typeof window !== "undefined" &&
-    window.location?.pathname === "/order-success";
-  if (!isOrderSuccessPage) {
+  if (!isOrderSuccessPage()) {
     if (process.env.NODE_ENV === "development") {
       console.log(
         "[Meta Pixel] trackPurchaseOnOrderSuccess blocked - not on order-success page",
