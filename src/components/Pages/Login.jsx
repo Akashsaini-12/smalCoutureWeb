@@ -3,8 +3,6 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loginThunk,
-  verifyOtpThunk,
-  sendOtpThunk,
   forgotPasswordSendOtpThunk,
   forgotPasswordResetThunk,
 } from "../../redux/actions";
@@ -19,7 +17,6 @@ const Login = () => {
   const [loginId, setLoginId] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [resetOtp, setResetOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -60,22 +57,10 @@ const Login = () => {
     navigate(redirectTo, { replace: true });
   }, [auth.user, auth.token, navigate, location]);
 
-  // Switch to OTP panel when server says account needs verification
-  const needsOtp = Boolean(auth.pendingEmail) && !auth.user;
-
   const handleLogin = (e) => {
     e.preventDefault();
     setLocalError("");
     dispatch(loginThunk({ emailOrPhone: loginId, password }));
-  };
-
-  const handleVerifyOtp = (e) => {
-    e.preventDefault();
-    dispatch(verifyOtpThunk(auth.pendingEmail || forgotEmail, otp));
-  };
-
-  const handleResendOtp = () => {
-    dispatch(sendOtpThunk(auth.pendingEmail || forgotEmail));
   };
 
   const handleForgotSendOtp = async (e) => {
@@ -173,48 +158,12 @@ const Login = () => {
           </div>
 
           <div
-            className={`m-customer-forms${tab === "forgot" && !needsOtp ? " show-recover-password-form" : ""}`}
+            className={`m-customer-forms${tab === "forgot" ? " show-recover-password-form" : ""}`}
           >
             <div className="container">
 
-              {/* ── OTP Verification Panel ── */}
-              {needsOtp && (
-                <div className="m-login-form" style={{ maxWidth: 480, margin: "0 auto 40px" }}>
-                  <h3>Verify Your Email</h3>
-                  <p style={{ color: "#555", marginBottom: 16 }}>
-                    An OTP was sent to <b>{auth.pendingEmail}</b>. Enter it below to continue.
-                  </p>
-                  {auth.error && <p style={{ color: "red", marginBottom: 12 }}>{auth.error}</p>}
-                  {auth.successMessage && <p style={{ color: "green", marginBottom: 12 }}>{auth.successMessage}</p>}
-                  <form onSubmit={handleVerifyOtp}>
-                    <input
-                      className="form-field form-field--input"
-                      type="text"
-                      placeholder="Enter 6-digit OTP"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      maxLength={6}
-                      required
-                      style={{ letterSpacing: 6, fontSize: 22, textAlign: "center" }}
-                    />
-                    <button className="m-button m-button--primary" type="submit" disabled={auth.loading}>
-                      {auth.loading ? "Verifying…" : "Verify OTP"}
-                    </button>
-                  </form>
-                  <button
-                    type="button"
-                    className="m-button m-button--white"
-                    style={{ marginTop: 12 }}
-                    onClick={handleResendOtp}
-                    disabled={auth.loading}
-                  >
-                    Resend OTP
-                  </button>
-                </div>
-              )}
-
               {/* ── Forgot Password Panel ── */}
-              {!needsOtp && tab === "forgot" && (
+              {tab === "forgot" && (
                 <div className="m-recover-form" id="recover">
                   <h3>Reset your password</h3>
                   <p>OTP will be sent on your registered email only.</p>
@@ -333,7 +282,7 @@ const Login = () => {
               )}
 
               {/* ── Login Panel ── */}
-              {!needsOtp && tab === "login" && (
+              {tab === "login" && (
                 <div className="m-login-form" id="login">
                   <h3>Log In</h3>
                   {(localError || auth.error) && <p style={{ color: "red", marginBottom: 12 }}>{localError || auth.error}</p>}
@@ -374,8 +323,7 @@ const Login = () => {
               )}
 
               {/* ── New Customer ── */}
-              {!needsOtp && (
-                <div className="m-sign-up">
+              <div className="m-sign-up">
                   <h3>New Customer</h3>
                   <p>
                     Sign up for early Sale access plus tailored new arrivals, trends and promotions.
@@ -389,11 +337,9 @@ const Login = () => {
                     Register
                   </button>
                 </div>
-              )}
-
+              </div>
             </div>
           </div>
-        </div>
       </main>
     </>
   );
