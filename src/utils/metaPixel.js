@@ -238,13 +238,16 @@ export function trackPurchase({ orderId, items, value, currency = "INR" }) {
 
   try {
     window.__metaAllowPurchase = true;
-    trackMetaEvent("Purchase", {
+    const purchaseParams = {
       value: normalizePurchaseValue(value),
       currency,
       num_items: numItems,
       content_ids: contents.map((c) => c.id),
       contents,
       order_id: id,
+    };
+    META_PIXEL_IDS.forEach((pixelId) => {
+      window.fbq("trackSingle", pixelId, "Purchase", purchaseParams);
     });
     return true;
   } finally {
