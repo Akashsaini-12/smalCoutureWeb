@@ -131,6 +131,17 @@ export const rootReducer = (state = initialState, action) => {
         },
       };
 
+    case "AUTH_MESSAGE":
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          loading: false,
+          error: null,
+          successMessage: action.payload.message || null,
+        },
+      };
+
     case "AUTH_LOGOUT":
       return {
         ...state,

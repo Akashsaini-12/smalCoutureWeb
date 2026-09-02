@@ -9,7 +9,7 @@ import {
 
 // const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://website-backend-bot8.vercel.app";
   //  const API_BASE = "https://website-backend-bot8.vercel.app";
-  // const API_BASE = "http://35.244.32.175:4000";
+//const API_BASE = "http://localhost:4000";
 const API_BASE = "https://api.smalcouture.com";
 // ss
 // const API_BASE =
@@ -1057,12 +1057,10 @@ export const registerThunk =
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstName, lastName, email, phone, password }),
       });
+      persistAuth(data.token, data.user);
       dispatch({
-        type: "AUTH_OTP_SENT",
-        payload: {
-          message: data.message || "OTP sent to your email",
-          email: data.email || email,
-        },
+        type: "AUTH_SUCCESS",
+        payload: { token: data.token, user: data.user, message: data.message },
       });
     } catch (err) {
       dispatch({
@@ -1071,52 +1069,6 @@ export const registerThunk =
       });
     }
   };
-
-// POST /api/auth/send-otp  (resend)
-export const sendOtpThunk = (email) => async (dispatch) => {
-  dispatch({ type: "AUTH_LOADING" });
-  try {
-    const data = await fetchJson(`${API_BASE}/api/auth/send-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: String(email || "") }),
-    });
-    dispatch({
-      type: "AUTH_OTP_SENT",
-      payload: { message: data.message || "OTP sent", email },
-    });
-  } catch (err) {
-    dispatch({
-      type: "AUTH_ERROR",
-      payload: { error: err.message || "Failed to send OTP" },
-    });
-  }
-};
-
-// POST /api/auth/verify-otp
-export const verifyOtpThunk = (email, otp) => async (dispatch) => {
-  dispatch({ type: "AUTH_LOADING" });
-  try {
-    const data = await fetchJson(`${API_BASE}/api/auth/verify-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: String(email || ""),
-        otp: String(otp || ""),
-      }),
-    });
-    persistAuth(data.token, data.user);
-    dispatch({
-      type: "AUTH_SUCCESS",
-      payload: { token: data.token, user: data.user, message: data.message },
-    });
-  } catch (err) {
-    dispatch({
-      type: "AUTH_ERROR",
-      payload: { error: err.message || "OTP verification failed" },
-    });
-  }
-};
 
 // POST /api/auth/login
 export const loginThunk =
@@ -1140,18 +1092,10 @@ export const loginThunk =
         payload: { token: data.token, user: data.user },
       });
     } catch (err) {
-      // Check if the error indicates the account needs OTP verification
-      if (err.message && err.message.includes("not verified")) {
-        dispatch({
-          type: "AUTH_NEEDS_OTP",
-          payload: { error: err.message, email: identifier },
-        });
-      } else {
-        dispatch({
-          type: "AUTH_ERROR",
-          payload: { error: err.message || "Login failed" },
-        });
-      }
+      dispatch({
+        type: "AUTH_ERROR",
+        payload: { error: err.message || "Login failed" },
+      });
     }
   };
 
@@ -1196,7 +1140,7 @@ export const forgotPasswordResetThunk =
         }),
       });
       dispatch({
-        type: "AUTH_OTP_SENT",
+        type: "AUTH_MESSAGE",
         payload: { message: data.message || "Password reset successful" },
       });
       return data;
@@ -1268,7 +1212,7 @@ export const changePasswordThunk =
         body: JSON.stringify({ currentPassword, newPassword }),
       });
       dispatch({
-        type: "AUTH_OTP_SENT",
+        type: "AUTH_MESSAGE",
         payload: { message: data.message || "Password changed" },
       });
       return data;
