@@ -85,7 +85,13 @@ export function trackMetaPageView() {
   trackMetaEvent("PageView");
 }
 
-export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }) {
+export function sendMetaCapiPurchase({
+  orderId,
+  items,
+  value,
+  currency = "INR",
+  customer = {},
+}) {
   if (!META_CAPI_ENDPOINT || !META_CAPI_PIXEL_ID) {
     return false;
   }
@@ -122,6 +128,7 @@ export function sendMetaCapiPurchase({ orderId, items, value, currency = "INR" }
         ? { client_user_agent: navigator.userAgent }
         : {}),
     },
+    customer,
   };
 
   const isBrowser = typeof window !== "undefined";
@@ -318,6 +325,7 @@ export function trackPurchaseOnOrderSuccess({
   items,
   value,
   currency = "INR",
+  customer = {},
 }) {
   const id = orderId ? String(orderId).trim() : "";
   if (!id) {
@@ -356,7 +364,13 @@ export function trackPurchaseOnOrderSuccess({
   }
 
   const browserEventSent = trackPurchase({ orderId: id, items, value, currency });
-  const capiEventSent = sendMetaCapiPurchase({ orderId: id, items, value, currency });
+  const capiEventSent = sendMetaCapiPurchase({
+    orderId: id,
+    items,
+    value,
+    currency,
+    customer,
+  });
   if (!browserEventSent && !capiEventSent) return;
   try {
     sessionStorage.setItem(dedupeKey, "1");

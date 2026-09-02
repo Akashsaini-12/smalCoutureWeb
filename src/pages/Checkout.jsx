@@ -51,6 +51,15 @@ function getOrderTotal(order) {
   return total ?? 0;
 }
 
+function getSignedInUserEmail() {
+  try {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    return String(user?.email || "").trim().toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
 /** Backend may send `(Color/M)` or `(Color, no size)` — slash-only regex wrongly failed and marked every line OOS */
 function parseOutOfStockBannerMessage(msg) {
   if (typeof msg !== "string") return null;
@@ -963,6 +972,11 @@ export default function Checkout({ cartItems = [] }) {
         items: orderItems,
         value: purchaseTotal,
         currency: "INR",
+        customer: {
+          email: getSignedInUserEmail(),
+          phone: String(shippingAddress?.phone || "").trim(),
+          zip: String(shippingAddress?.pincode || "").trim(),
+        },
       };
       stashPurchaseMetaForSuccess(purchaseMeta);
       navigate(
