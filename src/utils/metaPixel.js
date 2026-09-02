@@ -15,7 +15,10 @@ const META_CAPI_ENDPOINT =
   process.env.REACT_APP_META_CAPI_ENDPOINT ||
   "https://api.smalcouture.com/api/meta/purchase";
 const META_CAPI_PIXEL_ID =
-  process.env.REACT_APP_META_CAPI_PIXEL_ID || process.env.REACT_APP_META_PIXEL_ID || "";
+  process.env.REACT_APP_META_CAPI_PIXEL_ID ||
+  process.env.REACT_APP_META_PIXEL_ID ||
+  META_PIXEL_IDS[0] ||
+  DEFAULT_META_PIXEL_IDS[0];
 const MIN_PURCHASE_TRIGGER_VALUE = 0.01;
 
 function normalizePurchaseValue(value) {
