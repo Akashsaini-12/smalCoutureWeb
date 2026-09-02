@@ -3,8 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   registerThunk,
-  verifyOtpThunk,
-  sendOtpThunk,
 } from "../../redux/actions";
 
 const Register = () => {
@@ -18,11 +16,7 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp, setOtp] = useState("");
   const [localError, setLocalError] = useState("");
-
-  // After OTP sent, pendingEmail is set → show OTP panel
-  const showOtpPanel = Boolean(auth.pendingEmail) && !auth.user;
 
   // Redirect after successful verification / login
   useEffect(() => {
@@ -43,15 +37,6 @@ const Register = () => {
     }
 
     dispatch(registerThunk({ firstName, lastName, email, phone, password }));
-  };
-
-  const handleVerifyOtp = (e) => {
-    e.preventDefault();
-    dispatch(verifyOtpThunk(auth.pendingEmail || email, otp));
-  };
-
-  const handleResendOtp = () => {
-    dispatch(sendOtpThunk(auth.pendingEmail || email));
   };
 
   return (
@@ -81,8 +66,7 @@ const Register = () => {
             <div className="m-register-form__wrapper">
 
               {/* ── Registration Form ── */}
-              {!showOtpPanel && (
-                <>
+              <>
                   <h1>Register</h1>
                   {(localError || auth.error) && (
                     <p style={{ color: "red", marginBottom: 12 }}>{localError || auth.error}</p>
@@ -149,44 +133,7 @@ const Register = () => {
                       Log In
                     </button>
                   </form>
-                </>
-              )}
-
-              {/* ── OTP Verification Panel ── */}
-              {showOtpPanel && (
-                <>
-                  <h1>Verify Email</h1>
-                  <p style={{ color: "#555", marginBottom: 16 }}>
-                    We sent a 6-digit OTP to <b>{auth.pendingEmail}</b>. Enter it below to activate your account.
-                  </p>
-                  {auth.error && <p style={{ color: "red", marginBottom: 12 }}>{auth.error}</p>}
-                  {auth.successMessage && <p style={{ color: "green", marginBottom: 12 }}>{auth.successMessage}</p>}
-                  <form onSubmit={handleVerifyOtp}>
-                    <input
-                      className="form-field form-field--input"
-                      type="text"
-                      placeholder="Enter 6-digit OTP"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      maxLength={6}
-                      required
-                      style={{ letterSpacing: 6, fontSize: 22, textAlign: "center" }}
-                    />
-                    <button className="m-button m-button--primary m:w-full" type="submit" disabled={auth.loading}>
-                      {auth.loading ? "Verifying…" : "Verify OTP"}
-                    </button>
-                  </form>
-                  <button
-                    type="button"
-                    className="m-button m-button--white m:w-full"
-                    style={{ marginTop: 12 }}
-                    onClick={handleResendOtp}
-                    disabled={auth.loading}
-                  >
-                    Resend OTP
-                  </button>
-                </>
-              )}
+              </>
 
             </div>
           </div>
