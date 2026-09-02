@@ -38,6 +38,19 @@ function parsePrice(value) {
   return Number.isFinite(num) ? num : 0;
 }
 
+function getOrderTotal(order) {
+  const candidates = [
+    order?.total,
+    order?.grandTotal,
+    order?.finalTotal,
+    order?.amountPaid,
+  ];
+  const total = candidates
+    .map((candidate) => parsePrice(candidate))
+    .find((candidate) => candidate > 0);
+  return total ?? 0;
+}
+
 /** Backend may send `(Color/M)` or `(Color, no size)` — slash-only regex wrongly failed and marked every line OOS */
 function parseOutOfStockBannerMessage(msg) {
   if (typeof msg !== "string") return null;
@@ -935,19 +948,21 @@ export default function Checkout({ cartItems = [] }) {
         setError("Order was not created. Please try again.");
         return;
       }
-      const purchaseValue = orderItems.reduce((sum, it) => {
+      const calculatedTotal = orderItems.reduce((sum, it) => {
         const price = parsePrice(it?.price);
         const qty = Number(it?.quantity || 1);
         return sum + (isFinite(price) ? price : 0) * (isFinite(qty) ? qty : 1);
       }, 0);
-      const purchaseTotal = Math.max(
+      const fallbackTotal = Math.max(
         0,
-        purchaseValue + shippingPreview - discountPreview,
+        calculatedTotal + shippingPreview - discountPreview,
       );
+      const purchaseTotal = getOrderTotal(res?.order) || fallbackTotal;
       const purchaseMeta = {
         orderId: String(orderId),
         items: orderItems,
         value: purchaseTotal,
+        currency: "INR",
       };
       stashPurchaseMetaForSuccess(purchaseMeta);
       navigate(
