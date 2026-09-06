@@ -6,6 +6,7 @@ import {
   forgotPasswordSendOtpThunk,
   forgotPasswordResetThunk,
 } from "../../redux/actions";
+import logo from "../../assets/ba-removebg-preview.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,6 +24,10 @@ const Login = () => {
   /** Forgot password: 1 = email, 2 = OTP, 3 = new password */
   const [forgotStep, setForgotStep] = useState(1);
   const [localError, setLocalError] = useState("");
+
+  useEffect(() => {
+    dispatch({ type: "AUTH_CLEAR_MESSAGES" });
+  }, [dispatch]);
 
   const resetForgotFlow = () => {
     setForgotStep(1);
@@ -136,7 +141,7 @@ const Login = () => {
 
   return (
     <>
-      <main id="MainContent" role="main">
+      <main id="MainContent" className="login-page" role="main">
         <div className="shopify-section" id="shopify-section-template--16598221750377__main">
           <div className="m-page-header m-page-header--template-login m-page-header--large m:text-center m-scroll-trigger animate--fade-in-up">
             <div className="container-fluid">
@@ -284,26 +289,34 @@ const Login = () => {
               {/* ── Login Panel ── */}
               {tab === "login" && (
                 <div className="m-login-form" id="login">
-                  <h3>Log In</h3>
+                  <p className="login-form__eyebrow">WELCOME BACK</p>
+                  <h3>Sign in to your account</h3>
+                  <p className="login-form__intro">Access your saved styles, orders and faster checkout.</p>
                   {(localError || auth.error) && <p style={{ color: "red", marginBottom: 12 }}>{localError || auth.error}</p>}
                   {auth.successMessage && <p style={{ color: "green", marginBottom: 12 }}>{auth.successMessage}</p>}
                   <form onSubmit={handleLogin}>
-                    <input
-                      className="form-field form-field--input"
-                      type="text"
-                      placeholder="Email or Mobile Number"
-                      value={loginId}
-                      onChange={(e) => setLoginId(e.target.value)}
-                      required
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
+                    <div className="login-field">
+                      <input
+                        className="form-field form-field--input"
+                        type="text"
+                        placeholder=" "
+                        value={loginId}
+                        onChange={(e) => setLoginId(e.target.value)}
+                        required
+                      />
+                      <label>Email or mobile number</label>
+                    </div>
+                    <div className="login-field">
+                      <input
+                        className="form-field form-field--input"
+                        type="password"
+                        placeholder=" "
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <label>Password</label>
+                    </div>
                     <button
                       type="button"
                       className="m-reset-password-btn"
@@ -324,11 +337,10 @@ const Login = () => {
 
               {/* ── New Customer ── */}
               <div className="m-sign-up">
-                  <h3>New Customer</h3>
-                  <p>
-                    Sign up for early Sale access plus tailored new arrivals, trends and promotions.
-                    To opt out, click unsubscribe in our emails.
-                  </p>
+                  <p className="login-signup__eyebrow">YOUR STYLE, YOUR STORY</p>
+                  <img className="login-signup__logo" src={logo} alt="SMal Couture" />
+                  <h3>New customer?</h3>
+                  <p>Create an account for early sale access, tailored new arrivals and a smoother shopping experience.</p>
                   <button
                     type="button"
                     className="m-button m-button--primary"
