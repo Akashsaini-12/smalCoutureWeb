@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -18,14 +18,16 @@ import { getUserId } from "../utils/userId";
 
 const inputStyle = {
   width: "100%",
-  padding: "12px 14px",
-  borderRadius: 12,
-  border: "1px solid rgba(15, 23, 42, 0.14)",
-  fontSize: 15,
+  minHeight: 52,
+  padding: "0 12px",
+  borderRadius: 10,
+  border: "1px solid #dfe4ea",
+  fontSize: 16,
   fontFamily: "inherit",
   boxSizing: "border-box",
   outline: "none",
-  background: "#fff",
+  background: "#f8f9fa",
+  color: "#333",
   transition: "box-shadow 0.15s ease, border-color 0.15s ease",
 };
 
@@ -35,32 +37,50 @@ const labelStyle = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "rgba(15, 23, 42, 0.6)",
+  color: "#75604f",
   marginBottom: 8,
 };
 
 const cardStyle = {
   background: "#fff",
-  border: "1px solid rgba(15, 23, 42, 0.08)",
-  borderRadius: 18,
+  border: "1px solid #eee9e3",
+  borderRadius: 14,
   padding: "22px 20px",
-  boxShadow: "0 10px 30px rgba(15,23,42,0.06)",
+  boxShadow: "0 12px 35px rgba(42, 33, 27, 0.04)",
+};
+
+const compactCardStyle = {
+  ...cardStyle,
+  padding: "18px 16px",
+};
+
+const compactInputStyle = {
+  ...inputStyle,
+  minHeight: 46,
+  fontSize: 16,
+};
+
+const passwordInputStyle = {
+  ...compactInputStyle,
+  fontSize: 24,
+  letterSpacing: "0.14em",
+  lineHeight: 1,
 };
 
 const sectionTitleStyle = {
   marginTop: 0,
   marginBottom: 4,
-  fontSize: 16,
-  fontWeight: 850,
-  color: "#0f172a",
+  fontSize: 15,
+  fontWeight: 800,
+  color: "#171717",
   letterSpacing: "-0.01em",
 };
 
 const sectionSubStyle = {
   marginTop: 0,
   marginBottom: 18,
-  fontSize: 13.5,
-  color: "rgba(15, 23, 42, 0.62)",
+  fontSize: 12.5,
+  color: "#766150",
 };
 
 function initialsOfUser(user) {
@@ -69,6 +89,56 @@ function initialsOfUser(user) {
   const a = (f[0] || "U").toUpperCase();
   const b = (l[0] || "").toUpperCase();
   return `${a}${b}`.trim();
+}
+
+function ProfileFloatingField({ id, label, value, onChange, type = "text", style, ...props }) {
+  const [focused, setFocused] = useState(false);
+  const active = focused || String(value ?? "").length > 0;
+
+  return (
+    <div style={{ position: "relative", width: "100%" }}>
+      <label
+        htmlFor={id}
+        style={{
+          position: "absolute",
+          left: 12,
+          top: active ? 0 : "50%",
+          zIndex: 1,
+          padding: "0 3px",
+          color: active ? "#685343" : "#75604f",
+          background: active ? "#fff" : "transparent",
+          fontSize: active ? 11 : 15,
+          pointerEvents: "none",
+          transform: active ? "translateY(-50%)" : "translateY(-50%)",
+          transition: "top 0.2s ease, font-size 0.2s ease, color 0.2s ease",
+        }}
+      >
+        {label}
+      </label>
+      <input
+        {...props}
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onFocus={(event) => {
+          setFocused(true);
+          props.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          props.onBlur?.(event);
+        }}
+        style={{
+          ...compactInputStyle,
+          ...style,
+          borderColor: focused ? "#b88a58" : "#dfe4ea",
+          background: focused ? "#fff" : "#f8f9fa",
+          boxShadow: focused ? "0 0 0 2px rgba(184,138,88,0.12)" : "none",
+        }}
+      />
+    </div>
+  );
 }
 
 export default function Profile() {
@@ -84,8 +154,10 @@ export default function Profile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [newPasswordTouched, setNewPasswordTouched] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const avatarInputRef = useRef(null);
+
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [addrLoading, setAddrLoading] = useState(false);
   const [addrError, setAddrError] = useState("");
@@ -234,20 +306,6 @@ export default function Profile() {
     }
   };
 
-  const handleAvatarPick = async (file) => {
-    if (!file) return;
-    try {
-      setAvatarUploading(true);
-      const url = await uploadImageToCloudinary(file);
-      await dispatch(updateProfileThunk({ avatarUrl: url }));
-      toast.success("Profile photo updated");
-    } catch (e) {
-      toast.error(e?.message || "Failed to update photo");
-    } finally {
-      setAvatarUploading(false);
-    }
-  };
-
   const dirtyProfile = useMemo(() => {
     if (!user) return false;
     const fn = String(firstName || "").trim();
@@ -262,6 +320,10 @@ export default function Profile() {
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
+    if (!/^\d{10}$/.test(String(phone || "").trim())) {
+      toast.error("Phone number must contain exactly 10 digits");
+      return;
+    }
     try {
       await dispatch(
         updateProfileThunk({
@@ -278,12 +340,16 @@ export default function Profile() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    if (newPassword.length < 6) {
-      toast.error("New password must be at least 6 characters");
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
-    if (newPassword !== confirmPassword) {
-      toast.error("New passwords do not match");
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    if (!/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      toast.error("Password must contain at least one letter and one number");
       return;
     }
     try {
@@ -294,6 +360,7 @@ export default function Profile() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+      setNewPasswordTouched(false);
     } catch (err) {
       toast.error(err?.message || "Could not change password");
     }
@@ -326,13 +393,27 @@ export default function Profile() {
     window.location.href = "/";
   };
 
+  const handleAvatarPick = async (file) => {
+    if (!file) return;
+    try {
+      setAvatarUploading(true);
+      const url = await uploadImageToCloudinary(file);
+      await dispatch(updateProfileThunk({ avatarUrl: url }));
+      toast.success("Profile photo updated");
+    } catch (e) {
+      toast.error(e?.message || "Failed to update photo");
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   return (
     <main id="MainContent" role="main">
       <div className="shopify-section" id="shopify-section-profile">
         <div
           style={{
-            background: "linear-gradient(135deg, rgba(15,23,42,1) 0%, rgba(30,41,59,1) 55%, rgba(51,65,85,1) 100%)",
-            color: "#fff",
+            background: "#ffffff",
+            color: "#5b3a1d",
             padding: "38px 0 26px",
             borderBottom: "1px solid rgba(255,255,255,0.08)",
           }}
@@ -343,17 +424,17 @@ export default function Profile() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                   <Link
                     to="/"
-                    style={{ color: "rgba(255,255,255,0.78)", textDecoration: "none", fontWeight: 700, fontSize: 13 }}
+                    style={{ color: "#8a6338", textDecoration: "none", fontWeight: 700, fontSize: 13 }}
                   >
                     Home
                   </Link>
                   <span style={{ opacity: 0.35 }}>›</span>
-                  <span style={{ color: "#fff", fontWeight: 800, fontSize: 13 }}>Account</span>
+                  <span style={{ color: "#5b3a1d", fontWeight: 800, fontSize: 13 }}>Account</span>
                 </div>
                 {user?.role === 0 && (
                   <Link
                     to="/admin"
-                    style={{ color: "#fff", fontWeight: 800, textDecoration: "underline", fontSize: 13, whiteSpace: "nowrap" }}
+                    style={{ color: "#8a6338", fontWeight: 800, textDecoration: "underline", fontSize: 13, whiteSpace: "nowrap" }}
                   >
                     ← Back to admin panel
                   </Link>
@@ -362,38 +443,78 @@ export default function Profile() {
             </nav>
 
             <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 16,
-                  background: "rgba(255,255,255,0.10)",
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 900,
-                  letterSpacing: "0.02em",
-                  overflow: "hidden",
-                  position: "relative",
-                }}
-              >
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <span aria-hidden="true">{avatarInitials || "U"}</span>
-                )}
+              <div>
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 16,
+                    background: "#fff",
+                    border: "1px solid #b79160",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 900,
+                    letterSpacing: "0.02em",
+                    overflow: "hidden",
+                    position: "relative",
+                  }}
+                >
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span aria-hidden="true">{avatarInitials || "U"}</span>
+                  )}
+                </div>
               </div>
               <div style={{ minWidth: 0 }}>
-                <h1 style={{ margin: 0, fontSize: 24, fontWeight: 900, letterSpacing: "-0.02em" }}>My profile</h1>
-                <div style={{ marginTop: 4, color: "rgba(255,255,255,0.72)", fontSize: 13.5, fontWeight: 600 }}>
+                <h1 style={{ margin: 0, fontSize: 24, fontWeight: 900, letterSpacing: "-0.02em", color: "#5b3a1d" }}>{user.firstName || "Account"}</h1>
+                <div style={{ marginTop: 4, color: "#8a6338", fontSize: 13.5, fontWeight: 600 }}>
                   {user.email}
                   {user?.role === 0 ? " • Admin" : ""}
                 </div>
               </div>
             </div>
             <div style={{ marginTop: 16, display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <label
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  handleAvatarPick(e.target.files?.[0]);
+                  e.target.value = "";
+                }}
+                disabled={avatarUploading}
+              />
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={avatarUploading}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 56,
+                  height: 38,
+                  padding: 0,
+                  borderRadius: 14,
+                  background: "#fff",
+                  border: "1px solid #b79160",
+                  color: "#5b3a1d",
+                  cursor: avatarUploading ? "wait" : "pointer",
+                }}
+                aria-label="Edit profile photo"
+                title="Edit profile photo"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" />
+                </svg>
+              </button>
+              <Link
+                to="/orders"
+                className="profile-orders-button"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -401,24 +522,19 @@ export default function Profile() {
                   gap: 10,
                   padding: "10px 14px",
                   borderRadius: 14,
-                  background: "rgba(255,255,255,0.10)",
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  cursor: avatarUploading ? "wait" : "pointer",
+                  background: "#fff",
+                  border: "1px solid #b79160",
+                  color: "#5b3a1d",
+                  textDecoration: "none",
+                  cursor: "pointer",
                   userSelect: "none",
                   fontWeight: 900,
                   fontSize: 13,
                   minWidth: 132,
                 }}
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={(e) => handleAvatarPick(e.target.files?.[0])}
-                  disabled={avatarUploading}
-                />
-                {avatarUploading ? "Uploading…" : "Change photo"}
-              </label>
+                My orders
+              </Link>
 
               <button
                 type="button"
@@ -430,9 +546,9 @@ export default function Profile() {
                   gap: 10,
                   padding: "10px 14px",
                   borderRadius: 14,
-                  background: "rgba(239,68,68,0.14)",
-                  border: "1px solid rgba(239,68,68,0.28)",
-                  color: "#fff",
+                  background: "#fff",
+                  border: "1px solid #b79160",
+                  color: "#5b3a1d",
                   fontWeight: 950,
                   fontSize: 13,
                   cursor: "pointer",
@@ -456,46 +572,24 @@ export default function Profile() {
                 gap: 16,
               }}
             >
-              <section style={cardStyle}>
+              <section style={compactCardStyle}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                   <div>
                     <h2 style={sectionTitleStyle}>Profile details</h2>
                     <p style={sectionSubStyle}>Update your contact information for orders and support.</p>
                   </div>
-                  {dirtyProfile && (
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 12px",
-                        background: "rgba(37, 99, 235, 0.10)",
-                        border: "1px solid rgba(37, 99, 235, 0.22)",
-                        color: "#1d4ed8",
-                        borderRadius: 999,
-                        fontSize: 12,
-                        fontWeight: 800,
-                        letterSpacing: "0.03em",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      Unsaved changes
-                    </span>
-                  )}
                 </div>
 
                 <form onSubmit={handleSaveProfile}>
                   <div style={{ display: "grid", gap: 14 }}>
                     <div>
-                      <label htmlFor="profile-email" style={labelStyle}>
-                        Email
-                      </label>
-                      <input
+                      <ProfileFloatingField
                         id="profile-email"
+                        label="Email"
                         type="email"
                         value={user.email || ""}
-                        disabled
-                        style={{ ...inputStyle, background: "rgba(15,23,42,0.04)", color: "rgba(15,23,42,0.55)" }}
+                        readOnly
+                        style={{ background: "#f8f9fa", color: "#333" }}
                       />
                       <p style={{ fontSize: 12, color: "rgba(15,23,42,0.55)", marginTop: 8, marginBottom: 0 }}>
                         Email can’t be changed here.
@@ -504,148 +598,155 @@ export default function Profile() {
 
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                       <div>
-                        <label htmlFor="profile-first" style={labelStyle}>
-                          First name
-                        </label>
-                        <input
+                        <ProfileFloatingField
                           id="profile-first"
+                          label="First name"
                           type="text"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
                           required
                           autoComplete="given-name"
-                          style={inputStyle}
                         />
                       </div>
                       <div>
-                        <label htmlFor="profile-last" style={labelStyle}>
-                          Last name
-                        </label>
-                        <input
+                        <ProfileFloatingField
                           id="profile-last"
+                          label="Last name"
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
                           autoComplete="family-name"
-                          style={inputStyle}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="profile-phone" style={labelStyle}>
-                        Phone
-                      </label>
-                      <input
+                      <ProfileFloatingField
                         id="profile-phone"
+                        label="Phone"
                         type="tel"
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
                         autoComplete="tel"
-                        style={inputStyle}
+                        inputMode="numeric"
+                        minLength={10}
+                        maxLength={10}
+                        pattern="[0-9]{10}"
+                        title="Enter exactly 10 digits"
                       />
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                    <div className="profile-action-wrap" style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                       <button
                         type="submit"
                         disabled={loading || !dirtyProfile}
                         style={{
-                          padding: "14px 18px",
-                          background: "#111827",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: 12,
-                          fontSize: 14.5,
-                          fontWeight: 800,
-                          cursor: loading ? "wait" : dirtyProfile ? "pointer" : "not-allowed",
+                          padding: "10px 14px",
+                          background: "#fff",
+                          color: "#5b3a1d",
+                          border: "1px solid #b79160",
+                          borderRadius: 14,
+                          fontSize: 13,
+                          fontWeight: 900,
+                          cursor: loading ? "wait" : "pointer",
                           fontFamily: "inherit",
-                          opacity: loading ? 0.7 : dirtyProfile ? 1 : 0.55,
-                          minWidth: 180,
-                          boxShadow: "0 10px 24px rgba(17,24,39,0.18)",
+                          opacity: 1,
+                          width: "100%",
+                          minWidth: 0,
                         }}
                       >
                         {loading ? "Saving…" : "Save changes"}
                       </button>
-                      <span style={{ fontSize: 12.5, color: "rgba(15,23,42,0.60)", fontWeight: 600 }}>
-                        Tip: your name is used on invoices and order emails.
-                      </span>
                     </div>
                   </div>
                 </form>
               </section>
 
-              <section style={cardStyle}>
+              <section style={compactCardStyle}>
                 <h2 style={sectionTitleStyle}>Security</h2>
-                <p style={sectionSubStyle}>Change your password to keep your account safe.</p>
+                <p style={sectionSubStyle}>Please use a 6 digits alphanumeric password to keep your account safe.</p>
 
                 <form onSubmit={handleChangePassword}>
                   <div style={{ display: "grid", gap: 14 }}>
                     <div>
-                      <label htmlFor="pw-current" style={labelStyle}>
-                        Current password
-                      </label>
-                      <input
+                      <ProfileFloatingField
                         id="pw-current"
+                        label="Current password"
                         type="password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                         autoComplete="current-password"
-                        style={inputStyle}
+                        minLength={6}
+                        required
+                        style={passwordInputStyle}
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="pw-new" style={labelStyle}>
-                        New password
-                      </label>
-                      <input
+                      <ProfileFloatingField
                         id="pw-new"
+                        label="New password"
                         type="password"
                         value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setNewPassword(value);
+                          setNewPasswordTouched(value.length >= 6);
+                        }}
+                        onBlur={() => setNewPasswordTouched(true)}
                         autoComplete="new-password"
-                        style={inputStyle}
+                        minLength={6}
+                        pattern="(?=.*[A-Za-z])(?=.*\d).+"
+                        title="Password must contain at least one letter and one number"
+                        required
+                        style={passwordInputStyle}
                       />
+                      {newPasswordTouched && newPassword.length > 0 && (
+                        newPassword.length < 6 ? (
+                          <p className="profile-password__hint">Please enter at least 6 characters</p>
+                        ) : (!/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword)) ? (
+                          <p className="profile-password__hint">Password must contain at least one letter and one number</p>
+                        ) : null
+                      )}
                     </div>
 
                     <div>
-                      <label htmlFor="pw-confirm" style={labelStyle}>
-                        Confirm new password
-                      </label>
-                      <input
+                      <ProfileFloatingField
                         id="pw-confirm"
+                        label="Confirm new password"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         autoComplete="new-password"
-                        style={inputStyle}
+                        minLength={6}
+                        pattern="(?=.*[A-Za-z])(?=.*\d).+"
+                        title="Password must contain at least one letter and one number"
+                        required
+                        style={passwordInputStyle}
                       />
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                    <div className="profile-action-wrap" style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                       <button
                         type="submit"
                         disabled={loading || !currentPassword || !newPassword}
                         style={{
-                          padding: "14px 18px",
+                          padding: "10px 14px",
                           background: "#fff",
-                          color: "#0f172a",
-                          border: "1px solid rgba(15,23,42,0.18)",
-                          borderRadius: 12,
-                          fontSize: 14.5,
-                          fontWeight: 850,
-                          cursor: loading ? "wait" : currentPassword && newPassword ? "pointer" : "not-allowed",
+                          color: "#5b3a1d",
+                          border: "1px solid #b79160",
+                          borderRadius: 14,
+                          fontSize: 13,
+                          fontWeight: 900,
+                          cursor: loading ? "wait" : "pointer",
                           fontFamily: "inherit",
-                          opacity: loading ? 0.7 : currentPassword && newPassword ? 1 : 0.55,
-                          minWidth: 180,
+                          opacity: 1,
+                          width: "100%",
+                          minWidth: 0,
                         }}
                       >
                         Update password
                       </button>
-                      <span style={{ fontSize: 12.5, color: "rgba(15,23,42,0.60)", fontWeight: 600 }}>
-                        Minimum 6 characters.
-                      </span>
                     </div>
                   </div>
                 </form>
@@ -659,23 +760,6 @@ export default function Profile() {
                   <h2 style={sectionTitleStyle}>Address book</h2>
                   <p style={sectionSubStyle}>Save shipping addresses for faster checkout.</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={startNewAddress}
-                  style={{
-                    padding: "10px 14px",
-                    background: "#fff",
-                    color: "#0f172a",
-                    border: "1px solid rgba(15,23,42,0.18)",
-                    borderRadius: 12,
-                    fontSize: 13.5,
-                    fontWeight: 850,
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  + Add new
-                </button>
               </div>
 
               {addrLoading ? (
@@ -692,18 +776,71 @@ export default function Profile() {
                         style={{
                           textAlign: "left",
                           borderRadius: 16,
-                          padding: "14px 14px",
-                          border: active ? "2px solid rgba(37,99,235,0.55)" : "1px solid rgba(15,23,42,0.10)",
-                          background: active ? "rgba(37,99,235,0.06)" : "#fff",
+                          padding: "16px",
+                          border: active ? "2px solid #b79160" : "1px solid #d8a45f",
+                          background: "#fff",
                           cursor: "pointer",
                           fontFamily: "inherit",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                           <div style={{ fontWeight: 950, color: "#0f172a" }}>
-                            {a?.label || "Address"} {a?.isDefault ? <span style={{ color: "#1d4ed8" }}>• Default</span> : null}
+                            {a?.label || "Address"} {a?.isDefault ? <span style={{ color: "#8a6338" }}>• Default</span> : null}
                           </div>
-                          <span style={{ color: "rgba(15,23,42,0.55)", fontWeight: 800, fontSize: 12 }}>Select</span>
+                          <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                            <span
+                              title="Edit address"
+                              aria-label="Edit address"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                startEditAddress(String(a._id));
+                              }}
+                              style={{
+                                width: 38,
+                                height: 38,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                border: "1px solid #30251f",
+                                borderRadius: 11,
+                                background: "#fff",
+                                color: "#5b3a1d",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+                              </svg>
+                            </span>
+                            <span
+                              title="Delete address"
+                              aria-label="Delete address"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setSelectedAddressId(String(a._id));
+                                handleDeleteAddress();
+                              }}
+                              style={{
+                                width: 38,
+                                height: 38,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                border: "1px solid #30251f",
+                                borderRadius: 11,
+                                background: "#fff",
+                                color: "#5b3a1d",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round">
+                                <path d="M6 6l12 12M18 6 6 18" />
+                              </svg>
+                            </span>
+                          </div>
                         </div>
                         <div style={{ marginTop: 6, color: "rgba(15,23,42,0.72)", fontWeight: 700, fontSize: 13 }}>
                           {a?.name || "-"} • {a?.phone || "-"}
@@ -713,38 +850,31 @@ export default function Profile() {
                           <br />
                           {[a?.city, a?.state].filter(Boolean).join(", ")} {a?.pincode ? `- ${a.pincode}` : ""}
                         </div>
-                        <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                          <span
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              startEditAddress(String(a._id));
-                            }}
-                            style={{ color: "#111827", fontWeight: 900, fontSize: 13, textDecoration: "underline" }}
-                          >
-                            Edit
-                          </span>
-                          <span
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setSelectedAddressId(String(a._id));
-                              handleDeleteAddress();
-                            }}
-                            style={{ color: "#e11d48", fontWeight: 900, fontSize: 13, textDecoration: "underline" }}
-                          >
-                            Delete
-                          </span>
-                        </div>
                       </button>
                     );
                   })}
                 </div>
-              ) : (
-                <div style={{ color: "rgba(15,23,42,0.65)", fontWeight: 700 }}>
-                  No saved addresses yet. Add one to speed up checkout.
-                </div>
-              )}
+              ) : null}
+
+              <div style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={startNewAddress}
+                  style={{
+                    padding: "10px 18px",
+                    background: "#fff",
+                    color: "#5b3a1d",
+                    border: "1px solid #b79160",
+                    borderRadius: 12,
+                    fontSize: 13.5,
+                    fontWeight: 850,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  + Add new
+                </button>
+              </div>
 
               {addrError ? (
                 <div style={{ marginTop: 12, color: "#b91c1c", fontWeight: 800 }}>{addrError}</div>
@@ -753,7 +883,7 @@ export default function Profile() {
               {showAddressForm && (
                 <div style={{ marginTop: 16, borderTop: "1px solid rgba(15,23,42,0.08)", paddingTop: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                    <div style={{ fontWeight: 950, color: "#0f172a" }}>
+                    <div style={{ fontWeight: 950, color: "#5b3a1d" }}>
                       {selectedAddressId ? "Edit address" : "Add new address"}
                     </div>
                     <button
@@ -761,12 +891,12 @@ export default function Profile() {
                       onClick={() => setShowAddressForm(false)}
                       style={{
                         border: "none",
-                        background: "rgba(15,23,42,0.06)",
+                        background: "#f1ede5",
                         padding: "10px 12px",
                         borderRadius: 12,
                         cursor: "pointer",
                         fontWeight: 900,
-                        color: "#0f172a",
+                        color: "#5b3a1d",
                         fontFamily: "inherit",
                       }}
                     >

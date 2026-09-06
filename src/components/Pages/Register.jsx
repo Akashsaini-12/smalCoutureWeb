@@ -41,6 +41,10 @@ const Register = () => {
       setLocalError("Password must be at least 6 characters");
       return;
     }
+    if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      setLocalError("Password must contain at least one letter and one number");
+      return;
+    }
     if (!/^\d{10}$/.test(phone)) {
       setPhoneTouched(true);
       setLocalError("Phone number must contain exactly 10 digits");
@@ -168,11 +172,11 @@ const Register = () => {
                       <p className="register-email__hint">Please enter correct email address</p>
                     )}
                     <div className="register-field">
-                      <input onKeyDown={handleFieldKeyDown} ref={passwordRef} className="form-field form-field--input" type="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required />
+                      <input onKeyDown={handleFieldKeyDown} ref={passwordRef} className="form-field form-field--input" type="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} pattern="(?=.*[A-Za-z])(?=.*\d).+" title="Password must contain at least one letter and one number" required />
                       <label>Password</label>
                     </div>
                     <div className="register-field">
-                      <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="password" placeholder=" " value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} required />
+                      <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="password" placeholder=" " value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} pattern="(?=.*[A-Za-z])(?=.*\d).+" title="Password must contain at least one letter and one number" required />
                       <label>Confirm Password</label>
                     </div>
                     {showPasswordMismatch && password !== confirmPassword && (
