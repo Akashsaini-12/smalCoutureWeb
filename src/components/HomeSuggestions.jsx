@@ -204,7 +204,7 @@ export default function HomeSuggestions({ addToCart, cartItems = [] }) {
   return (
     <section className="m-section m-gradient m-color-default">
       <div className="container-fluid m-section-my m-section-py">
-        <div className="m-section__header m:text-center">
+        <div className="m-section__header m:text-center homepage-section-divider">
           <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
             Suggested for you
           </h2>
@@ -226,4 +226,3 @@ export default function HomeSuggestions({ addToCart, cartItems = [] }) {
     </section>
   );
 }
-
