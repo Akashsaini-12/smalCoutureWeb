@@ -6,6 +6,10 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
     const rootRef = useRef(null);
 
     const safeOptions = Array.isArray(options) ? options : [];
+    const stopHeaderMenu = (event) => {
+      event.stopPropagation();
+      document.dispatchEvent(new CustomEvent("mselect-interaction"));
+    };
     const selected =
       safeOptions.find((o) => String(o.value) === String(value)) || safeOptions[0];
   
@@ -67,12 +71,11 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
             aria-haspopup="listbox"
             aria-expanded={open ? "true" : "false"}
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+              stopHeaderMenu(e);
               setOpen((v) => !v);
             }}
             onPointerDown={(e) => {
-              e.stopPropagation();
+              stopHeaderMenu(e);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
@@ -127,15 +130,14 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
                   role="option"
                   aria-selected={isSelected ? "true" : "false"}
                   onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    stopHeaderMenu(e);
                     const v = String(o.value);
                     setValue(v);
                     setOpen(false);
                     if (onChange) onChange(v);
                   }}
                   onPointerDown={(e) => {
-                    e.stopPropagation();
+                    stopHeaderMenu(e);
                   }}
                   style={{
                     padding: "8px 12px",
