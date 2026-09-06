@@ -204,7 +204,7 @@ const MixMatch = ({ addToCart }) => {
         data-section-id="template--15265873625193__lookbook_MB4Mr4"
       >
         <div className="container-fluid m-section-my m-section-py">
-          <div className="m-section__header m:text-center ">
+          <div className="m-section__header m:text-center homepage-section-divider">
             <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
               Check out mix &amp; match
             </h2>
