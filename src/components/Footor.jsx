@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import whatsappLogo from "../assets/download.png";
 
 const FOOTER_CSS =
   "/cdn/shop/t/10/assets/footer4754.css?v=184147594002676474491709194135";
@@ -45,6 +44,22 @@ const instagramIcon = (
     <path
       fill="currentColor"
       d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+    />
+  </svg>
+);
+
+const whatsappIcon = (
+  <svg
+    className="m-svg-icon--medium"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+    <path
+      d="M8.5 9.2c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.2.1.4-.1.6l-.5.6c.7 1.2 1.7 2.2 2.9 2.9l.6-.5c.2-.2.4-.2.6-.1l1.7.7c.3.1.4.3.4.5v.5c0 .3 0 .6-.5.8-.4.2-1.4.5-2.4.1-1-.4-2.1-1-3.3-2.2-1.2-1.2-1.8-2.3-2.2-3.3-.4-1-.1-2 .1-2.4Z"
+      fill="currentColor"
     />
   </svg>
 );
@@ -182,15 +197,26 @@ const Footor = () => {
           >
             <style>{`
               .m-footer--section-shell {
-                background: #f6f2eb;
+                background: #fbf9f5;
                 color: #1d1b1b;
-                box-shadow: inset 0 1px 0 rgba(35, 25, 18, 0.06);
+                padding-top: 80px;
+              }
+              .m-footer--section-shell::before {
+                content: "";
+                display: block;
+                margin: 0 22px;
+                border-top: 1px solid rgba(183, 145, 96, 0.35);
               }
               .m-footer--section-shell .m-footer--middle {
-                background: transparent;
+                margin: 76px 22px 18px;
+                border: 1px solid rgba(183, 145, 96, 0.5);
+                border-radius: 24px;
+                background: #f1ede5;
                 color: #1d1b1b;
                 padding-top: 34px;
                 padding-bottom: 28px;
+                box-shadow: 0 12px 30px rgba(48, 37, 31, 0.1);
+                overflow: hidden;
               }
               .m-footer--section-shell .m-footer--middle .container-fluid {
                 max-width: 1400px;
@@ -299,11 +325,25 @@ const Footor = () => {
               .m-footer--contact-card,
               .m-footer--contact-link,
               .m-footer--social-pill {
-                border-radius: 999px;
-                border: 1px solid rgba(178, 149, 96, 0.9);
-                background: rgba(255, 255, 255, 0.42);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 10px 18px rgba(31, 22, 16, 0.04);
-                color: rgba(26, 22, 21, 0.8);
+                border-radius: 22px;
+                border: 1px solid #b79160;
+                background: #f1ede5;
+                box-shadow: 0 8px 18px rgba(48, 37, 31, 0.12);
+                color: #5b3a1d;
+                font-family: inherit;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 1.25;
+                transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+              }
+              .m-footer--contact-card:hover,
+              .m-footer--contact-link:hover,
+              .m-footer--social-pill:hover {
+                border-color: #b79160;
+                background: #f1ede5;
+                color: #5b3a1d;
+                box-shadow: 0 10px 20px rgba(48, 37, 31, 0.16);
+                transform: none;
               }
               .m-footer--contact-card {
                 display: flex;
@@ -318,18 +358,15 @@ const Footor = () => {
                 gap: 10px;
                 width: 100%;
                 min-width: 0;
-                color: rgba(26, 22, 21, 0.7);
+                color: inherit;
               }
               .m-footer--contact-card svg {
-                color: rgba(26, 22, 21, 0.78);
+                color: inherit;
               }
               .m-footer--contact-card-text {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                font-size: 0.96rem;
-                font-weight: 700;
-                line-height: 1.25;
                 min-width: 0;
               }
               .m-footer--contact-link {
@@ -340,14 +377,11 @@ const Footor = () => {
                 min-height: 54px;
                 padding: 12px 18px;
                 text-decoration: none;
-                font-weight: 700;
-                font-size: 0.97rem;
                 box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 10px 18px rgba(31, 22, 16, 0.045);
                 transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
               }
               .m-footer--contact-link:hover {
                 transform: translateY(-1px);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 14px 22px rgba(31, 22, 16, 0.08);
               }
               .m-footer--contact-link > span {
                 display: flex;
@@ -358,11 +392,12 @@ const Footor = () => {
                 min-width: 0;
                 white-space: nowrap;
               }
-              .m-footer--contact-link img {
+              .m-footer--contact-link img,
+              .m-footer--contact-link svg {
                 width: 18px;
                 height: 18px;
                 flex-shrink: 0;
-                filter: drop-shadow(0 2px 4px rgba(15, 122, 72, 0.2));
+                color: currentColor;
               }
               .m-footer--contact-link .m-footer--wa-number {
                 overflow: hidden;
@@ -372,11 +407,19 @@ const Footor = () => {
                 letter-spacing: -0.01em;
               }
               .m-footer--contact-link .m-footer--wa-copy {
-                opacity: 0.78;
-                white-space: nowrap;
-                flex-shrink: 1;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                display: none;
+              }
+              .m-footer--wa-chip {
+                margin-left: auto;
+                flex-shrink: 0;
+                border: 1px solid #b79160;
+                border-radius: 999px;
+                padding: 8px 14px;
+                background: #f1ede5;
+                color: #5b3a1d;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 1;
               }
               .m-footer--social-row {
                 display: grid;
@@ -387,19 +430,19 @@ const Footor = () => {
               .m-footer--social-pill {
                 display: flex;
                 align-items: center;
-                justify-content: flex-start;
+                justify-content: center;
+                position: relative;
                 gap: 10px;
                 min-height: 56px;
                 padding: 14px 18px;
                 text-decoration: none;
-                color: rgba(26, 22, 21, 0.8);
-                font-weight: 700;
-                font-size: 0.96rem;
               }
               .m-footer--social-pill svg {
                 width: 18px;
                 height: 18px;
                 flex-shrink: 0;
+                position: absolute;
+                left: 18px;
               }
               .social-media-links {
                 display: flex;
@@ -461,6 +504,16 @@ const Footor = () => {
                 }
               }
               @media (max-width: 767px) {
+                .m-footer--section-shell {
+                  padding-top: 56px !important;
+                }
+                .m-footer--section-shell::before {
+                  margin: 0 12px;
+                }
+                .m-footer--section-shell .m-footer--middle {
+                  margin: 54px 12px 12px !important;
+                  border-radius: 20px;
+                }
                 .m-footer {
                   margin-top: 0 !important;
                   padding-top: 0 !important;
@@ -480,7 +533,6 @@ const Footor = () => {
                 .m-footer--middle {
                   padding-top: 0 !important;
                   padding-bottom: 0 !important;
-                  margin-top: 0 !important;
                 }
                 .m-footer--middle > .container-fluid {
                   padding-top: 0 !important;
@@ -514,7 +566,7 @@ const Footor = () => {
                 .m-footer--contact-card-text,
                 .m-footer--social-pill,
                 .m-footer--contact-link {
-                  font-size: 0.9rem;
+                  font-size: 13px;
                 }
                 .m-footer--contact-link > span {
                   gap: 6px;
@@ -526,7 +578,7 @@ const Footor = () => {
                   text-overflow: ellipsis;
                 }
                 .m-footer--social-row {
-                  grid-template-columns: 1fr;
+                  grid-template-columns: repeat(2, minmax(0, 1fr));
                 }
                 .m-footer--accordion .m-accordion--item.open .m-accordion--item-content {
                   display: block !important;
@@ -577,7 +629,7 @@ const Footor = () => {
                                   <path d="M22 6 12 13 2 6" />
                                 </svg>
                                 <span className="m-footer--contact-card-text">
-                                  Write us on smalcouture@gmail.com
+                                  write us on smalcouture@gmail.com
                                 </span>
                               </span>
                             </div>
@@ -589,16 +641,9 @@ const Footor = () => {
                               className="m-footer--contact-link"
                             >
                               <span>
-                                <img
-                                  src={whatsappLogo}
-                                  alt="WhatsApp"
-                                  width={18}
-                                  height={18}
-                                  style={{ width: 18, height: 18, objectFit: "contain", display: "block", flexShrink: 0 }}
-                                  loading="lazy"
-                                />
+                                {whatsappIcon}
                                 <span className="m-footer--wa-number">+918199985004</span>
-                                <span className="m-footer--wa-copy">- Click here to open WhatsApp</span>
+                                <span className="m-footer--wa-chip">Click here to open whatsapp</span>
                               </span>
                             </a>
                           </div>
@@ -638,9 +683,6 @@ const Footor = () => {
                               </svg>
                               smal_west
                             </a>
-                          </div>
-                          <div className="m-footer--connect-copy">
-                            <strong>Let's Connect.</strong> Whether you need help with an order, have a product inquiry, or want to collaborate, we'd love to hear from you.
                           </div>
                         </div>
                       </div>
