@@ -895,12 +895,14 @@ const Header = () => {
     }
     setProfileOpen(v => !v)
   }
-  const handleLogout = () => {
-    const confirmed = window.confirm('Are you sure you want to logout?')
-    if (!confirmed) return
+  const handleLogout = (event) => {
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
     dispatch(logoutThunk())
     setProfileOpen(false)
-    navigate('/')
+    setIsMenuOpen(false)
+    setActiveMobileMenu(null)
+    navigate('/', { replace: true })
   }
 
   return (
@@ -1134,7 +1136,7 @@ const Header = () => {
                       background: '#f5f5f5', border: 'none', borderRadius: 10,
                       cursor: 'pointer', color: '#111', fontSize: 13.5, fontWeight: 500, fontFamily: 'inherit',
                     }}>My Orders</button>
-                    <button onClick={() => { setIsMenuOpen(false); handleLogout() }} style={{
+                    <button type="button" onClick={handleLogout} style={{
                       display: 'flex', alignItems: 'center', gap: 9, padding: '10px 14px',
                       background: '#fff5f5', border: 'none', borderRadius: 10,
                       cursor: 'pointer', color: '#e53935', fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
