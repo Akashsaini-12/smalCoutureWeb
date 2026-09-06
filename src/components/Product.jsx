@@ -295,6 +295,8 @@ const Product = ({ addToCart, cartItems = [] }) => {
                   flexWrap: "nowrap",
                   minWidth: 0,
                   padding: "10px 12px",
+                  position: "relative",
+                  zIndex: 100,
                 }}
                 onClick={(event) => event.stopPropagation()}
                 onPointerDown={(event) => event.stopPropagation()}
