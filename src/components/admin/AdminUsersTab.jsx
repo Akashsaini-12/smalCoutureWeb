@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 export default function AdminUsersTab({
   listOrders,
   adminListUsers,
+  adminDeleteUser,
   Modal,
   OrderDetail,
   ProductDetail,
@@ -13,6 +14,10 @@ export default function AdminUsersTab({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [deletingUserId, setDeletingUserId] = useState("");
+  const [removeTarget, setRemoveTarget] = useState(null);
+  const [adminIdentifier, setAdminIdentifier] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -90,6 +95,33 @@ export default function AdminUsersTab({
     setDetailOpen(true);
     setProductOpen(false);
     setSelectedItem(null);
+  };
+
+  const removeUser = async (event, user) => {
+    event.stopPropagation();
+    const userId = String(user?._id || "");
+    if (!userId || deletingUserId) return;
+    setRemoveTarget(user);
+    setAdminIdentifier("");
+    setAdminPassword("");
+  };
+
+  const confirmRemoveUser = async (event) => {
+    event.preventDefault();
+    const userId = String(removeTarget?._id || "");
+    if (!userId || deletingUserId || !adminIdentifier.trim() || !adminPassword) return;
+    setDeletingUserId(userId);
+    setError("");
+    try {
+      await adminDeleteUser(userId, { emailOrPhone: adminIdentifier.trim(), password: adminPassword });
+      setUsers((current) => current.filter((item) => String(item?._id || "") !== userId));
+      setRemoveTarget(null);
+    } catch (e) {
+      setError(e?.message || "Failed to remove user");
+    } finally {
+      setDeletingUserId("");
+      setAdminPassword("");
+    }
   };
 
   return (
@@ -191,9 +223,28 @@ export default function AdminUsersTab({
                       </span>
                     </td>
                     <td style={{ textAlign: "right" }}>
-                      <span style={{ fontWeight: 950, color: "#0f172a", fontSize: 12, textDecoration: "underline" }}>
-                        View Orders →
-                      </span>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontWeight: 950, color: "#0f172a", fontSize: 12, textDecoration: "underline" }}>
+                          View Orders →
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(event) => removeUser(event, u)}
+                          disabled={deletingUserId === id}
+                          style={{
+                            border: "1px solid #d6c7ba",
+                            borderRadius: 999,
+                            padding: "6px 11px",
+                            background: "#f7f2ec",
+                            color: "#705845",
+                            fontSize: 11,
+                            fontWeight: 800,
+                            cursor: deletingUserId === id ? "wait" : "pointer",
+                          }}
+                        >
+                          {deletingUserId === id ? "Removing…" : "Remove"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -210,6 +261,49 @@ export default function AdminUsersTab({
           </table>
         </div>
       )}
+
+      <Modal
+        open={Boolean(removeTarget)}
+        title="Confirm user removal"
+        width="min(420px, calc(100% - 32px))"
+        onClose={() => {
+          if (!deletingUserId) setRemoveTarget(null);
+        }}
+      >
+        <form onSubmit={confirmRemoveUser} style={{ display: "grid", gap: 9 }}>
+          <div style={{ color: "#475569", fontSize: 12, lineHeight: 1.4 }}>
+            Enter your admin ID and password to remove this account. Existing orders will be preserved.
+          </div>
+          <div style={{ padding: "9px 11px", borderRadius: 9, background: "#f7f2ec", color: "#5b4637", fontSize: 12, lineHeight: 1.5 }}>
+            <strong>{`${removeTarget?.firstName || ""} ${removeTarget?.lastName || ""}`.trim() || "User"}</strong>
+            <div>Mobile: {removeTarget?.phone || "Unavailable"}</div>
+          </div>
+          <input
+            value={adminIdentifier}
+            onChange={(event) => setAdminIdentifier(event.target.value)}
+            placeholder="Admin email or mobile"
+            autoComplete="username"
+            required
+            style={{ padding: "9px 11px", border: "1px solid #cbd5e1", borderRadius: 9 }}
+          />
+          <input
+            value={adminPassword}
+            onChange={(event) => setAdminPassword(event.target.value)}
+            placeholder="Admin password"
+            type="password"
+            autoComplete="current-password"
+            required
+            style={{ padding: "9px 11px", border: "1px solid #cbd5e1", borderRadius: 9 }}
+          />
+          <button
+            type="submit"
+            disabled={Boolean(deletingUserId)}
+            style={{ justifySelf: "end", border: "1px solid #d6c7ba", borderRadius: 999, padding: "8px 15px", background: "#705845", color: "#fff", fontWeight: 800, cursor: "pointer" }}
+          >
+            {deletingUserId ? "Removing…" : "Confirm remove"}
+          </button>
+        </form>
+      </Modal>
 
       {/* User Orders modal */}
       <Modal
@@ -314,4 +408,3 @@ export default function AdminUsersTab({
     </div>
   );
 }
-
