@@ -131,7 +131,7 @@ function FloatingAddressField({ label, value, onChange, inputMode, type = "text"
           transformOrigin: "left center",
           fontSize: active ? 11 : 15,
           fontWeight: 500,
-          color: active ? "#1d4ed8" : "#666f7d",
+          color: active ? "#8f6a46" : "#666f7d",
           background: "#f8f8f8",
           padding: "0 4px",
           lineHeight: 1.2,
@@ -146,6 +146,7 @@ function FloatingAddressField({ label, value, onChange, inputMode, type = "text"
         type={type}
         value={value}
         onChange={onChange}
+        data-address-field="true"
         inputMode={inputMode}
         maxLength={maxLength}
         placeholder=""
@@ -1502,7 +1503,7 @@ export default function Checkout({ cartItems = [] }) {
                                       <div style={{ fontWeight: 700, color: "#0f172a" }}>
                                         {a.label || "Address"}
                                         {a.isDefault ? (
-                                          <span style={{ marginLeft: 8, color: "#1d4ed8", fontWeight: 700, fontSize: 12 }}>
+                                          <span style={{ marginLeft: 8, color: "#8f6a46", fontWeight: 700, fontSize: 12 }}>
                                             • Default
                                           </span>
                                         ) : null}
@@ -1573,7 +1574,20 @@ export default function Checkout({ cartItems = [] }) {
               </div>
 
               {showAddressForm && (
-                <div ref={addressFormRef} style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}>
+                <div
+                  ref={addressFormRef}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" || !event.target.matches("[data-address-field='true']")) return;
+                    event.preventDefault();
+                    const fields = Array.from(
+                      event.currentTarget.querySelectorAll("[data-address-field='true']"),
+                    );
+                    const currentIndex = fields.indexOf(event.target);
+                    const nextField = fields[currentIndex + 1];
+                    if (nextField) nextField.focus();
+                  }}
+                  style={{ marginTop: 16, border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: "#fff" }}
+                >
                   <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
                     <div style={{ fontWeight: 700, color: "#0f172a" }}>
                       {selectedAddressId ? "Edit address" : "Add new address"}
@@ -1585,7 +1599,7 @@ export default function Checkout({ cartItems = [] }) {
 
                   <div style={{ display: "grid", gap: 14 }}>
                    <label style={{ ...inlineRowStyle, display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, margin: 0, fontWeight: 700, color: "#0f172a", cursor: "pointer" }}>
-                     <input type="checkbox" checked={isDefaultAddress} onChange={(e) => setIsDefaultAddress(e.target.checked)} />
+                     <input type="checkbox" checked={isDefaultAddress} onChange={(e) => setIsDefaultAddress(e.target.checked)} style={{ accentColor: "#8f6a46" }} />
                      <span style={{ fontWeight: 600, color: "#0f172a" }}>Set as default</span>
                    </label>
 
@@ -1633,37 +1647,45 @@ export default function Checkout({ cartItems = [] }) {
                    />
 
                    <div>
-                     <div style={{ marginBottom: 10, fontSize: 17, fontWeight: 700, color: "#111827" }}>Type of address</div>
-                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }}>
+                     <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, marginBottom: 8 }}>
+                       <div style={{ fontSize: 15, fontWeight: 700, color: "#111827", whiteSpace: "nowrap" }}>Type of address</div>
+                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                        {[
                          { value: "Home", label: "Home", icon: "⌂" },
                          { value: "Work", label: "Work", icon: "▣" },
                        ].map((option) => {
                          const selected = addressLabel === option.value;
                          return (
-                           <button
-                             key={option.value}
-                             type="button"
-                             onClick={() => setAddressLabel(option.value)}
-                             style={{
-                               ...addressTypeButtonStyle,
-                               borderColor: selected ? "#3b82f6" : "#d1d5db",
-                               background: selected ? "#ffffff" : "#f4f5f7",
-                               boxShadow: selected ? "0 0 0 2px rgba(59,130,246,0.12)" : "none",
-                               color: selected ? "#1d4ed8" : "#374151",
-                             }}
-                           >
-                             <span style={{ fontSize: 20, lineHeight: 1 }}>{option.icon}</span>
-                             <span style={{ fontWeight: 700 }}>{option.label}</span>
-                           </button>
+                             <button
+                               key={option.value}
+                               type="button"
+                               onClick={() => setAddressLabel(option.value)}
+                               style={{
+                                 ...addressTypeButtonStyle,
+                                 minHeight: 30,
+                                 minWidth: 64,
+                                 padding: "5px 9px",
+                                 gap: 4,
+                                 borderRadius: 6,
+                                 borderColor: selected ? "#8f6a46" : "#e1d7cc",
+                                 background: selected ? "#f5ede4" : "#fbfaf8",
+                                 boxShadow: selected ? "0 0 0 2px rgba(143,106,70,0.12)" : "none",
+                                 color: selected ? "#5d432f" : "#75675d",
+                                 fontSize: 11,
+                               }}
+                             >
+                               <span style={{ fontSize: 13, lineHeight: 1 }}>{option.icon}</span>
+                               <span style={{ fontWeight: 700, fontSize: 11 }}>{option.label}</span>
+                             </button>
                          );
                        })}
+                       </div>
                      </div>
                    </div>
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, marginTop: 14 }}>
-                    <button type="button" onClick={handleSaveAddress} style={{ ...smallPrimaryBtn, minHeight: 46, fontSize: 15, background: "#1f1a17", padding: "10px 12px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, marginTop: 16, paddingTop: 14, borderTop: "1px solid #e7e0d8" }}>
+                    <button type="button" onClick={handleSaveAddress} style={{ ...smallPrimaryBtn, minHeight: 40, fontSize: 13, borderRadius: 8, background: "#5d432f", padding: "9px 12px" }}>
                       {selectedAddressId ? "Update address" : "Save address"}
                     </button>
                     <button
@@ -1698,9 +1720,12 @@ export default function Checkout({ cartItems = [] }) {
                       }}
                       style={{
                         ...smallGhostBtn,
-                        minHeight: 46,
-                        fontSize: 15,
-                        padding: "10px 12px",
+                        minHeight: 40,
+                        fontSize: 13,
+                        borderRadius: 8,
+                        color: "#5d432f",
+                        border: "1px solid #cdbba8",
+                        padding: "9px 12px",
                         opacity: 1,
                         cursor: "pointer",
                       }}
