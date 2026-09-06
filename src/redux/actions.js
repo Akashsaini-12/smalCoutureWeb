@@ -21,7 +21,11 @@ function normalizeJsonRequestBody(options = {}) {
   try {
     const parsed = JSON.parse(body);
     if (!parsed || typeof parsed !== "object") return options;
-    return { ...options, body: JSON.stringify(deepEnsureHttpsImages(parsed)) };
+    return {
+      ...options,
+      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+      body: JSON.stringify(deepEnsureHttpsImages(parsed)),
+    };
   } catch {
     return options;
   }
@@ -815,6 +819,16 @@ export async function adminListUsers() {
   });
 }
 
+// Admin: remove a user account without touching its orders
+export async function adminDeleteUser(userId, credentials) {
+  const token = localStorage.getItem("token") || "";
+  return fetchJson(`${API_BASE}/api/admin/users/${encodeURIComponent(String(userId || ""))}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(credentials || {}),
+  });
+}
+
 // Admin: list all orders
 export async function adminListOrders() {
   const token = localStorage.getItem("token") || "";
@@ -835,6 +849,17 @@ export async function adminUpdateOrder(orderId, patch) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(patch || {}),
+  });
+}
+
+// Admin: permanently delete an order record
+export async function adminDeleteOrder(orderId, credentials) {
+  if (!orderId) throw new Error("orderId is required");
+  const token = localStorage.getItem("token") || "";
+  return fetchJson(`${API_BASE}/api/admin/orders/${encodeURIComponent(String(orderId))}`, {
+    method: "DELETE",
+    body: JSON.stringify(credentials || {}),
+    headers: { Authorization: `Bearer ${token}` },
   });
 }
 
