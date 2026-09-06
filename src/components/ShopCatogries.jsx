@@ -11,7 +11,8 @@ import { fetchShopCategories } from "../redux/actions";
 import { imgSrc } from "../utils/ensureHttpsUrl";
 
 const ALL_PRODUCTS_PATH = "/AllProducts";
-const MOBILE_CARD_W = "calc(66vw - 20px)";
+const MOBILE_CARD_W = "min(280px, calc(100% - 16px))";
+const MOBILE_CAROUSEL_PAD = 16;
 
 const isRootCategory = (c) =>
   c == null || c.parentId == null || c.parentId === undefined;
@@ -88,8 +89,8 @@ const ShopCatogries = () => {
     };
     if (!isMobile || totalSlides === 0) { clear(); return undefined; }
     const syncPad = () => {
-      // Left-aligned cards on mobile (no center padding).
-      const pad = 0;
+      // Keep the first and last cards inside the section gutter.
+      const pad = MOBILE_CAROUSEL_PAD;
       inner.style.paddingLeft = `${pad}px`;
       inner.style.paddingRight = `${pad}px`;
       wrap.style.scrollPaddingLeft = `${pad}px`;
@@ -119,8 +120,8 @@ const ShopCatogries = () => {
     };
     if (!isMobile || totalSlides2 === 0) { clear(); return undefined; }
     const syncPad = () => {
-      // Left-aligned cards on mobile (no center padding).
-      const pad = 0;
+      // Keep the first and last cards inside the section gutter.
+      const pad = MOBILE_CAROUSEL_PAD;
       inner.style.paddingLeft = `${pad}px`;
       inner.style.paddingRight = `${pad}px`;
       wrap.style.scrollPaddingLeft = `${pad}px`;
@@ -376,8 +377,11 @@ const ShopCatogries = () => {
         }
         @media (max-width:767px) {
           .sbc-carousel {
-            margin-left: -20px;
-            width: calc(100% + 20px);
+            margin-left: 0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto;
           }
         }
         .sbc-carousel-inner {
@@ -385,6 +389,7 @@ const ShopCatogries = () => {
           flex-wrap: nowrap;
           gap: 12px;
           min-width: 0;
+          max-width: max-content;
         }
         .sbc-slide {
           flex: 0 0 ${MOBILE_CARD_W};
