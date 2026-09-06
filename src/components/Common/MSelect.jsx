@@ -25,6 +25,7 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
     return (
       <div
         ref={rootRef}
+        data-product-collection-chip="true"
         style={{ position: "relative" }}
         onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
