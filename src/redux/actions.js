@@ -1196,9 +1196,8 @@ export const fetchCurrentUser = () => async (dispatch, getState) => {
     dispatch({ type: "AUTH_UPDATE_USER", payload: data.user });
   } catch {
     // token expired — log out silently
+    persistAuth(null, null);
     dispatch({ type: "AUTH_LOGOUT" });
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
   }
 };
 
