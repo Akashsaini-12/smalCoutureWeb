@@ -77,7 +77,7 @@ const HappyCustomers = () => {
         <div className="container-fluid m-section-my m-section-py">
           <div className="m-testimonials__wrapper m:text-color-body">
             <div className="m-testimonials__header m:text-left">
-              <div className="m-section__header m:text-left ">
+              <div className="m-section__header m:text-left homepage-section-divider">
                 <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
                   Happy Customers
                 </h2>
