@@ -879,6 +879,15 @@ const Header = () => {
   }, [isMenuOpen])
 
   useEffect(() => {
+    const closeForSelect = () => {
+      setIsMenuOpen(false)
+      setActiveMobileMenu(null)
+    }
+    document.addEventListener('mselect-interaction', closeForSelect)
+    return () => document.removeEventListener('mselect-interaction', closeForSelect)
+  }, [])
+
+  useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])
