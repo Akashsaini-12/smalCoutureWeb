@@ -71,6 +71,9 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
               e.stopPropagation();
               setOpen((v) => !v);
             }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") setOpen((v) => !v);
               if (e.key === "Escape") setOpen(false);
@@ -130,6 +133,9 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
                     setValue(v);
                     setOpen(false);
                     if (onChange) onChange(v);
+                  }}
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
                   }}
                   style={{
                     padding: "8px 12px",
