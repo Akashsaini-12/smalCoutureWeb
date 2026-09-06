@@ -348,12 +348,18 @@ function ProductCard({
 
           <div
             className="m-product-card__action m-product-card__action--top m-product-card__addons m:display-flex"
-            style={{ zIndex: 30, pointerEvents: "auto" }}
+            style={{
+              zIndex: 30,
+              pointerEvents: "auto",
+              top: "auto",
+              right: 16,
+              bottom: 16,
+              left: "auto",
+              flexDirection: "column",
+            }}
           >
-            {/* Hide Add-to-cart icon on mobile (keep wishlist + quick view). */}
-            {!isMobileView ? atcButton() : null}
-            {wishlistButton("left")}
-            {quickViewButton("left")}
+            {/* Keep only the wishlist action on the product image. */}
+            {wishlistButton()}
           </div>
 
           <div className="m-product-card__action m:hidden lg:m:block">
@@ -507,7 +513,6 @@ function ProductCard({
                   )
                 ) : null}
                 {wishlistButton("top")}
-                {quickViewButton("top")}
               </div>
             </div>
           </div>
