@@ -888,6 +888,20 @@ const Header = () => {
   }, [])
 
   useEffect(() => {
+    const closeMenuBeforeProductChip = (event) => {
+      if (!event.target?.closest?.('[data-product-collection-chip="true"]')) return
+      setIsMenuOpen(false)
+      setActiveMobileMenu(null)
+    }
+    document.addEventListener('pointerdown', closeMenuBeforeProductChip, true)
+    document.addEventListener('click', closeMenuBeforeProductChip, true)
+    return () => {
+      document.removeEventListener('pointerdown', closeMenuBeforeProductChip, true)
+      document.removeEventListener('click', closeMenuBeforeProductChip, true)
+    }
+  }, [])
+
+  useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])

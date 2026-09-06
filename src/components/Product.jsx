@@ -301,6 +301,9 @@ const Product = ({ addToCart, cartItems = [] }) => {
                 onClick={(event) => event.stopPropagation()}
                 onPointerDown={(event) => event.stopPropagation()}
                 onTouchStart={(event) => event.stopPropagation()}
+                onTouchEnd={(event) => {
+                  event.stopPropagation()
+                }}
               >
                 <style>{`
                   /* Product: modern dropdown (scoped to this toolbar only) */
