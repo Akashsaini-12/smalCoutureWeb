@@ -700,16 +700,16 @@ const ProfileDropdown = ({ user, pos, dropdownRef, onClose, navigate, onLogout }
   const initials = u => `${(u?.firstName?.[0] || 'U').toUpperCase()}${(u?.lastName?.[0] || '').toUpperCase()}`
   const items = [
     user?.role === 0 && { label: 'Admin Panel', path: '/admin' },
-    { label: 'My Profile', path: '/account' },
-    { label: 'My Orders',  path: '/orders' },
+    { label: 'Orders',     path: '/orders' },
     { label: 'Wishlist',   path: '/wishlist' },
+    { label: 'Settings',   path: '/account' },
   ].filter(Boolean)
 
   const iconFor = (label) => {
     if (label === 'Admin Panel') return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-    if (label === 'My Profile') return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    if (label === 'My Orders')  return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    if (label === 'Orders')     return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5b3a1d" strokeWidth="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
     if (label === 'Wishlist')   return <svg width="13" height="13" viewBox="0 0 512 512" fill="#666"><path d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3z"/></svg>
+    if (label === 'Settings')   return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5b3a1d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.8-3.3 3.5-5 7.5-5s6.7 1.7 7.5 5"/></svg>
   }
 
   return createPortal(
@@ -717,27 +717,27 @@ const ProfileDropdown = ({ user, pos, dropdownRef, onClose, navigate, onLogout }
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9990 }} />
       <div ref={dropdownRef} style={{
         position: 'fixed', top: pos.top, right: pos.right, zIndex: 9995,
-        width: 268, background: '#fff', borderRadius: 18,
+        width: 242, background: '#f1ede5', borderRadius: 16,
         boxShadow: '0 2px 8px rgba(0,0,0,0.06), 0 24px 64px rgba(0,0,0,0.12)',
         border: '1px solid rgba(0,0,0,0.07)', overflow: 'hidden', fontFamily: 'inherit',
         animation: 'dropIn 0.16s ease',
       }}>
         <style>{`@keyframes dropIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:none}}`}</style>
-        <div style={{ padding: '20px 18px 16px', background: 'linear-gradient(135deg,#1c1c1c,#363636)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
+        <div style={{ padding: '14px 15px 12px', background: '#f6f2eb', borderBottom: '1px solid rgba(183,145,96,0.28)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              width: 46, height: 46, borderRadius: '50%',
-              border: '2px solid rgba(255,255,255,0.18)',
-              background: 'rgba(255,255,255,0.1)',
+              width: 38, height: 38, borderRadius: '50%',
+              border: '1px solid rgba(183,145,96,0.55)',
+              background: '#f1ede5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16, fontWeight: 700, color: '#fff', flexShrink: 0,
+              fontSize: 14, fontWeight: 700, color: '#5b3a1d', flexShrink: 0,
             }}>{initials(user)}</div>
             <div style={{ overflow: 'hidden', flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 14.5, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#5b3a1d', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {user.firstName} {user.lastName}
               </div>
-              <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.48)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {user.email}
+              <div style={{ fontSize: 11.5, color: 'rgba(91,58,29,0.72)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {user.phone || 'Mobile number unavailable'}
               </div>
               {user.role === 0 && (
                 <span style={{
@@ -749,23 +749,23 @@ const ProfileDropdown = ({ user, pos, dropdownRef, onClose, navigate, onLogout }
             </div>
           </div>
         </div>
-        <div style={{ padding: '8px 0' }}>
+        <div style={{ padding: '6px 0' }}>
           {items.map(({ label, path }) => (
             <button key={label} type="button" onClick={() => { onClose(); navigate(path) }} style={{
-              display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 18px',
+              display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '8px 15px',
               background: 'transparent', border: 'none', cursor: 'pointer',
-              fontSize: 13.5,
-              fontWeight: label === 'My Profile' ? 800 : 500,
-              color: label === 'My Profile' ? '#2563eb' : '#111827',
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#5b3a1d',
               textAlign: 'left', fontFamily: 'inherit',
-              transition: 'background 0.12s',
+              transition: 'background 0.16s ease, color 0.16s ease',
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#f7f7f7' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#e8ddce' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
             >
               <span style={{
-                width: 30, height: 30, borderRadius: 8,
-                background: label === 'My Profile' ? 'rgba(37,99,235,0.12)' : '#f2f2f2',
+                width: 27, height: 27, borderRadius: 7,
+                background: '#f6f2eb',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}>
                 {iconFor(label)}
@@ -773,18 +773,18 @@ const ProfileDropdown = ({ user, pos, dropdownRef, onClose, navigate, onLogout }
               <span style={{ color: 'inherit' }}>{label}</span>
             </button>
           ))}
-          <div style={{ margin: '6px 16px', borderTop: '1px solid #f0f0f0' }} />
+          <div style={{ margin: '5px 15px', borderTop: '1px solid rgba(183,145,96,0.22)' }} />
           <button type="button" onClick={onLogout} style={{
-            display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 18px',
+            display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '8px 15px',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            fontSize: 13.5, color: '#e53935', textAlign: 'left', fontFamily: 'inherit',
-            transition: 'background 0.12s',
+            fontSize: 13, color: '#5b3a1d', textAlign: 'left', fontFamily: 'inherit',
+            transition: 'background 0.16s ease, color 0.16s ease',
           }}
-            onMouseEnter={e => e.currentTarget.style.background = '#fff5f5'}
+            onMouseEnter={e => e.currentTarget.style.background = '#e8ddce'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            <span style={{ width: 30, height: 30, borderRadius: 8, background: '#fff0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e53935" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <span style={{ width: 27, height: 27, borderRadius: 7, background: '#f6f2eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5b3a1d" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             </span>
             Log Out
           </button>
@@ -898,7 +898,13 @@ const Header = () => {
     }
     setProfileOpen(v => !v)
   }
-  const handleLogout = () => { dispatch(logoutThunk()); setProfileOpen(false); navigate('/') }
+  const handleLogout = () => {
+    const confirmed = window.confirm('Are you sure you want to logout?')
+    if (!confirmed) return
+    dispatch(logoutThunk())
+    setProfileOpen(false)
+    navigate('/')
+  }
 
   return (
     <>
@@ -969,17 +975,20 @@ const Header = () => {
             {/* Right-side icons */}
             <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 2 }}>
               <IconBtn label="Search" onClick={() => setSearchOpen(true)}><SearchIcon /></IconBtn>
+              <IconBtn label="Cart" badge={cartCount} onClick={() => navigate('/cart')}><CartIcon /></IconBtn>
               {user ? (
                 <button
+                  ref={avatarRef}
                   type="button"
                   aria-label="My profile"
-                  onClick={() => navigate("/account")}
+                  onClick={openDropdown}
                   style={{
                     width: 34,
                     height: 34,
-                    borderRadius: 12,
-                    background: "transparent",
-                    border: "none",
+                    borderRadius: "50%",
+                    background: profileOpen ? "#e8ddce" : "#f1ede5",
+                    border: "1px solid #b79160",
+                    color: "#5b3a1d",
                     cursor: "pointer",
                     padding: 0,
                     display: "flex",
@@ -992,7 +1001,7 @@ const Header = () => {
                     <img
                       src={avatarUrl}
                       alt="Profile"
-                      style={{ width: 30, height: 30, borderRadius: 12, objectFit: "cover" }}
+                      style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover" }}
                     />
                   ) : (
                     <span
@@ -1000,9 +1009,10 @@ const Header = () => {
                       style={{
                         width: 30,
                         height: 30,
-                        borderRadius: 12,
-                        background: "#111",
-                        color: "#fff",
+                        borderRadius: "50%",
+                        background: "#ffffff",
+                        color: "#5b3a1d",
+                        border: "none",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -1016,7 +1026,43 @@ const Header = () => {
                   )}
                 </button>
               ) : null}
-              <IconBtn label="Cart" badge={cartCount} onClick={() => navigate('/cart')}><CartIcon /></IconBtn>
+              {user && profileOpen && (
+                <ProfileDropdown
+                  user={user} pos={dropdownPos} dropdownRef={dropdownRef}
+                  onClose={() => setProfileOpen(false)}
+                  navigate={navigate} onLogout={handleLogout}
+                />
+              )}
+              {!user && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  style={{
+                    marginLeft: 6,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    padding: '8px 14px',
+                    border: '1px solid #b79160',
+                    borderRadius: 22,
+                    background: '#fff',
+                    color: '#5b3a1d',
+                    fontFamily: 'inherit',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    lineHeight: 1,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.5" />
+                    <path d="M4.5 20c.8-3.3 3.5-5 7.5-5s6.7 1.7 7.5 5" />
+                  </svg>
+                  Login
+                </button>
+              )}
             </div>
           </header>
           <div aria-hidden style={{ height: MOBILE_HEADER_OFFSET_PX, width: '100%' }} />
@@ -1094,7 +1140,7 @@ const Header = () => {
                     <button onClick={() => { setIsMenuOpen(false); handleLogout() }} style={{
                       display: 'flex', alignItems: 'center', gap: 9, padding: '10px 14px',
                       background: '#fff5f5', border: 'none', borderRadius: 10,
-                      cursor: 'pointer', color: '#e53935', fontSize: 13.5, fontWeight: 500, fontFamily: 'inherit',
+                      cursor: 'pointer', color: '#e53935', fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
                     }}>Log out</button>
                   </div>
                 </>
@@ -1154,21 +1200,27 @@ const Header = () => {
             }}>
               <IconBtn label="Search" onClick={() => setSearchOpen(true)}><SearchIcon /></IconBtn>
 
+              <IconBtn label="Wishlist" onClick={() => navigate('/wishlist')}><WishlistIcon /></IconBtn>
+              {user && <IconBtn label="Orders" onClick={() => navigate('/orders')}><OrdersIcon /></IconBtn>}
+              <IconBtn label="Cart" badge={cartCount} onClick={() => navigate('/cart')}><CartIcon /></IconBtn>
               {user ? (
                 <>
                   <button ref={avatarRef} type="button" aria-label="Profile" onClick={openDropdown} style={{
-                    width: 36, height: 36, borderRadius: 12,
-                    background: profileOpen ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
-                    color: '#111', fontSize: 11.5, fontWeight: 800, letterSpacing: 0.4,
-                    border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', fontFamily: 'inherit',
+                    width: 36, height: 36, borderRadius: "50%",
+                    background: profileOpen ? '#e8ddce' : '#f1ede5',
+                    color: '#5b3a1d', fontSize: 11.5, fontWeight: 800, letterSpacing: 0.4,
+                    border: '1px solid #b79160', cursor: 'pointer', fontFamily: 'inherit',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     outline: 'none', transition: 'background 0.18s, box-shadow 0.18s',
                     boxShadow: profileOpen ? '0 0 0 3px rgba(0,0,0,0.08)' : 'none',
                     overflow: "hidden",
                     padding: 0,
-                  }}>
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#e8ddce' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = profileOpen ? '#e8ddce' : '#f1ede5' }}
+                  >
                     {avatarUrl ? (
-                      <img src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <img src={avatarUrl} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
                     ) : (
                       initials(user)
                     )}
@@ -1184,10 +1236,37 @@ const Header = () => {
               ) : (
                 <IconBtn label="Account" onClick={() => navigate('/login')}><AccountIcon /></IconBtn>
               )}
-
-              <IconBtn label="Wishlist" onClick={() => navigate('/wishlist')}><WishlistIcon /></IconBtn>
-              {user && <IconBtn label="Orders" onClick={() => navigate('/orders')}><OrdersIcon /></IconBtn>}
-              <IconBtn label="Cart" badge={cartCount} onClick={() => navigate('/cart')}><CartIcon /></IconBtn>
+              {!user && (
+                <button
+                  type="button"
+                  aria-label="Login"
+                  onClick={() => navigate('/login')}
+                  style={{
+                    marginLeft: 2,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 5,
+                    padding: '7px 10px',
+                    border: '1px solid #b79160',
+                    borderRadius: 18,
+                    background: '#fff',
+                    color: '#5b3a1d',
+                    fontFamily: 'inherit',
+                    fontSize: 10,
+                    fontWeight: 600,
+                    lineHeight: 1,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.5" />
+                    <path d="M4.5 20c.8-3.3 3.5-5 7.5-5s6.7 1.7 7.5 5" />
+                  </svg>
+                  Login
+                </button>
+              )}
             </div>
           </div>
 
