@@ -932,7 +932,7 @@ const AppInner = () => {
       )}
       <div
         id="shopify-section-template--15265873625193__1621243260e1af0c20"
-        className="shopify-section app-main"
+        className={`shopify-section app-main${location.pathname === "/" ? " home-desktop-scale" : ""}`}
         style={{ flex: "1 0 auto" }}
       >
         {!isAdminRoute && <Header />}
