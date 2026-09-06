@@ -591,7 +591,7 @@ const Footor = () => {
             <div className="m-footer--middle m-gradient m-color-footer">
               <div className="container-fluid">
                 <div className="m-footer--accordion m-footer--accordion-grid">
-                  <div className={`m-footer--block m-footer--block-newsletter m-accordion--item order-first m:w-full lg:m:w-1/2 ${isOpen("newsletter") ? "open" : ""}`}>
+                  <div id="get-in-touch" className={`m-footer--block m-footer--block-newsletter m-accordion--item order-first m:w-full lg:m:w-1/2 ${isOpen("newsletter") ? "open" : ""}`}>
                     <div
                       className="m-footer--block-inner m-scroll-trigger animate--fade-in-up"
                       data-cascade
