@@ -8,7 +8,6 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
     const safeOptions = Array.isArray(options) ? options : [];
     const stopHeaderMenu = (event) => {
       event.stopPropagation();
-      document.dispatchEvent(new CustomEvent("mselect-interaction"));
     };
     const selected =
       safeOptions.find((o) => String(o.value) === String(value)) || safeOptions[0];
@@ -25,7 +24,6 @@ export default function MSelect({ options = [], defaultValue = "0", name = "coll
     return (
       <div
         ref={rootRef}
-        data-product-collection-chip="true"
         style={{ position: "relative" }}
         onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
