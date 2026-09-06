@@ -293,8 +293,12 @@ const Product = ({ addToCart, cartItems = [] }) => {
                   justifyContent: "space-between",
                   gap: 12,
                   flexWrap: "nowrap",
+                  minWidth: 0,
                   padding: "10px 12px",
                 }}
+                onClick={(event) => event.stopPropagation()}
+                onPointerDown={(event) => event.stopPropagation()}
+                onTouchStart={(event) => event.stopPropagation()}
               >
                 <style>{`
                   /* Product: modern dropdown (scoped to this toolbar only) */
@@ -423,6 +427,40 @@ const Product = ({ addToCart, cartItems = [] }) => {
                   [data-collection-toolbar] .m-select-custom {
                     flex: 0 0 auto;
                     margin-left: auto;
+                  }
+                  @media (max-width: 767px) {
+                    [data-collection-toolbar] {
+                      align-items: center !important;
+                      flex-wrap: nowrap !important;
+                      gap: 8px !important;
+                      overflow: visible !important;
+                    }
+                    [data-collection-toolbar] .product-section-heading {
+                      flex: 1 1 auto !important;
+                      width: auto !important;
+                      min-width: 0 !important;
+                      white-space: nowrap !important;
+                      overflow: hidden !important;
+                      text-overflow: ellipsis !important;
+                      font-size: 16px !important;
+                      letter-spacing: -0.03em !important;
+                    }
+                    [data-collection-toolbar] .m-select-custom {
+                      flex: 0 0 154px !important;
+                      width: 154px !important;
+                      min-width: 154px !important;
+                      margin-left: auto !important;
+                    }
+                    [data-collection-toolbar] .m-select-custom--trigger {
+                      width: 154px !important;
+                      min-width: 154px !important;
+                      min-height: 34px !important;
+                      padding: 6px 10px !important;
+                      font-size: 13px !important;
+                    }
+                    [data-collection-toolbar] .m-select-custom--trigger-text {
+                      font-size: 13px !important;
+                    }
                   }
                 `}</style>
 
