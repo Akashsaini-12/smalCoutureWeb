@@ -548,7 +548,7 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
           <div className="container-fluid m-section-my m-section-py" style={{ marginTop: 44 }}>
             {suggestedCards.length > 0 && (
               <>
-                <div className="m-section__header m:text-left">
+                <div className="m-section__header m:text-left homepage-section-divider">
                   <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
                     Suggested for you
                   </h2>
