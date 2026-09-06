@@ -1052,10 +1052,16 @@ export const registerThunk =
   async (dispatch) => {
     dispatch({ type: "AUTH_LOADING" });
     try {
+      const registrationPayload = { firstName, lastName, phone, password };
+      const normalizedEmail = String(email || "").trim();
+      if (normalizedEmail) {
+        registrationPayload.email = normalizedEmail;
+      }
+
       const data = await fetchJson(`${API_BASE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, phone, password }),
+        body: JSON.stringify(registrationPayload),
       });
       persistAuth(data.token, data.user);
       dispatch({
