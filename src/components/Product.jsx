@@ -15,8 +15,8 @@ import { getUserId } from "../utils/userId";
 import { isInternalFreeSizeLabel } from "../utils/internalFreeSize";
 
 const TAB_OPTIONS = [
-  { value: "best-selling",      label: "best sellers" },
-  { value: "created-descending", label: "new arrivals" },
+  { value: "best-selling",      label: "Best Sellings" },
+  { value: "created-descending", label: "New Arrivals" },
 ];
 
 // Same catalog → ProductCard mapping used in AllProducts.jsx
@@ -273,7 +273,7 @@ const Product = ({ addToCart, cartItems = [] }) => {
     <>
       <section
         id="m-section--template--15265873625193__162251092958fcda7c"
-        className="m-section m-product-tabs m:block sf-home__product-tab m-product-tabs--select m-gradient m-color-default"
+        className="home-product-section m-section m-product-tabs m:block sf-home__product-tab m-product-tabs--select m-gradient m-color-default"
       >
         <m-product-tabs
           id="template--15265873625193__162251092958fcda7c"
@@ -285,14 +285,14 @@ const Product = ({ addToCart, cartItems = [] }) => {
           <div className="container-fluid m-section-my m-section-py">
             <div className="m-section__header">
               <div
-                className="m-section__heading m-scroll-trigger animate--fade-in-up"
+                className="m-section__heading m-scroll-trigger animate--fade-in-up homepage-section-divider"
                 data-collection-toolbar
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  justifyContent: "space-between",
                   gap: 12,
-                  flexWrap: "wrap",
+                  flexWrap: "nowrap",
                   padding: "10px 12px",
                 }}
               >
@@ -319,29 +319,36 @@ const Product = ({ addToCart, cartItems = [] }) => {
                     display: none !important;
                   }
                   [data-collection-toolbar] .m-select-custom--trigger {
+                    position: relative !important;
                     display: inline-flex !important;
                     align-items: center !important;
                     justify-content: space-between !important;
                     gap: 10px !important;
-                    padding: 9px 12px !important;
+                    padding: 6px 12px !important;
                     border-radius: 999px !important;
-                    background: #fff !important;
-                    border: 1px solid rgba(15,23,42,0.14) !important;
-                    box-shadow: 0 8px 20px rgba(15,23,42,0.08) !important;
+                    background: #fbf8f2 !important;
+                    border: 1px solid rgba(157, 122, 63, 0.42) !important;
+                    box-shadow: 0 8px 20px rgba(75, 54, 27, 0.10) !important;
                     transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, background 140ms ease;
-                    min-height: 44px !important;
+                    min-height: 36px !important;
+                    width: 180px !important;
+                    min-width: 180px !important;
+                    box-sizing: border-box !important;
                     text-decoration: none !important;
                   }
                   [data-collection-toolbar] .m-select-custom.isActive .m-select-custom--trigger,
                   [data-collection-toolbar] .m-select-custom--trigger:hover {
-                    border-color: rgba(15,23,42,0.22) !important;
-                    box-shadow: 0 14px 32px rgba(15,23,42,0.12) !important;
+                    border-color: #9d7a3f !important;
+                    background: #fffdf9 !important;
+                    box-shadow: 0 14px 32px rgba(75, 54, 27, 0.16) !important;
                   }
                   [data-collection-toolbar] .m-select-custom--trigger:active { transform: scale(0.98); }
                   [data-collection-toolbar] .m-select-custom--trigger-text {
+                    flex: 1 1 auto !important;
                     font-size: 14px !important;
                     font-weight: 900 !important;
-                    color: #0f172a !important;
+                    color: #283044 !important;
+                    text-align: center !important;
                     white-space: nowrap !important;
                     text-decoration: none !important;
                     border-bottom: 0 !important;
@@ -355,53 +362,74 @@ const Product = ({ addToCart, cartItems = [] }) => {
                   [data-collection-toolbar] .m-select-custom--trigger-icon svg {
                     width: 14px !important;
                     height: 14px !important;
-                    color: rgba(15,23,42,0.75) !important;
+                    color: #9d7a3f !important;
                     transition: transform 160ms ease;
+                  }
+                  [data-collection-toolbar] .m-select-custom--trigger-icon {
+                    position: absolute !important;
+                    right: 12px !important;
                   }
                   [data-collection-toolbar] .m-select-custom.isActive .m-select-custom--trigger-icon svg {
                     transform: rotate(180deg);
                   }
                   [data-collection-toolbar] .m-select-custom--options {
-                    margin-top: 8px !important;
-                    border-radius: 12px !important;
-                    border: 1px solid rgba(15,23,42,0.12) !important;
-                    box-shadow: 0 18px 50px rgba(15,23,42,0.14) !important;
+                    margin-top: 10px !important;
+                    padding: 8px !important;
+                    border-radius: 16px !important;
+                    background: #fbf8f2 !important;
+                    border: 1px solid rgba(157, 122, 63, 0.34) !important;
+                    box-shadow: 0 18px 50px rgba(75, 54, 27, 0.18) !important;
                     overflow: hidden !important;
                   }
                   [data-collection-toolbar] .m-select-custom--option {
                     font-size: 13px !important;
                     font-weight: 850 !important;
-                    color: #0f172a !important;
-                    padding: 10px 12px !important;
-                    transition: background 140ms ease;
+                    color: #283044 !important;
+                    border-radius: 9px !important;
+                    padding: 11px 13px !important;
+                    transition: background 140ms ease, color 140ms ease;
                   }
                   [data-collection-toolbar] .m-select-custom--option:hover {
-                    background: rgba(15,23,42,0.06) !important;
+                    background: rgba(157, 122, 63, 0.12) !important;
+                    color: #171b2b !important;
                   }
                   [data-collection-toolbar] .m-select-custom--option.isActive {
-                    background: rgba(15,23,42,0.07) !important;
+                    background: #283044 !important;
+                    color: #fffdf9 !important;
                     position: relative;
                   }
                   [data-collection-toolbar] .m-select-custom--option.isActive::before {
                     content: "";
                     position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    width: 3px;
-                    background: #0f172a;
+                    left: 6px;
+                    top: 9px;
+                    bottom: 9px;
+                    width: 2px;
+                    border-radius: 2px;
+                    background: #d6b36a;
+                  }
+                  [data-collection-toolbar] .product-section-heading {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    width: auto;
+                    text-align: left;
+                    font-size: clamp(22px, 3vw, 42px) !important;
+                    font-weight: 900 !important;
+                    letter-spacing: -0.04em;
+                    line-height: 1.05 !important;
+                    color: #0f172a !important;
+                    white-space: nowrap;
+                  }
+                  [data-collection-toolbar] .m-select-custom {
+                    flex: 0 0 auto;
+                    margin-left: auto;
                   }
                 `}</style>
 
                 <span
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 850,
-                    color: "rgba(15,23,42,0.78)",
-                    lineHeight: 1,
-                  }}
+                  className="product-section-heading"
                 >
-                  You are in
+                  Shop our latest styles
                 </span>
                 <MSelect
                   name="collection"
@@ -535,7 +563,22 @@ const Product = ({ addToCart, cartItems = [] }) => {
                                     </a>
 
                                     {/* Top actions: wishlist + quick view */}
-                                    <div className="m-product-card__action m-product-card__action--top m-product-card__addons m:display-flex">
+                                    <div
+                                      className="m-product-card__action m-product-card__action--top m-product-card__addons m:display-flex"
+                                      style={{
+                                        position: "absolute",
+                                        top: "auto",
+                                        right: 12,
+                                        bottom: 12,
+                                        left: "auto",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "flex-end",
+                                        justifyContent: "flex-end",
+                                        width: "auto",
+                                        transform: "none",
+                                      }}
+                                    >
                                       {/* Wishlist */}
                                       <button
                                         type="button"
@@ -580,6 +623,8 @@ const Product = ({ addToCart, cartItems = [] }) => {
                                           border: "1px solid #e5e7eb", background: "#fff",
                                           display: "flex", alignItems: "center", justifyContent: "center",
                                           cursor: "pointer", padding: 0, marginTop: 6,
+                                          display: "none",
+                                          pointerEvents: "none",
                                         }}
                                       >
                                         <svg viewBox="0 0 17 11" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -637,7 +682,7 @@ const Product = ({ addToCart, cartItems = [] }) => {
 
                                       {/* Color swatches */}
                                       {colors.length > 0 && (
-                                        <div className="m-product-option m-product-option--color m:flex-wrap m:items-center m:justify-start">
+                                        <div className="product-home-color-options m-product-option m-product-option--color m:flex-wrap m:items-center m:justify-start">
                                           <div className="m-product-option--content m:inline-flex m:flex-wrap">
                                             {colors.map((color) => (
                                               <div key={color.name} className="m-product-option--node m-tooltip m-tooltip--top">
