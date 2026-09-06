@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +17,11 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [showPasswordMismatch, setShowPasswordMismatch] = useState(false);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const passwordRef = useRef(null);
 
   // Redirect after successful verification / login
   useEffect(() => {
@@ -26,22 +31,50 @@ const Register = () => {
   const handleRegister = (e) => {
     e.preventDefault();
     setLocalError("");
+    setShowPasswordMismatch(false);
 
     if (password !== confirmPassword) {
-      setLocalError("Passwords do not match");
+      setShowPasswordMismatch(true);
       return;
     }
     if (password.length < 6) {
       setLocalError("Password must be at least 6 characters");
       return;
     }
+    if (!/^\d{10}$/.test(phone)) {
+      setPhoneTouched(true);
+      setLocalError("Phone number must contain exactly 10 digits");
+      return;
+    }
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
+      setLocalError("Please enter correct email address");
+      return;
+    }
 
-    dispatch(registerThunk({ firstName, lastName, email, phone, password }));
+    setShowEmailConfirmation(true);
+  };
+
+  const confirmRegister = () => {
+    setShowEmailConfirmation(false);
+    dispatch(registerThunk({ firstName, lastName, email: email.trim(), phone, password }));
+  };
+
+  const handleFieldKeyDown = (event) => {
+    if (event.key !== "Enter") return;
+
+    const fields = Array.from(event.currentTarget.form.querySelectorAll("input"));
+    const currentIndex = fields.indexOf(event.currentTarget);
+    const nextField = fields[currentIndex + 1];
+
+    if (nextField) {
+      event.preventDefault();
+      nextField.focus();
+    }
   };
 
   return (
     <>
-      <main id="MainContent" role="main">
+      <main id="MainContent" className="register-page" role="main">
         <div className="shopify-section" id="shopify-section-template--16598221815913__main">
           <div className="m-page-header m-page-header--template-register m:text-center m-scroll-trigger animate--fade-in-up">
             <div className="container-fluid">
@@ -56,7 +89,7 @@ const Register = () => {
                       <path d="M17.525 36.465l-7.071 7.07c-4.686 4.686-4.686 12.284 0 16.971L205.947 256 10.454 451.494c-4.686 4.686-4.686 12.284 0 16.971l7.071 7.07c4.686 4.686 12.284 4.686 16.97 0l211.051-211.05c4.686-4.686 4.686-12.284 0-16.971L34.495 36.465c-4.686-4.687-12.284-4.687-16.97 0z" />
                     </svg>
                   </span>
-                  <span className="m-breadcrumb--item-current m-breadcrumb--item">Create Account</span>
+                  <span className="m-breadcrumb--item-current m-breadcrumb--item">Register</span>
                 </div>
               </div>
             </nav>
@@ -67,71 +100,91 @@ const Register = () => {
 
               {/* ── Registration Form ── */}
               <>
-                  <h1>Register</h1>
+                  <div className="register-form__intro">
+                    <h2>Create your account</h2>
+                    <p>Join SMal Couture for a more personal shopping experience.</p>
+                  </div>
                   {(localError || auth.error) && (
-                    <p style={{ color: "red", marginBottom: 12 }}>{localError || auth.error}</p>
+                    <p className="register-form__error">{localError || auth.error}</p>
                   )}
                   <form onSubmit={handleRegister}>
-                    <input
-                      className="form-field form-field--input"
-                      type="text"
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="text"
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="email"
-                      placeholder="Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="tel"
-                      placeholder="Phone Number"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <input
-                      className="form-field form-field--input"
-                      type="password"
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
-                    <div className="m-register-form__description">
-                      Sign up for early Sale access plus tailored new arrivals, trends and promotions.
-                      To opt out, click unsubscribe in our emails.
+                    <div className="register-field">
+                      <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="text" placeholder=" " value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                      <label>First Name</label>
                     </div>
+                    <div className="register-field">
+                      <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="text" placeholder=" " value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                      <label>Last Name</label>
+                    </div>
+                    <div className="register-field">
+                      <input
+                        className="form-field form-field--input"
+                        type="tel"
+                        onKeyDown={handleFieldKeyDown}
+                        placeholder=" "
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        onFocus={() => setPhoneTouched(false)}
+                        onBlur={() => setPhoneTouched(true)}
+                        minLength={10}
+                        maxLength={10}
+                        pattern="[0-9]{10}"
+                        inputMode="numeric"
+                        title="Enter exactly 10 digits"
+                        required
+                      />
+                      <label>Phone Number</label>
+                    </div>
+                    {phoneTouched && phone.length > 0 && phone.length !== 10 && (
+                      <p className="register-phone__hint">Please enter correct phone number</p>
+                    )}
+                    <div className="register-field">
+                      <input
+                        className="form-field form-field--input"
+                        type="email"
+                        onKeyDown={handleFieldKeyDown}
+                        placeholder=" "
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={() => setEmailTouched(false)}
+                        onBlur={() => setEmailTouched(true)}
+                        pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$"
+                        title="Enter a valid email address, for example name@gmail.com"
+                      />
+                      <label>Email (Optional)</label>
+                      <button
+                        type="button"
+                        className="register-email__skip"
+                        onClick={() => {
+                          setEmail("");
+                          setEmailTouched(false);
+                          passwordRef.current?.focus();
+                        }}
+                      >
+                        Skip
+                      </button>
+                    </div>
+                    {emailTouched && email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()) && (
+                      <p className="register-email__hint">Please enter correct email address</p>
+                    )}
+                    <div className="register-field">
+                      <input onKeyDown={handleFieldKeyDown} ref={passwordRef} className="form-field form-field--input" type="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required />
+                      <label>Password</label>
+                    </div>
+                    <div className="register-field">
+                      <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="password" placeholder=" " value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} required />
+                      <label>Confirm Password</label>
+                    </div>
+                    {showPasswordMismatch && password !== confirmPassword && (
+                      <p className="register-password__hint">Passwords do not match</p>
+                    )}
                     <button className="m-button m-button--primary m:w-full" type="submit" disabled={auth.loading}>
-                      {auth.loading ? "Creating account…" : "Register"}
+                      {auth.loading ? "Creating account…" : "Create account"}
                     </button>
-                    <button
-                      type="button"
-                      className="m-button m-button--secondary m:w-full"
-                      onClick={() => navigate("/login")}
-                    >
-                      Log In
-                    </button>
+                    <p className="register-form__login">
+                      Already have an account?{" "}
+                      <button type="button" onClick={() => navigate("/login")}>Login here</button>
+                    </p>
                   </form>
               </>
 
@@ -139,6 +192,37 @@ const Register = () => {
           </div>
         </div>
       </main>
+      {showEmailConfirmation && (
+        <div className="register-confirmation__backdrop" role="presentation">
+          <div
+            className="register-confirmation"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="register-confirmation-title"
+          >
+            <h2 id="register-confirmation-title">Confirm your mobile number</h2>
+            <p>Please confirm that this mobile number is correct:</p>
+            <strong>{phone}</strong>
+            <div className="register-confirmation__actions">
+              <button
+                type="button"
+                className="register-confirmation__cancel"
+                onClick={() => setShowEmailConfirmation(false)}
+              >
+                Edit number
+              </button>
+              <button
+                type="button"
+                className="register-confirmation__confirm"
+                onClick={confirmRegister}
+                disabled={auth.loading}
+              >
+                {auth.loading ? "Creating account…" : "Confirm & Register"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
