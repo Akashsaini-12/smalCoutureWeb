@@ -68,6 +68,9 @@ export const rootReducer = (state = initialState, action) => {
     case "AUTH_LOADING":
       return { ...state, auth: { ...state.auth, loading: true, error: null, successMessage: null } };
 
+    case "AUTH_CLEAR_MESSAGES":
+      return { ...state, auth: { ...state.auth, error: null, successMessage: null } };
+
     case "AUTH_SUCCESS":
       return {
         ...state,
