@@ -576,7 +576,7 @@ const DesktopNavItem = ({ navItem, activeDesktopMenu, openMega, closeMega }) => 
 }
 
 // ── Mobile Nav Item ───────────────────────────────────────────────────────
-const MobileNavItem = ({ navItem, activeMobileMenu, setActiveMobileMenu, onCloseDrawer }) => {
+const MobileNavItem = ({ navItem, activeMobileMenu, setActiveMobileMenu, isMenuOpen, onCloseDrawer }) => {
   const navigate = useNavigate()
   const menuId   = navItem._id || navItem.key
   const hasSub   = !!(navItem.items || navItem.groups)
@@ -626,11 +626,9 @@ const MobileNavItem = ({ navItem, activeMobileMenu, setActiveMobileMenu, onClose
       </div>
 
       {/* Sub panel */}
-      {hasSub && (
+      {hasSub && isMenuOpen && activeMobileMenu === menuId && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 10010, background: '#fff', overflowY: 'auto',
-          transform: activeMobileMenu === menuId ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
         }}>
           <button onClick={() => setActiveMobileMenu(null)} style={{
             display: 'flex', alignItems: 'center', gap: 10, width: '100%',
@@ -873,33 +871,20 @@ const Header = () => {
 
   useEffect(() => {
     if (!isMenuOpen) return
-    const fn = e => e.key === 'Escape' && setIsMenuOpen(false)
+    const fn = e => {
+      if (e.key !== 'Escape') return
+      setIsMenuOpen(false)
+      setActiveMobileMenu(null)
+    }
     document.addEventListener('keydown', fn)
     return () => document.removeEventListener('keydown', fn)
   }, [isMenuOpen])
 
   useEffect(() => {
-    const closeForSelect = () => {
-      setIsMenuOpen(false)
+    if (!isMenuOpen) {
       setActiveMobileMenu(null)
     }
-    document.addEventListener('mselect-interaction', closeForSelect)
-    return () => document.removeEventListener('mselect-interaction', closeForSelect)
-  }, [])
-
-  useEffect(() => {
-    const closeMenuBeforeProductChip = (event) => {
-      if (!event.target?.closest?.('[data-product-collection-chip="true"]')) return
-      setIsMenuOpen(false)
-      setActiveMobileMenu(null)
-    }
-    document.addEventListener('pointerdown', closeMenuBeforeProductChip, true)
-    document.addEventListener('click', closeMenuBeforeProductChip, true)
-    return () => {
-      document.removeEventListener('pointerdown', closeMenuBeforeProductChip, true)
-      document.removeEventListener('click', closeMenuBeforeProductChip, true)
-    }
-  }, [])
+  }, [isMenuOpen])
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
@@ -968,7 +953,12 @@ const Header = () => {
             >
               <BackArrowIcon />
             </button>
-            <button onClick={() => setIsMenuOpen(v => !v)} style={{
+            <button onClick={() => {
+              setIsMenuOpen(v => {
+                if (v) setActiveMobileMenu(null)
+                return !v
+              })
+            }} style={{
               width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: 'transparent', border: 'none', cursor: 'pointer', color: '#333', borderRadius: 8,
             }}>
@@ -1090,7 +1080,10 @@ const Header = () => {
           <div aria-hidden style={{ height: MOBILE_HEADER_OFFSET_PX, width: '100%' }} />
 
           {isMenuOpen && (
-            <div onClick={() => setIsMenuOpen(false)} style={{
+            <div onClick={() => {
+              setIsMenuOpen(false)
+              setActiveMobileMenu(null)
+            }} style={{
               position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.38)', zIndex: 9998,
               backdropFilter: 'blur(3px)',
             }} />
@@ -1108,7 +1101,10 @@ const Header = () => {
               padding: '0 18px', height: 56, borderBottom: '1px solid rgba(0,0,0,0.07)', flexShrink: 0,
             }}>
               <img src={logoSrc} alt="Logo" style={{ height: 46, width: 'auto', objectFit: 'contain', display: 'block' }} />
-              <button onClick={() => setIsMenuOpen(false)} style={{
+              <button onClick={() => {
+                setIsMenuOpen(false)
+                setActiveMobileMenu(null)
+              }} style={{
                 width: 32, height: 32, borderRadius: '50%', background: '#f2f2f2',
                 border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555',
               }}><CloseIcon /></button>
@@ -1120,7 +1116,11 @@ const Header = () => {
                   navItem={item}
                   activeMobileMenu={activeMobileMenu}
                   setActiveMobileMenu={setActiveMobileMenu}
-                  onCloseDrawer={() => setIsMenuOpen(false)}
+                  isMenuOpen={isMenuOpen}
+                  onCloseDrawer={() => {
+                    setIsMenuOpen(false)
+                    setActiveMobileMenu(null)
+                  }}
                 />
               ))}
             </ul>
