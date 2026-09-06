@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { adminListOrders, adminListUsers, adminUpdateOrder, listOrders, logoutThunk } from "../redux/actions";
+import { adminDeleteOrder, adminDeleteUser, adminListOrders, adminListUsers, adminUpdateOrder, listOrders, logoutThunk } from "../redux/actions";
 import SlidesAdminSection from "./admin/SlidesAdminSection";
 import ProductsAdminSection from "./admin/ProductsAdminSection";
 import CategoriesAdminSection from "./admin/CategoriesAdminSection";
@@ -680,12 +680,16 @@ function OrderDetail({ order, onItemClick }) {
   );
 }
 
-function AdminOrdersTab({ adminListOrders }) {
+function AdminOrdersTab({ adminListOrders, adminDeleteOrder }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [updatingOrderId, setUpdatingOrderId] = useState(null);
+  const [deletingOrderId, setDeletingOrderId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [adminIdentifier, setAdminIdentifier] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -752,9 +756,10 @@ function AdminOrdersTab({ adminListOrders }) {
     if (!q) return orders;
     return orders.filter((o) => {
       const oid = String(o?._id || "").toLowerCase();
+      const orderNumber = `#${String(o?.orderNumber || o?.orderNo || o?._id || "").slice(-8)}`.toLowerCase();
       const uid = String(o?.userId || "").toLowerCase();
       const mail = String(o?.shippingAddress?.name || "").toLowerCase(); // fallback
-      return oid.includes(q) || uid.includes(q) || mail.includes(q);
+      return oid.includes(q) || orderNumber.includes(q) || uid.includes(q) || mail.includes(q);
     });
   }, [orders, query]);
 
@@ -763,6 +768,35 @@ function AdminOrdersTab({ adminListOrders }) {
     setDetailOpen(true);
     setProductOpen(false);
     setSelectedItem(null);
+  };
+
+  const deleteOrder = async (order) => {
+    const id = String(order?._id || "");
+    if (!id || deletingOrderId) return;
+    setDeleteTarget(order);
+    setAdminIdentifier("");
+    setAdminPassword("");
+  };
+
+  const confirmDeleteOrder = async (event) => {
+    event.preventDefault();
+    const id = String(deleteTarget?._id || "");
+    if (!id || deletingOrderId || !adminIdentifier.trim() || !adminPassword) return;
+    try {
+      setDeletingOrderId(id);
+      await adminDeleteOrder(id, { emailOrPhone: adminIdentifier.trim(), password: adminPassword });
+      setOrders((prev) => prev.filter((item) => String(item?._id || "") !== id));
+      if (selectedOrder && String(selectedOrder?._id || "") === id) {
+        setDetailOpen(false);
+        setSelectedOrder(null);
+      }
+      setDeleteTarget(null);
+    } catch (e) {
+      setError(e?.message || "Failed to delete order");
+    } finally {
+      setDeletingOrderId(null);
+      setAdminPassword("");
+    }
   };
 
   return (
@@ -774,7 +808,33 @@ function AdminOrdersTab({ adminListOrders }) {
         error={error}
         items={filtered}
         onRowClick={openOrder}
+        onDeleteOrder={deleteOrder}
+        deletingOrderId={deletingOrderId}
       />
+
+      <Modal
+        open={Boolean(deleteTarget)}
+        title="Confirm order deletion"
+        width="min(420px, calc(100% - 32px))"
+        onClose={() => {
+          if (!deletingOrderId) setDeleteTarget(null);
+        }}
+      >
+        <form onSubmit={confirmDeleteOrder} style={{ display: "grid", gap: 9 }}>
+          <div style={{ color: "#111", fontSize: 12, lineHeight: 1.4 }}>
+            This permanently deletes the order. Enter your admin ID and password to continue.
+          </div>
+          <div style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9, background: "#fff", color: "#111", fontSize: 12, lineHeight: 1.5 }}>
+            <strong>Order total: {formatINR(deleteTarget?.total)}</strong>
+            <div>Customer: {deleteTarget?.shippingAddress?.name || deleteTarget?.customerName || "Unavailable"}</div>
+          </div>
+          <input value={adminIdentifier} onChange={(event) => setAdminIdentifier(event.target.value)} placeholder="Admin email or mobile" autoComplete="username" required style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9 }} />
+          <input value={adminPassword} onChange={(event) => setAdminPassword(event.target.value)} placeholder="Admin password" type="password" autoComplete="current-password" required style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9 }} />
+          <button type="submit" disabled={Boolean(deletingOrderId)} style={{ justifySelf: "end", border: "1px solid #d9d9d9", borderRadius: 999, padding: "8px 15px", background: "#fff", color: "#111", fontWeight: 800, cursor: "pointer" }}>
+            {deletingOrderId ? "Deleting…" : "Confirm delete"}
+          </button>
+        </form>
+      </Modal>
 
       <Modal
         open={detailOpen}
@@ -1232,6 +1292,7 @@ export default function AdminPanel() {
               <AdminUsersTabComponent
                 listOrders={listOrders}
                 adminListUsers={adminListUsers}
+                adminDeleteUser={adminDeleteUser}
                 Modal={Modal}
                 OrderDetail={OrderDetail}
                 ProductDetail={ProductDetail}
@@ -1241,7 +1302,7 @@ export default function AdminPanel() {
             )}
 
             {activeTab === "orders" && (
-              <AdminOrdersTab adminListOrders={adminListOrders} />
+              <AdminOrdersTab adminListOrders={adminListOrders} adminDeleteOrder={adminDeleteOrder} />
             )}
 
             {activeTab === "add-product" && (
@@ -1393,6 +1454,49 @@ const styles = `
   .action-del { background: rgba(255,101,132,0.15); color: var(--accent2); }
   .action-del:hover { background: var(--accent2); color: white; }
 
+  /* Orders workspace */
+  .admin-orders-page { display: grid; gap: 18px; }
+  .admin-orders-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .admin-orders-kicker { color: #111; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+  .admin-orders-heading h2 { margin: 5px 0 4px; color: #302820; font-size: 26px; font-weight: 600; letter-spacing: -.03em; }
+  .admin-orders-heading p { margin: 0; color: #111; font-size: 13px; }
+  .admin-orders-count { padding: 7px 12px; border: 1px solid #d9d9d9; border-radius: 999px; background: #fff; color: #111; font-size: 12px; font-weight: 800; }
+  .admin-orders-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: hidden; border: 1px solid #e8dfd7; border-radius: 14px; background: #fff; }
+  .admin-orders-metrics div { display: grid; gap: 5px; padding: 15px 18px; border-right: 1px solid #eee7e1; }
+  .admin-orders-metrics div:last-child { border-right: 0; }
+  .admin-orders-metrics span { color: #111; font-size: 11px; }
+  .admin-orders-metrics strong { color: #111; font-size: 22px; font-weight: 600; }
+  .admin-orders-toolbar { display: grid; gap: 7px; }
+  .admin-orders-toolbar label { color: #111; font-size: 12px; font-weight: 800; }
+  .admin-orders-toolbar input { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #d9d9d9; border-radius: 10px; background: #fff; color: #111; font: inherit; font-size: 13px; outline: none; }
+  .admin-orders-toolbar input:focus { border-color: #999; box-shadow: 0 0 0 3px rgba(0,0,0,.06); }
+  .admin-orders-table { overflow-x: auto; border: 1px solid #e8dfd7; border-radius: 14px; background: #fff; }
+  .admin-orders-table table { min-width: 980px; table-layout: fixed; }
+  .admin-orders-table th:nth-child(1), .admin-orders-table td:nth-child(1) { width: 25%; }
+  .admin-orders-table th:nth-child(2), .admin-orders-table td:nth-child(2) { width: 24%; }
+  .admin-orders-table th:nth-child(3), .admin-orders-table td:nth-child(3) { width: 13%; }
+  .admin-orders-table th:nth-child(4), .admin-orders-table td:nth-child(4) { width: 14%; }
+  .admin-orders-table th:nth-child(5), .admin-orders-table td:nth-child(5) { width: 14%; }
+  .admin-orders-table th:nth-child(6), .admin-orders-table td:nth-child(6) { width: 10%; }
+  .admin-orders-table th { padding: 12px 16px; border-bottom: 1px solid #eee7e1; background: #faf7f3; color: #111; font-size: 10px; letter-spacing: .12em; }
+  .admin-orders-table td { padding: 15px 18px; border-bottom: 1px solid #f1ebe6; vertical-align: middle; }
+  .admin-orders-row { cursor: pointer; transition: background .15s ease; }
+  .admin-orders-row:hover td { background: #fdfaf7; }
+  .admin-orders-id, .admin-orders-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #111; font-size: 13px; font-weight: 800; }
+  .admin-orders-order-id { margin-top: 4px; overflow: hidden; color: #111; font-size: 10px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+  .admin-orders-date, .admin-orders-phone { margin-top: 4px; color: #111; font-size: 11px; }
+  .admin-orders-address { max-width: 260px; margin-top: 4px; overflow: hidden; color: #111; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+  .admin-orders-payment, .admin-orders-status { display: inline-flex; padding: 4px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: capitalize; }
+  .admin-orders-payment { background: #eee; color: #111; }
+  .admin-orders-payment.is-paid { border-color: #245b38; background: #245b38; color: #fff; }
+  .admin-orders-status { background: #fff; border: 1px solid #d9d9d9; color: #111; }
+  .admin-orders-total { color: #111; font-size: 14px; font-weight: 800; text-align: left; }
+  .admin-orders-delete { border: 1px solid #d9d9d9; border-radius: 999px; padding: 6px 10px; background: #fff; color: #111; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+  .admin-orders-delete:hover { background: #f3f3f3; }
+  .admin-orders-delete:disabled { cursor: wait; opacity: .55; }
+  .admin-orders-empty { padding: 34px !important; color: #111; font-size: 13px; text-align: center; }
+  .admin-orders-error { padding: 12px 16px; border-bottom: 1px solid #d9d9d9; background: #fff; color: #111; font-size: 13px; font-weight: 700; }
+
   /* SLIDES GRID */
   .slides-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .slide-card {
@@ -1534,6 +1638,11 @@ const styles = `
   }
 
   @media (max-width: 640px) {
+    .admin-orders-heading { align-items: flex-start; flex-direction: column; }
+    .admin-orders-metrics div { padding: 13px 12px; }
+    .admin-orders-metrics span { font-size: 10px; }
+    .admin-orders-metrics strong { font-size: 19px; }
+
     .slides-grid {
       grid-template-columns: minmax(0, 1fr);
     }

@@ -11,7 +11,7 @@ import { fetchShopCategories } from "../redux/actions";
 import { imgSrc } from "../utils/ensureHttpsUrl";
 
 const ALL_PRODUCTS_PATH = "/AllProducts";
-const MOBILE_CARD_W = "calc(72vw - 24px)";
+const MOBILE_CARD_W = "calc(66vw - 20px)";
 
 const isRootCategory = (c) =>
   c == null || c.parentId == null || c.parentId === undefined;
@@ -89,7 +89,7 @@ const ShopCatogries = () => {
     if (!isMobile || totalSlides === 0) { clear(); return undefined; }
     const syncPad = () => {
       // Left-aligned cards on mobile (no center padding).
-      const pad = 16;
+      const pad = 0;
       inner.style.paddingLeft = `${pad}px`;
       inner.style.paddingRight = `${pad}px`;
       wrap.style.scrollPaddingLeft = `${pad}px`;
@@ -120,7 +120,7 @@ const ShopCatogries = () => {
     if (!isMobile || totalSlides2 === 0) { clear(); return undefined; }
     const syncPad = () => {
       // Left-aligned cards on mobile (no center padding).
-      const pad = 16;
+      const pad = 0;
       inner.style.paddingLeft = `${pad}px`;
       inner.style.paddingRight = `${pad}px`;
       wrap.style.scrollPaddingLeft = `${pad}px`;
@@ -258,7 +258,7 @@ const ShopCatogries = () => {
           width: 100%;
           overflow-x: hidden;
         }
-        @media (max-width:767px) { .sbc-section { padding:36px 0 52px; } }
+        @media (max-width:767px) { .sbc-section { padding:36px 0 18px; } }
 
         .sbc-inner {
           max-width: 1440px;
@@ -271,17 +271,26 @@ const ShopCatogries = () => {
 
         /* ─── section header ─── */
         .sbc-hdr {
+          position: relative;
           display: flex;
           align-items: flex-end;
-          justify-content: space-between;
+          justify-content: center;
           margin-bottom: 22px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid rgba(15, 23, 42, 0.14);
         }
         @media (max-width:767px) {
           .sbc-hdr { align-items: flex-start; gap: 12px; }
+          .sbc-hdr .sbc-ctrls { position: absolute; right: 0; top: 0; }
         }
         @media (max-width:767px) { .sbc-hdr { margin-bottom: 22px; } }
 
-        .sbc-title { display: flex; flex-direction: column; gap: 6px; }
+        .sbc-title {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          text-align: center;
+        }
 
         .sbc-eyebrow {
           font-size: 11px;
@@ -292,16 +301,16 @@ const ShopCatogries = () => {
         }
 
         .sbc-title h2 {
-          font-size: clamp(1.5rem, 2.2vw, 2.2rem);
-          font-weight: 300;
+          font-size: clamp(22px, 3vw, 42px);
+          font-weight: 900;
           letter-spacing: -0.04em;
           color: var(--sbc-text);
-          line-height: 1;
+          line-height: 1.05;
           margin: 0;
         }
         .sbc-title h2 em {
-          font-style: italic;
-          font-weight: 400;
+          font-style: normal;
+          font-weight: 900;
         }
 
         /* ─── view all ─── */
@@ -364,6 +373,12 @@ const ShopCatogries = () => {
           scroll-snap-type: x mandatory;
           -webkit-overflow-scrolling: touch;
           width: 100%;
+        }
+        @media (max-width:767px) {
+          .sbc-carousel {
+            margin-left: -20px;
+            width: calc(100% + 20px);
+          }
         }
         .sbc-carousel-inner {
           display: flex;
@@ -529,8 +544,8 @@ const ShopCatogries = () => {
           flex: 0 0 min(280px, 70vw);
           scroll-snap-align: start;
         }
-        @media (min-width: 768px)  { .sbc-hitem { flex-basis: 232px; } }
-        @media (min-width: 1280px) { .sbc-hitem { flex-basis: 260px; } }
+        @media (min-width: 768px)  { .sbc-hitem { flex-basis: 214px; } }
+        @media (min-width: 1280px) { .sbc-hitem { flex-basis: 240px; } }
 
         /* ─── card ─── */
         .sbc-card {
@@ -633,7 +648,6 @@ const ShopCatogries = () => {
           {/* ── HEADER ── */}
           <div className="sbc-hdr">
             <div className="sbc-title">
-              <div className="sbc-eyebrow">Collections</div>
               <h2>Shop by <em>Category</em></h2>
             </div>
 
@@ -730,7 +744,6 @@ const ShopCatogries = () => {
             <>
               <div className="sbc-mob-block">
                 <div className="sbc-mob-hdr">
-                  <div className="sbc-mob-pill">Featured</div>
                   <div className="sbc-ctrls" style={{ margin: 0 }}>
                     <button type="button" aria-label="Previous" className="sbc-btn" onClick={() => scrollByCard(-1)}>
                       <svg width="15" height="15" viewBox="0 0 20 20" fill="none">

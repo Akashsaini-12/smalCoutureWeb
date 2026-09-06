@@ -742,8 +742,8 @@ const ProfileDropdown = ({ user, pos, dropdownRef, onClose, navigate, onLogout }
               {user.role === 0 && (
                 <span style={{
                   display: 'inline-flex', marginTop: 7, padding: '2px 9px',
-                  background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.16)',
-                  borderRadius: 20, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.05em',
+                  background: '#705845', border: '1px solid #705845',
+                  borderRadius: 20, fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.05em',
                 }}>✦ ADMIN</span>
               )}
             </div>

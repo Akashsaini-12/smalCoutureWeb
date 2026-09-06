@@ -20,6 +20,7 @@ const Register = () => {
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
   const [showPasswordMismatch, setShowPasswordMismatch] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
   const passwordRef = useRef(null);
 
@@ -65,6 +66,10 @@ const Register = () => {
 
   const handleFieldKeyDown = (event) => {
     if (event.key !== "Enter") return;
+
+    if (event.currentTarget === passwordRef.current) {
+      setPasswordTouched(true);
+    }
 
     const fields = Array.from(event.currentTarget.form.querySelectorAll("input"));
     const currentIndex = fields.indexOf(event.currentTarget);
@@ -172,9 +177,33 @@ const Register = () => {
                       <p className="register-email__hint">Please enter correct email address</p>
                     )}
                     <div className="register-field">
-                      <input onKeyDown={handleFieldKeyDown} ref={passwordRef} className="form-field form-field--input" type="password" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} pattern="(?=.*[A-Za-z])(?=.*\d).+" title="Password must contain at least one letter and one number" required />
+                      <input
+                        onKeyDown={handleFieldKeyDown}
+                        ref={passwordRef}
+                        className="form-field form-field--input"
+                        type="password"
+                        placeholder=" "
+                        value={password}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setPassword(value);
+                          setPasswordTouched(value.length >= 6);
+                        }}
+                        onBlur={() => setPasswordTouched(true)}
+                        minLength={6}
+                        pattern="(?=.*[A-Za-z])(?=.*\d).+"
+                        title="Password must contain at least one letter and one number"
+                        required
+                      />
                       <label>Password</label>
                     </div>
+                    {passwordTouched && password.length > 0 && (
+                      password.length < 6 ? (
+                        <p className="register-password__hint">Please enter at least 6 characters</p>
+                      ) : (!/[A-Za-z]/.test(password) || !/\d/.test(password)) ? (
+                        <p className="register-password__hint">Password must contain at least one letter and one number</p>
+                      ) : null
+                    )}
                     <div className="register-field">
                       <input onKeyDown={handleFieldKeyDown} className="form-field form-field--input" type="password" placeholder=" " value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={6} pattern="(?=.*[A-Za-z])(?=.*\d).+" title="Password must contain at least one letter and one number" required />
                       <label>Confirm Password</label>

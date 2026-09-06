@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,6 +24,7 @@ const Login = () => {
   /** Forgot password: 1 = email, 2 = OTP, 3 = new password */
   const [forgotStep, setForgotStep] = useState(1);
   const [localError, setLocalError] = useState("");
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     dispatch({ type: "AUTH_CLEAR_MESSAGES" });
@@ -66,6 +67,12 @@ const Login = () => {
     e.preventDefault();
     setLocalError("");
     dispatch(loginThunk({ emailOrPhone: loginId, password }));
+  };
+
+  const handleLoginInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    setLocalError("");
+    dispatch({ type: "AUTH_CLEAR_MESSAGES" });
   };
 
   const handleForgotSendOtp = async (e) => {
@@ -301,7 +308,13 @@ const Login = () => {
                         type="text"
                         placeholder=" "
                         value={loginId}
-                        onChange={(e) => setLoginId(e.target.value)}
+                        onChange={handleLoginInputChange(setLoginId)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            passwordRef.current?.focus();
+                          }
+                        }}
                         required
                       />
                       <label>Email or mobile number</label>
@@ -310,9 +323,10 @@ const Login = () => {
                       <input
                         className="form-field form-field--input"
                         type="password"
+                        ref={passwordRef}
                         placeholder=" "
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handleLoginInputChange(setPassword)}
                         required
                       />
                       <label>Password</label>

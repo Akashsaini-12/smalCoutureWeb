@@ -1,10 +1,8 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/effect-fade";
-import "swiper/css/pagination";
 import { useSelector } from "react-redux";
 import { ensureHttpsUrl } from "../../utils/ensureHttpsUrl";
 
@@ -31,8 +29,6 @@ function buildSliderResponsiveImage(url) {
 
 /* ── Constants — unchanged ── */
 const SECTION_ID = "template--15265873625193__1621243260e1af0c20";
-const BUTTON_TEXT = "Shop Now";
-const FOOTER_TEXT = "The ReCotton Tee";
 const ASPECT_RATIO = "2.16";
 const ASPECT_RATIO_MOBILE = "0.88";
 const DESKTOP_HEIGHT = 1125;
@@ -47,40 +43,6 @@ function shopNowPath(slide) {
   return "/AllProducts";
 }
 
-/* ── Arrow icon ── */
-const ArrowIcon = () => (
-  <svg
-    width="10" height="10" viewBox="0 0 10 10"
-    fill="none" aria-hidden="true" style={{ display: "block" }}
-  >
-    <path
-      d="M2 5h6M5.5 2.5L8 5l-2.5 2.5"
-      stroke="currentColor" strokeWidth="1.4"
-      strokeLinecap="round" strokeLinejoin="round"
-    />
-  </svg>
-);
-
-/* ── Chevron icons (slider nav) ── */
-const Chevron = ({ dir = "right" }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 20 20"
-    fill="none"
-    aria-hidden="true"
-    style={{ display: "block", transform: dir === "left" ? "rotate(180deg)" : "none" }}
-  >
-    <path
-      d="M7.5 4.5L12.5 10L7.5 15.5"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 /* ── Slide content ── */
 function SlideContent({ slide, sectionId, navigate }) {
   return (
@@ -88,6 +50,15 @@ function SlideContent({ slide, sectionId, navigate }) {
       className="m-slide m-slide--middle-left m-slide--text-large ms-slide"
       data-slide={slide.id}
       data-slide-type="slider_item"
+      role="link"
+      tabIndex={0}
+      onClick={() => navigate(shopNowPath(slide))}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          navigate(shopNowPath(slide));
+        }
+      }}
     >
       {/* Background image */}
       <div
@@ -113,60 +84,25 @@ function SlideContent({ slide, sectionId, navigate }) {
 
       {/* Overlay */}
       <div className="ms-veil" aria-hidden="true" />
+      <div className="ms-explore-prompt" aria-hidden="true">
+        <span className="ms-explore-arrow">↓</span>
+        <span>Swipe down to explore all products</span>
+      </div>
 
       {/* Content */}
       <div className="m-slide__wrapper container-fluid ms-content-wrap">
         <div className="m-slide__content m-richtext ms-content-inner">
 
-          {/* Eyebrow tag */}
-          <div className="ms-tag">
-            <span className="ms-tag-line" aria-hidden="true" />
-            <span className="ms-tag-text">{slide.title}</span>
-          </div>
-
           {/* Hero title */}
           <h2 className="m-richtext__title m-slide__title ms-title">
             {Array.isArray(slide.subtitle) ? (
-              <>
-                {slide.subtitle[0]}
-                {slide.subtitle[1] && <><br />{slide.subtitle[1]}</>}
-              </>
+              slide.subtitle.filter(Boolean).join(" ")
             ) : (
               slide.subtitle
             )}
           </h2>
 
-          {/* CTA */}
-          <div className="m-richtext__button m-slide__button">
-            <button
-              type="button"
-              className="m-slide__button-first m-button ms-btn"
-              onClick={() => navigate(shopNowPath(slide))}
-            >
-              <span className="ms-btn-text">{BUTTON_TEXT}</span>
-              <span className="ms-btn-circle" aria-hidden="true">
-                <ArrowIcon />
-              </span>
-            </button>
-          </div>
-
         </div>
-      </div>
-
-      {/* Footer — desktop only */}
-      <div
-        className="m-slider__footer m-slider__footer--end container-fluid m:flex m:items-center m:justify-end ms-footer"
-        style={{ "--btn-color": "#000" }}
-      >
-        <span>{FOOTER_TEXT}</span>
-        <span className="ms-footer-sep" aria-hidden="true" />
-        <button
-          type="button"
-          className="m-button m-button--link ms-footer-link"
-          onClick={() => navigate(shopNowPath(slide))}
-        >
-          {BUTTON_TEXT}
-        </button>
       </div>
     </div>
   );
@@ -180,13 +116,6 @@ function Slider() {
   );
   const swiperRef = useRef(null);
   const [activeRealIndex, setActiveRealIndex] = useState(0);
-
-  const desktopDots = useMemo(() => {
-    const n = Array.isArray(slides) ? slides.length : 0;
-    // Show one dot per slide (only when multiple slides exist)
-    if (n <= 1) return [];
-    return Array.from({ length: n }, (_, i) => i);
-  }, [slides]);
 
   return (
     <section
@@ -213,6 +142,10 @@ function Slider() {
         @keyframes ms-prog { from{width:0%} to{width:100%} }
         @keyframes ms-zoom { from{transform:scale(1.06)} to{transform:scale(1)} }
         @keyframes ms-line { from{width:0%} to{width:100%} }
+        @keyframes ms-explore-float {
+          0%, 100% { opacity:.48; transform:translateY(0); }
+          50% { opacity:.9; transform:translateY(8px); }
+        }
 
         /* ── Theme resets ── */
         #m-slider-${SECTION_ID} .m-slide__wrapper.m-slide-animate--fade-in-up,
@@ -225,6 +158,34 @@ function Slider() {
           display:block;width:100%!important;height:100%!important;
           object-fit:cover!important;object-position:center top!important;
         }
+        #m-slider-${SECTION_ID} .ms-slide {
+          cursor:pointer;
+        }
+        #m-slider-${SECTION_ID} .ms-explore-prompt {
+          display:flex;
+          align-items:center;
+          gap:10px;
+          position:absolute;
+          left:8%;
+          top:50%;
+          z-index:4;
+          color:rgba(15,23,42,.58);
+          font-family:'Inter',sans-serif!important;
+          font-size:10px!important;
+          font-weight:700!important;
+          letter-spacing:.13em!important;
+          text-transform:uppercase;
+          white-space:nowrap;
+          transform:rotate(-90deg) translateX(-50%);
+          transform-origin:left center;
+          animation:ms-explore-float 2.8s ease-in-out infinite;
+          pointer-events:none;
+        }
+        #m-slider-${SECTION_ID} .ms-explore-arrow {
+          color:#b9914f;
+          font-size:18px;
+          line-height:1;
+        }
 
         /* ── Ken Burns ── */
         #m-slider-${SECTION_ID} .ms-bg img {
@@ -235,63 +196,84 @@ function Slider() {
           transform:scale(1);
         }
 
-        /* ── Overlay: bottom-heavy gradient ── */
+        /* ── Couture editorial overlay ── */
         #m-slider-${SECTION_ID} .ms-veil {
           position:absolute;inset:0;pointer-events:none;z-index:1;
-          /* Keep it very subtle (avoid black band) */
-          background:linear-gradient(to top,
-            rgba(0,0,0,.30) 0%,
-            rgba(0,0,0,.14) 28%,
-            rgba(0,0,0,.06) 52%,
-            transparent 78%
-          );
+          background:linear-gradient(0deg, rgba(20,25,42,.10), transparent 48%);
         }
 
         /* ── Content wrapper — bottom-pinned ── */
         #m-slider-${SECTION_ID} .ms-content-wrap {
           position:absolute!important;inset:0!important;
           display:flex!important;align-items:flex-end!important;
-          padding-bottom:32px!important;z-index:3;
+          padding-bottom:10px!important;z-index:3;
         }
         #m-slider-${SECTION_ID} .ms-content-inner { width:100%; }
 
         /* ── Eyebrow tag ── */
         #m-slider-${SECTION_ID} .ms-tag {
-          display:inline-flex;align-items:center;gap:10px;
-          margin-bottom:10px;
+          display:inline-flex;align-items:center;gap:8px;
+          margin-bottom:16px;
+          padding:8px 13px;
+          border:1px solid rgba(214,179,106,.7);
+          border-radius:999px;
+          background:rgba(24,29,47,.28);
+          backdrop-filter:blur(8px);
         }
         #m-slider-${SECTION_ID} .ms-tag-line {
-          display:inline-block;width:20px;height:1px;
-          background:rgba(255,255,255,.45);flex-shrink:0;
+          display:inline-block;width:7px;height:7px;
+          border-radius:50%;
+          background:#d6b36a;flex-shrink:0;
         }
         #m-slider-${SECTION_ID} .ms-tag-text {
           font-family:'Inter',sans-serif!important;
-          font-size:10px!important;font-weight:500!important;
-          letter-spacing:.22em!important;text-transform:uppercase;
-          color:rgba(255,255,255,.55)!important;
+          font-size:10px!important;font-weight:700!important;
+          letter-spacing:.18em!important;text-transform:uppercase;
+          color:#fff!important;
         }
 
         /* ── Hero title ── */
         #m-slider-${SECTION_ID} .ms-title {
-          font-family:'Playfair Display',Georgia,serif!important;
-          font-size:clamp(2.4rem,8.5vw,3.8rem)!important;
-          font-weight:700!important;line-height:1.04!important;
-          letter-spacing:-.015em!important;color:#fff!important;
-          margin-bottom:22px!important;
-          text-shadow:none!important;
+          position:relative;
+          display:inline-block;
+          width:max-content;
+          max-width:calc(100vw - 40px);
+          font-family:'Inter',sans-serif!important;
+          font-size:clamp(1.12rem,1.8vw,1.44rem)!important;
+          font-weight:800!important;line-height:1!important;
+          letter-spacing:.1em!important;text-transform:uppercase;
+          white-space:nowrap;
+          color:#fff!important;
+          margin:0 0 18px!important;
+          padding:12px 22px 12px 44px!important;
+          border:1px solid rgba(214,179,106,.72)!important;
+          border-radius:999px!important;
+          background:rgba(32,38,59,.82)!important;
+          box-shadow:0 10px 24px rgba(0,0,0,.22)!important;
+          text-shadow:0 1px 3px rgba(0,0,0,.45)!important;
+        }
+        #m-slider-${SECTION_ID} .ms-title::before {
+          content:'';
+          position:absolute;
+          left:16px;
+          top:50%;
+          width:10px;
+          height:10px;
+          border-radius:50%;
+          background:#d6b36a;
+          transform:translateY(-50%);
         }
 
-        /* ════════════════════════════════
-           THE BUTTON
-        ════════════════════════════════ */
+        /* ── Primary hero button ── */
         #m-slider-${SECTION_ID} .ms-btn {
           display:inline-flex!important;align-items:center!important;
-          gap:14px!important;
-          background:none!important;
-          border:none!important;
-          box-shadow:none!important;
+          gap:18px!important;
+          background:#fff!important;
+          border:1px solid #fff!important;
+          border-radius:999px!important;
+          box-shadow:0 12px 28px rgba(0,0,0,.18)!important;
           outline:none!important;
-          padding:0!important;margin:0!important;
+          padding:7px 8px 7px 20px!important;margin:0!important;
           cursor:pointer;
           -webkit-tap-highlight-color:transparent!important;
           text-decoration:none!important;
@@ -303,25 +285,17 @@ function Slider() {
         /* Text label */
         #m-slider-${SECTION_ID} .ms-btn-text {
           font-family:'Inter',sans-serif!important;
-          font-size:11px!important;font-weight:500!important;
-          letter-spacing:.22em!important;text-transform:uppercase;
-          color:#fff!important;
-          position:relative;padding-bottom:6px;
+          font-size:11px!important;font-weight:800!important;
+          letter-spacing:.16em!important;text-transform:uppercase;
+          color:#20263b!important;
+          position:relative;padding-bottom:0;
           user-select:none;line-height:1;
         }
-        /* Dim resting underline */
         #m-slider-${SECTION_ID} .ms-btn-text::before {
-          content:'';position:absolute;bottom:0;left:0;
-          width:100%;height:1px;
-          background:rgba(255,255,255,.22);
-          border-radius:1px;
+          display:none;
         }
-        /* Bright animated underline */
         #m-slider-${SECTION_ID} .ms-btn-text::after {
-          content:'';position:absolute;bottom:0;left:0;
-          width:0%;height:1px;background:#fff;
-          border-radius:1px;
-          transition:width .4s cubic-bezier(.4,0,.2,1);
+          display:none;
         }
         #m-slider-${SECTION_ID} .swiper-slide-active .ms-btn-text::after {
           animation:ms-line .5s .9s cubic-bezier(.4,0,.2,1) forwards;
@@ -332,24 +306,20 @@ function Slider() {
         /* Circle arrow */
         #m-slider-${SECTION_ID} .ms-btn-circle {
           width:34px;height:34px;border-radius:50%;
-          border:1px solid rgba(255,255,255,.35)!important;
-          background:transparent!important;
+          border:0!important;
+          background:#d6b36a!important;
           box-shadow:none!important;outline:none!important;
           display:flex;align-items:center;justify-content:center;
           flex-shrink:0;overflow:hidden;position:relative;
-          transition:border-color .3s ease;
+          transition:transform .3s ease, background .3s ease;
         }
         /* White fill sweeps in */
         #m-slider-${SECTION_ID} .ms-btn-circle::after {
           content:'';position:absolute;inset:0;border-radius:50%;
-          background:#fff;transform:scale(0);
+          display:none;
           transition:transform .3s cubic-bezier(.4,0,.2,1);
         }
-        #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle,
-        #m-slider-${SECTION_ID} .ms-btn:active .ms-btn-circle {
-          border-color:rgba(255,255,255,.9)!important;
-        }
-        #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle::after { transform:scale(1); }
+        #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle { transform:translateX(3px);background:#b9914f!important; }
 
         /* SVG arrow */
         #m-slider-${SECTION_ID} .ms-btn-circle svg {
@@ -358,7 +328,7 @@ function Slider() {
         }
         #m-slider-${SECTION_ID} .ms-btn-circle svg path { transition:stroke .28s ease; }
         #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle svg { transform:translateX(2px); }
-        #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle svg path { stroke:#111!important; }
+        #m-slider-${SECTION_ID} .ms-btn:hover .ms-btn-circle svg path { stroke:#fff!important; }
 
         /* Tap press */
         #m-slider-${SECTION_ID} .ms-btn:active .ms-btn-circle { transform:scale(.88); }
@@ -400,26 +370,25 @@ function Slider() {
           color:rgba(255,255,255,.85)!important;
         }
 
-        /* ── Pagination: thin progress bars ── */
+        /* ── Minimal pagination ── */
         #m-slider-${SECTION_ID} .swiper-pagination {
           display:flex!important;flex-direction:row!important;
-          gap:4px!important;width:100%!important;padding:0!important;
+          gap:8px!important;width:100%!important;padding:0!important;
           justify-content:center!important;align-items:center!important;
         }
         #m-slider-${SECTION_ID} .m-dot {
-          flex:1!important;max-width:70px!important;
-          height:2px!important;width:auto!important;
-          border-radius:1px!important;
-          background:rgba(255,255,255,.18)!important;
+          flex:0 0 8px!important;max-width:none!important;
+          height:8px!important;width:8px!important;
+          border-radius:999px!important;
+          background:rgba(255,255,255,.45)!important;
           margin:0!important;opacity:1!important;
           position:relative;overflow:hidden;
           cursor:pointer;transition:none!important;
         }
-        #m-slider-${SECTION_ID} .m-dot--active { background:rgba(255,255,255,.18)!important; }
+        #m-slider-${SECTION_ID} .m-dot--active { background:#d6b36a!important; transform:scale(1.25); }
         #m-slider-${SECTION_ID} .m-dot--active::after {
           content:'';position:absolute;inset:0;
-          background:#fff;transform-origin:left;
-          animation:ms-prog ${AUTOPLAY_DELAY_MS}ms linear forwards;
+          display:none;
         }
 
         /* Pagination wrapper */
@@ -428,9 +397,9 @@ function Slider() {
         }
         #m-slider-${SECTION_ID} .m-slider-controls {
           position:absolute!important;
-          bottom:0!important;top:auto!important;
-          left:0!important;right:0!important;
-          width:100%!important;transform:none!important;
+          bottom:24px!important;top:auto!important;
+          left:50%!important;right:auto!important;
+          width:auto!important;transform:translateX(-50%)!important;
           display:flex!important;justify-content:center!important;
           pointer-events:none;
           z-index: 50 !important;
@@ -453,37 +422,40 @@ function Slider() {
         }
         #m-slider-${SECTION_ID} .swiper-pagination--vertical {
           flex-direction:row!important;
-          padding:0 20px 10px!important;
+          padding:0!important;
         }
 
         /* ══ DESKTOP ══ */
         @media (min-width:768px) {
           #m-slider-${SECTION_ID} .ms-content-wrap {
-            align-items:center!important;
-            padding-bottom:0!important;
+            align-items:flex-end!important;
+            padding-bottom:76px!important;
             padding-left:5%!important;
           }
           #m-slider-${SECTION_ID} .ms-content-inner { max-width:480px!important;width:auto!important; }
-          #m-slider-${SECTION_ID} .ms-title { font-size:clamp(2.8rem,4vw,3.8rem)!important; }
+          #m-slider-${SECTION_ID} .ms-title {
+            font-size:clamp(1.16rem,1.6vw,1.4rem)!important;
+            padding:12px 22px 12px 44px!important;
+          }
           #m-slider-${SECTION_ID} .ms-footer { display:flex!important; }
           #m-slider-${SECTION_ID} .m-slider-controls {
-            top:50%!important;bottom:auto!important;
-            left:auto!important;right:4%!important;
-            width:auto!important;transform:translateY(-50%)!important;
+            top:auto!important;bottom:32px!important;
+            left:auto!important;right:5%!important;
+            width:auto!important;transform:none!important;
           }
           #m-slider-${SECTION_ID} .m-slider-controls__wrapper { width:auto; }
           #m-slider-${SECTION_ID} .swiper-pagination {
-            flex-direction:column!important;gap:8px!important;padding:0!important;
+            flex-direction:row!important;gap:8px!important;padding:0!important;
           }
           #m-slider-${SECTION_ID} .m-dot {
-            width:2px!important;height:32px!important;max-width:none!important;
+            width:8px!important;height:8px!important;max-width:none!important;
           }
           /* Desktop: ensure pagination is visible on light images */
           #m-slider-${SECTION_ID} .m-dot {
-            background: rgba(0,0,0,.22) !important;
+            background: rgba(255,255,255,.45) !important;
           }
           #m-slider-${SECTION_ID} .m-dot--active::after {
-            background: #111 !important;
+            background: #d6b36a !important;
           }
         }
 
@@ -565,13 +537,14 @@ function Slider() {
           #m-slider-${SECTION_ID} .ms-content-wrap {
             padding-left:20px!important;
             padding-right:20px!important;
-            padding-bottom:44px!important;
+            padding-bottom:10px!important;
           }
           #m-slider-${SECTION_ID} .ms-title {
-            font-size:clamp(2rem,9vw,2.8rem)!important;
+            font-size:clamp(1.1rem,4.4vw,1.32rem)!important;
           }
           /* Footer hidden on mobile */
           #m-slider-${SECTION_ID} .ms-footer { display:none!important; }
+          #m-slider-${SECTION_ID} .ms-explore-prompt { display:none!important; }
 
           /* Mobile: show real dot pagination (tap to change slide) */
           #m-slider-${SECTION_ID} .swiper-pagination {
@@ -591,41 +564,70 @@ function Slider() {
             height: 7px !important;
             max-width: none !important;
             border-radius: 999px !important;
-            background: rgba(255,255,255,.55) !important;
+            background: rgba(255,255,255,.45) !important;
             overflow: visible !important;
           }
           #m-slider-${SECTION_ID} .m-dot--active {
-            background: #fff !important;
+            background: #d6b36a !important;
           }
           #m-slider-${SECTION_ID} .m-dot--active::after {
             display: none !important;
           }
         }
 
+        /* ── External compact slide indicator ── */
+        #m-slider-${SECTION_ID} .ms-slider-line {
+          display:block;
+          width:min(220px, 42vw);
+          height:3px;
+          margin:14px auto 0;
+          border-radius:999px;
+          overflow:hidden;
+          background:rgba(15,23,42,.14);
+        }
+        #m-slider-${SECTION_ID} .ms-slider-line-fill {
+          height:100%;
+          border-radius:inherit;
+          background:#b9914f;
+          transition:width 520ms cubic-bezier(.22,.61,.36,1);
+        }
+        #m-slider-${SECTION_ID} .m-slider-controls,
+        #m-slider-${SECTION_ID} .swiper-pagination,
+        #m-slider-${SECTION_ID} .ms-desktop-dots {
+          display:none!important;
+        }
+        @media (max-width:767px) {
+          #m-slider-${SECTION_ID} .ms-slider-line {
+            width:min(180px, 52vw);
+            margin-top:10px;
+          }
+        }
+
         /* ── Slider arrows ── */
         #m-slider-${SECTION_ID} .ms-nav {
+          display:none;
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
           z-index: 70;
           pointer-events: auto;
-          width: 44px;
-          height: 44px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.35);
-          background: rgba(0,0,0,0.25);
-          color: #fff;
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.55);
+          background: rgba(255,255,255,0.90);
+          color: #20263b;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          backdrop-filter: blur(6px);
+          backdrop-filter: blur(10px);
           transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, opacity 140ms ease;
         }
         #m-slider-${SECTION_ID} .ms-nav:hover {
-          background: rgba(0,0,0,0.35);
-          border-color: rgba(255,255,255,0.55);
-          transform: translateY(-50%) scale(1.03);
+          background: #d6b36a;
+          border-color: #d6b36a;
+          transform: translateY(-50%) scale(1.04);
         }
         #m-slider-${SECTION_ID} .ms-nav:active {
           transform: translateY(-50%) scale(0.96);
@@ -639,8 +641,11 @@ function Slider() {
 
         /* Desktop: keep arrows slightly inset */
         @media (min-width: 768px) {
-          #m-slider-${SECTION_ID} .ms-nav--left { left: 22px; }
-          #m-slider-${SECTION_ID} .ms-nav--right { right: 22px; }
+          #m-slider-${SECTION_ID} .ms-nav { display:inline-flex; }
+          #m-slider-${SECTION_ID} .ms-nav--left { left: 28px; }
+          #m-slider-${SECTION_ID} .ms-nav--right { right: 28px; }
+          #m-slider-${SECTION_ID} .ms-nav:hover { transform: translateY(-50%) scale(1.04); }
+          #m-slider-${SECTION_ID} .ms-nav:active { transform: translateY(-50%) scale(.96); }
         }
 
         /* Mobile: smaller arrows */
@@ -657,7 +662,6 @@ function Slider() {
           className="m-slider-wrapper m:block m-slider-controls--show-pagination m-slider-controls--pagination-right"
           data-section-id={SECTION_ID}
         >
-          {/* Left / Right arrows */}
           {slides.length > 1 ? (
             <>
               <button
@@ -666,7 +670,7 @@ function Slider() {
                 aria-label="Previous slide"
                 onClick={() => swiperRef.current?.slidePrev()}
               >
-                <Chevron dir="left" />
+                <span aria-hidden="true">‹</span>
               </button>
               <button
                 type="button"
@@ -674,26 +678,18 @@ function Slider() {
                 aria-label="Next slide"
                 onClick={() => swiperRef.current?.slideNext()}
               >
-                <Chevron dir="right" />
+                <span aria-hidden="true">›</span>
               </button>
             </>
           ) : null}
 
           <Swiper
             className="swiper-container"
-            modules={[Autoplay, Pagination, EffectFade]}
-            effect="fade"
-            fadeEffect={{ crossFade: true }}
+            modules={[Autoplay]}
             loop
-            speed={TRANSITION_SPEED_MS}
+            speed={720}
             slidesPerView={1}
             autoplay={{ delay: AUTOPLAY_DELAY_MS, disableOnInteraction: true }}
-            pagination={{
-              clickable: true,
-              el: `.ms-swiper-pagination-${SECTION_ID}`,
-              bulletClass: "m-dot",
-              bulletActiveClass: "m-dot--active",
-            }}
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
               setActiveRealIndex(Number(swiper?.realIndex || 0));
@@ -726,33 +722,14 @@ function Slider() {
               );
             })}
 
-            {/* Mount pagination inside Swiper so it is not empty at init (desktop theme hides :empty). */}
-            <div
-              slot="container-end"
-              className={`ms-swiper-pagination-${SECTION_ID} swiper-pagination m:w-full m-dot-circle m-dot-circle--dark swiper-pagination--vertical`}
-              aria-label="Slider pagination"
-            />
           </Swiper>
 
-          {/* Desktop 3-dot control (explicit) */}
-          {desktopDots.length ? (
-            <div className="ms-desktop-dots" aria-label="Slider controls">
-              {desktopDots.map((i) => {
-                const isActive = activeRealIndex === i;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`ms-desktop-dot${isActive ? " active" : ""}`}
-                    aria-label={`Go to slide ${i + 1}`}
-                    onClick={() => {
-                      const sw = swiperRef.current;
-                      if (!sw) return;
-                      sw.slideToLoop(i);
-                    }}
-                  />
-                );
-              })}
+          {slides.length > 1 ? (
+            <div className="ms-slider-line" aria-label="Slide progress">
+              <div
+                className="ms-slider-line-fill"
+                style={{ width: `${((activeRealIndex + 1) / slides.length) * 100}%` }}
+              />
             </div>
           ) : null}
         </div>
