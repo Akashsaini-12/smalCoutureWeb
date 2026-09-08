@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -143,6 +143,7 @@ function ProfileFloatingField({ id, label, value, onChange, type = "text", style
 
 export default function Profile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((s) => s.auth?.user);
   const loading = useSelector((s) => s.auth?.loading);
   const error = useSelector((s) => s.auth?.error);
@@ -390,7 +391,8 @@ export default function Profile() {
     const ok = window.confirm("Confirm logout?");
     if (!ok) return;
     dispatch(logoutThunk());
-    window.location.href = "/";
+    navigate("/", { replace: true });
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
   };
 
   const handleAvatarPick = async (file) => {
