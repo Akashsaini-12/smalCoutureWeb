@@ -1258,5 +1258,10 @@ export const changePasswordThunk =
 // Logout — clear everything
 export const logoutThunk = () => (dispatch) => {
   persistAuth(null, null);
+  try {
+    sessionStorage.removeItem("aka_home_scroll_position");
+  } catch {
+    // Session storage may be unavailable in restricted browser contexts.
+  }
   dispatch({ type: "AUTH_LOGOUT" });
 };
