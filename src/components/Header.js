@@ -806,6 +806,7 @@ const Header = () => {
   const location = useLocation()
   const dispatch = useDispatch()
   const user     = useSelector(s => s.auth?.user)
+  const isLoginPage = location.pathname === '/login'
   const navItems = useSelector(s => s.navMenu)
   const shopCategories = useSelector(s => Array.isArray(s.shopCategories) ? s.shopCategories : [])
   const avatarRef   = useRef(null)
@@ -906,11 +907,15 @@ const Header = () => {
   const handleLogout = (event) => {
     event?.preventDefault?.()
     event?.stopPropagation?.()
+    if (typeof window !== 'undefined' && !window.confirm('Are you sure you want to log out?')) return
     dispatch(logoutThunk())
     setProfileOpen(false)
     setIsMenuOpen(false)
     setActiveMobileMenu(null)
     navigate('/', { replace: true })
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }))
+    }
   }
 
   return (
@@ -1048,16 +1053,29 @@ const Header = () => {
               {!user && (
                 <button
                   type="button"
+                  aria-label="Login"
                   onClick={() => navigate('/login')}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#f6f0e8'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = '#fff'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                  onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.94)' }}
+                  onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-1px)' }}
                   style={{
                     marginLeft: 6,
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 6,
-                    padding: '8px 14px',
+                    gap: isLoginPage ? 0 : 6,
+                    width: isLoginPage ? 34 : 'auto',
+                    height: 34,
+                    padding: isLoginPage ? 0 : '8px 14px',
                     border: '1px solid #b79160',
-                    borderRadius: 22,
+                    borderRadius: isLoginPage ? '50%' : 22,
                     background: '#fff',
                     color: '#5b3a1d',
                     fontFamily: 'inherit',
@@ -1066,13 +1084,22 @@ const Header = () => {
                     lineHeight: 1,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    transition: 'width 0.28s ease, padding 0.28s ease, border-radius 0.28s ease, background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease',
+                    boxShadow: isLoginPage ? '0 3px 10px rgba(183,145,96,0.2)' : 'none',
                   }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="12" cy="8" r="3.5" />
                     <path d="M4.5 20c.8-3.3 3.5-5 7.5-5s6.7 1.7 7.5 5" />
                   </svg>
-                  Login
+                  <span style={{
+                    maxWidth: isLoginPage ? 0 : 40,
+                    opacity: isLoginPage ? 0 : 1,
+                    transform: isLoginPage ? 'translateX(6px)' : 'translateX(0)',
+                    transition: 'max-width 0.22s ease, opacity 0.16s ease, transform 0.22s ease',
+                    overflow: 'hidden',
+                  }}>Login</span>
                 </button>
               )}
             </div>
@@ -1261,15 +1288,27 @@ const Header = () => {
                   type="button"
                   aria-label="Login"
                   onClick={() => navigate('/login')}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#f6f0e8'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = '#fff'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                  onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.94)' }}
+                  onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-1px)' }}
                   style={{
                     marginLeft: 2,
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 5,
-                    padding: '7px 10px',
+                    gap: isLoginPage ? 0 : 5,
+                    width: isLoginPage ? 36 : 'auto',
+                    height: 36,
+                    padding: isLoginPage ? 0 : '7px 10px',
                     border: '1px solid #b79160',
-                    borderRadius: 18,
+                    borderRadius: isLoginPage ? '50%' : 18,
                     background: '#fff',
                     color: '#5b3a1d',
                     fontFamily: 'inherit',
@@ -1278,13 +1317,22 @@ const Header = () => {
                     lineHeight: 1,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    transition: 'width 0.28s ease, padding 0.28s ease, border-radius 0.28s ease, background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease',
+                    boxShadow: isLoginPage ? '0 3px 10px rgba(183,145,96,0.2)' : 'none',
                   }}
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="12" cy="8" r="3.5" />
                     <path d="M4.5 20c.8-3.3 3.5-5 7.5-5s6.7 1.7 7.5 5" />
                   </svg>
-                  Login
+                  <span style={{
+                    maxWidth: isLoginPage ? 0 : 40,
+                    opacity: isLoginPage ? 0 : 1,
+                    transform: isLoginPage ? 'translateX(6px)' : 'translateX(0)',
+                    transition: 'max-width 0.22s ease, opacity 0.16s ease, transform 0.22s ease',
+                    overflow: 'hidden',
+                  }}>Login</span>
                 </button>
               )}
             </div>
