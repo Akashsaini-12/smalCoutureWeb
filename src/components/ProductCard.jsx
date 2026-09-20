@@ -432,7 +432,7 @@ function ProductCard({
             </div>
             {colorOptions && colorOptions.length > 0 && (
               <div data-limit data-pcard-variant-picker data-product-handle={handle}>
-                <div role="group" aria-label="Color" data-keep-featured-image="true" className="m-product-option m-product-option--color m:flex-wrap m:items-center m:justify-start">
+                <div role="group" aria-label="Color" data-keep-featured-image="true" className="product-home-color-options m-product-option m-product-option--color m:flex-wrap m:items-center m:justify-start">
                   <div className="m-product-option--content m:inline-flex m:flex-wrap">
                     {colorOptions.map((opt) => (
                       <div key={opt.value} className="m-product-option--node m-tooltip m-tooltip--top">
@@ -442,7 +442,11 @@ function ProductCard({
                             data-option-position={1}
                             data-option-type="color"
                             data-value={opt.value}
-                            style={{ backgroundColor: opt.color }}
+                            style={{
+                              backgroundColor: opt.color || "#111",
+                              outline: activeColor === opt.value ? "2px solid #111" : "none",
+                              outlineOffset: 2,
+                            }}
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
