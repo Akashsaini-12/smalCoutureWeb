@@ -5,6 +5,7 @@ import {
   fetchWishlistList,
   fetchRecentlyViewedMongo,
   fetchRecommendations,
+  listAvailableCoupons,
   removeWishlistMongo,
 } from "../redux/actions";
 import { getUserId } from "../utils/userId";
@@ -20,6 +21,40 @@ import {
   getInternalOrLegacyNoPublicSizeStock,
   resolveCartSizePayload,
 } from "../utils/internalFreeSize";
+
+const AnimatedBuyNowPrice = ({ basePrice, discountedPrice, regularPrice, hasDiscount, animate }) => (
+  <span
+    className={`qv-buy-price${hasDiscount ? " qv-buy-price--discounted" : ""}${animate ? " qv-buy-price--animate" : ""}`}
+    aria-live="polite"
+  >
+    {hasDiscount ? (
+      <>
+        <span className="qv-buy-price-old" aria-hidden="true">
+          ₹{basePrice}
+        </span>
+        <span className="qv-buy-price-new">
+          ₹{discountedPrice}
+        </span>
+      </>
+    ) : (
+      <span className="qv-buy-price-new">
+        {regularPrice}
+      </span>
+    )}
+  </span>
+);
+
+const getUniqueColorOptions = (options) => {
+  if (!Array.isArray(options)) return [];
+  const seen = new Set();
+  return options.filter((option) => {
+    const value = String(option?.label ?? option?.value ?? "").trim();
+    const key = value.toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
 
 /**
  * Quick view modal or full-page product detail (same UI).
@@ -48,9 +83,28 @@ const QuickViewModal = ({
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [imageDirection, setImageDirection] = useState("next");
+  const [galleryDrag, setGalleryDrag] = useState({
+    active: false,
+    rawIndex: 0,
+    direction: "next",
+    settling: false,
+  });
+  const gallerySettleTimerRef = useRef(null);
+  const galleryTargetIndexRef = useRef(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [lensPosition, setLensPosition] = useState({ x: 50, y: 50 });
+  const [isImageHovered, setIsImageHovered] = useState(false);
+  const [pincode, setPincode] = useState("");
+  const [deliveryChecked, setDeliveryChecked] = useState(false);
+  const [openProductInfo, setOpenProductInfo] = useState(null);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [animateBuyNowPrice, setAnimateBuyNowPrice] = useState(false);
+  const animatedCouponRef = useRef(null);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistPulse, setWishlistPulse] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [imageLightboxOpen, setImageLightboxOpen] = useState(false);
@@ -62,6 +116,14 @@ const QuickViewModal = ({
     y0: 0,
     t0: 0,
     didSwipe: false,
+  });
+  const galleryTouchRef = useRef({
+    active: false,
+    startX: 0,
+    startIndex: 0,
+    pendingX: null,
+    frame: null,
+    target: null,
   });
   const [inlineScale, setInlineScale] = useState(1);
   const [inlinePos, setInlinePos] = useState({ x: 0, y: 0 });
@@ -76,47 +138,70 @@ const QuickViewModal = ({
   });
 
   // Show a fixed footer only when the inline action buttons are out of view (page variant)
-  const [showFixedFooter, setShowFixedFooter] = useState(true);
+  const [showFixedFooter, setShowFixedFooter] = useState(false);
+  const [fixedFooterMounted, setFixedFooterMounted] = useState(false);
+  const [fixedFooterVisible, setFixedFooterVisible] = useState(false);
   const actionRef = useRef(null);
+
+  useEffect(() => {
+    const couponCode = selectedCoupon?.code || null;
+    if (!couponCode) {
+      animatedCouponRef.current = null;
+      setAnimateBuyNowPrice(false);
+      return undefined;
+    }
+    if (animatedCouponRef.current === couponCode) {
+      return undefined;
+    }
+
+    animatedCouponRef.current = couponCode;
+    setAnimateBuyNowPrice(true);
+    const timer = window.setTimeout(() => setAnimateBuyNowPrice(false), 2100);
+    return () => window.clearTimeout(timer);
+  }, [selectedCoupon]);
 
   useEffect(() => {
     if (!isPage) return undefined;
 
-    const setImmediateVisibility = (value) => {
-      setShowFixedFooter(Boolean(value));
+    const check = () => {
+      const el = actionRef.current;
+      if (!el) {
+        setShowFixedFooter(false);
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      const inView =
+        rect.top < window.innerHeight &&
+        rect.bottom > 0 &&
+        rect.left < window.innerWidth &&
+        rect.right > 0;
+      setShowFixedFooter(!inView);
     };
-
-    if (typeof IntersectionObserver === "undefined") {
-      const check = () => {
-        const el = actionRef.current;
-        if (!el) {
-          setImmediateVisibility(true);
-          return;
-        }
-        const rect = el.getBoundingClientRect();
-        const inView = rect.top < window.innerHeight && rect.bottom > 0;
-        setImmediateVisibility(!inView);
-      };
-      check();
-      window.addEventListener("scroll", check, { passive: true });
-      window.addEventListener("resize", check);
-      return () => {
-        window.removeEventListener("scroll", check);
-        window.removeEventListener("resize", check);
-      };
-    }
-
-    const obs = new IntersectionObserver((entries) => {
-      const e = entries[0];
-      if (!e) return;
-      setImmediateVisibility(!e.isIntersecting);
-    }, { root: null, threshold: 0.05 });
-
-    if (actionRef.current) obs.observe(actionRef.current);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
     return () => {
-      obs.disconnect();
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
     };
   }, [isPage]);
+
+  useEffect(() => {
+    if (!isPage) return undefined;
+    let hideTimer;
+    let showFrame;
+    if (showFixedFooter) {
+      setFixedFooterMounted(true);
+      showFrame = window.requestAnimationFrame(() => setFixedFooterVisible(true));
+    } else {
+      setFixedFooterVisible(false);
+      hideTimer = window.setTimeout(() => setFixedFooterMounted(false), 220);
+    }
+    return () => {
+      if (showFrame) window.cancelAnimationFrame(showFrame);
+      if (hideTimer) window.clearTimeout(hideTimer);
+    };
+  }, [isPage, showFixedFooter]);
 
   // Hide fixed footer when user navigates to cart/checkout pages
   useEffect(() => {
@@ -140,6 +225,22 @@ const QuickViewModal = ({
   });
   const userId = getUserId();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isPage) return undefined;
+    let mounted = true;
+    listAvailableCoupons({ userId, limit: 10 })
+      .then((response) => {
+        if (!mounted) return;
+        setAvailableCoupons(Array.isArray(response?.items) ? response.items : []);
+      })
+      .catch(() => {
+        if (mounted) setAvailableCoupons([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [isPage, userId]);
 
   const token = (() => {
     try {
@@ -327,10 +428,12 @@ const QuickViewModal = ({
   useEffect(() => {
     if (!product) return;
     setQuantity(1);
+    galleryTargetIndexRef.current = 0;
     setImageIndex(0);
-    setShowFullDescription(false);
-    if (product.colorOptions?.length) {
-      const first = product.colorOptions[0];
+    setOpenProductInfo(null);
+    const colorOptions = getUniqueColorOptions(product.colorOptions);
+    if (colorOptions.length) {
+      const first = colorOptions[0];
       setSelectedColor(first?.label ?? first?.value);
     } else {
       setSelectedColor(null);
@@ -347,6 +450,8 @@ const QuickViewModal = ({
     }
     setShowSizeChart(false);
     setImageLightboxOpen(false);
+    setPincode("");
+    setDeliveryChecked(false);
 
     // Keep the sticky footer visible immediately on product changes and refreshes.
     try { setShowFixedFooter(true); } catch (err) { }
@@ -436,6 +541,11 @@ const QuickViewModal = ({
 
     const wasIn = isWishlisted;
     setIsWishlisted(!wasIn);
+    if (!wasIn) {
+      setWishlistPulse(false);
+      window.requestAnimationFrame(() => setWishlistPulse(true));
+      window.setTimeout(() => setWishlistPulse(false), 420);
+    }
     setWishlistLoading(true);
 
     try {
@@ -453,6 +563,22 @@ const QuickViewModal = ({
     } finally {
       setWishlistLoading(false);
     }
+  };
+
+  const shareProduct = async () => {
+    const shareUrl = window.location.href;
+    const shareData = {
+      title: product?.title || "Product",
+      text: product?.title || "Check out this product",
+      url: shareUrl,
+    };
+
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+
+    await navigator.clipboard.writeText(shareUrl);
   };
 
   useEffect(() => {
@@ -477,11 +603,13 @@ const QuickViewModal = ({
     } else if (v) {
       setSelectedSize(null);
     }
+    galleryTargetIndexRef.current = 0;
     setImageIndex(0);
   }, [product, selectedColor]);
 
   const variants = Array.isArray(product?.variants) ? product.variants : [];
-  const firstOpt = product?.colorOptions?.[0];
+  const colorOptions = getUniqueColorOptions(product?.colorOptions);
+  const firstOpt = colorOptions[0];
   const resolvedColor = selectedColor || (firstOpt?.label ?? firstOpt?.value ?? null);
   const resolvedColorStr = String(resolvedColor ?? "");
   const activeVariant =
@@ -489,6 +617,7 @@ const QuickViewModal = ({
     (variants.length ? variants[0] : null);
 
   useEffect(() => {
+    galleryTargetIndexRef.current = 0;
     setImageIndex(0);
   }, [resolvedColorStr]);
 
@@ -504,8 +633,60 @@ const QuickViewModal = ({
   const images =
     Array.isArray(fromData) && fromData.length ? fromData : mainSrc ? [mainSrc] : [];
   const currentImage = images[imageIndex] ?? images[0] ?? mainSrc;
+  const galleryTrackOffset = galleryDrag.active ? galleryDrag.rawIndex : imageIndex;
   const price = product?.priceSale || product?.priceRegular || product?.price || "";
   const hasMultipleImages = images.length > 1;
+  const regularPriceNumber = toPriceNumber(product?.priceRegular);
+  const salePriceNumber = toPriceNumber(product?.priceSale || price);
+  const discountPercent =
+    regularPriceNumber > salePriceNumber && salePriceNumber > 0
+      ? Math.round(((regularPriceNumber - salePriceNumber) / regularPriceNumber) * 100)
+      : 0;
+  const baseBuyPrice = toPriceNumber(price);
+  const eligibleCoupons = availableCoupons.filter((coupon) => {
+    const minimumSubtotal = Number(coupon?.minSubtotal || 0);
+    return Number.isFinite(minimumSubtotal) && minimumSubtotal <= baseBuyPrice;
+  });
+  const productOffers = [
+    ...(Array.isArray(product?.offers)
+      ? product.offers
+          .map((offer) => ({
+            text: typeof offer === "string" ? offer.trim() : String(offer?.text || offer?.title || "").trim(),
+            coupon: null,
+        buyAtPrice: baseBuyPrice,
+      }))
+          .filter((offer) => offer.text)
+      : []),
+    ...eligibleCoupons.map((coupon) => {
+      const value = Number(coupon?.value || 0);
+      const discount = coupon?.type === "percent" ? `${value}% off` : `₹${value} off`;
+      const minimum = Number(coupon?.minSubtotal || 0);
+      const applicableOn = String(coupon?.applicableOn || "all").toLowerCase();
+      const payment =
+        applicableOn === "cod"
+          ? "Cash on delivery"
+          : applicableOn === "prepaid"
+            ? "Online payment"
+            : "All payment methods";
+      return {
+        text: `Flat ${discount}${minimum > 0 ? ` · Min order of ₹${minimum}` : ""} · ${payment}`,
+        coupon,
+        buyAtPrice:
+          coupon?.type === "percent"
+            ? Math.max(0, baseBuyPrice - Math.round((baseBuyPrice * value) / 100))
+            : Math.max(0, baseBuyPrice - value),
+      };
+    }),
+  ].filter((offer, index, offers) => offer.text && offers.findIndex((item) => item.text === offer.text) === index);
+  const selectedDiscount =
+    selectedCoupon?.type === "percent"
+      ? Math.round((baseBuyPrice * Number(selectedCoupon.value || 0)) / 100)
+      : Number(selectedCoupon?.value || 0);
+  const buyNowPrice = selectedCoupon
+    ? `₹${Math.max(0, baseBuyPrice - selectedDiscount)}`
+    : price;
+  const discountedBuyPrice = Math.max(0, baseBuyPrice - selectedDiscount);
+  const productReviews = Array.isArray(product?.reviews) ? product.reviews : [];
 
   const selectedStock = (() => {
     if (!activeVariant) return null;
@@ -550,8 +731,110 @@ const QuickViewModal = ({
     return fallback.some((o) => o && formatSizeForCustomerDisplay(o.value || o.label));
   })();
 
-  const goPrev = () => setImageIndex((i) => (i <= 0 ? images.length - 1 : i - 1));
-  const goNext = () => setImageIndex((i) => (i >= images.length - 1 ? 0 : i + 1));
+  const goPrev = () => {
+    if (imageIndex <= 0) return;
+    galleryTargetIndexRef.current = Math.max(0, galleryTargetIndexRef.current - 1);
+    setImageDirection("prev");
+    setGalleryDrag({ active: false, rawIndex: imageIndex, direction: "prev", settling: false });
+    setImageIndex((i) => Math.max(0, i - 1));
+  };
+  const goNext = () => {
+    if (imageIndex >= images.length - 1) return;
+    galleryTargetIndexRef.current = Math.min(images.length - 1, galleryTargetIndexRef.current + 1);
+    setImageDirection("next");
+    setGalleryDrag({ active: false, rawIndex: imageIndex, direction: "next", settling: false });
+    setImageIndex((i) => Math.min(images.length - 1, i + 1));
+  };
+  const updateGalleryDrag = (clientX, rect) => {
+    if (!rect || images.length < 2) return;
+    const raw = Math.max(
+      0,
+      Math.min(images.length - 1, ((clientX - rect.left) / rect.width) * (images.length - 1)),
+    );
+    const movingNext = raw >= imageIndex;
+    setImageDirection(movingNext ? "next" : "prev");
+    setGalleryDrag({ active: true, rawIndex: raw, direction: movingNext ? "next" : "prev", settling: false });
+  };
+  const finishGalleryTouch = (clientX, rect) => {
+    const gesture = galleryTouchRef.current;
+    if (!gesture.active || !rect || images.length < 2) return false;
+    const delta = clientX - gesture.startX;
+    const raw = Math.max(
+      0,
+      Math.min(
+        images.length - 1,
+        gesture.startIndex - delta / rect.width,
+      ),
+    );
+    const nextIndex =
+      raw > gesture.startIndex
+        ? Math.min(images.length - 1, gesture.startIndex + 1)
+        : raw < gesture.startIndex
+          ? Math.max(0, gesture.startIndex - 1)
+          : gesture.startIndex;
+    galleryTargetIndexRef.current = nextIndex;
+    const direction = nextIndex >= gesture.startIndex ? "next" : "prev";
+    galleryTouchRef.current.active = false;
+    setImageDirection(direction);
+    if (nextIndex === gesture.startIndex) {
+      setGalleryDrag({
+        active: false,
+        rawIndex: gesture.startIndex,
+        direction,
+        settling: false,
+      });
+      return true;
+    }
+    setGalleryDrag({
+      active: true,
+      rawIndex: nextIndex,
+      direction,
+      settling: true,
+    });
+    if (gallerySettleTimerRef.current) window.clearTimeout(gallerySettleTimerRef.current);
+    gallerySettleTimerRef.current = window.setTimeout(() => {
+      setImageIndex(nextIndex);
+      setGalleryDrag({
+        active: false,
+        rawIndex: nextIndex,
+        direction,
+        settling: false,
+      });
+    }, 480);
+    return true;
+  };
+  const settleGalleryTo = (targetIndex) => {
+    const nextIndex = Math.max(0, Math.min(images.length - 1, targetIndex));
+    const currentTarget = galleryTargetIndexRef.current;
+    if (nextIndex === currentTarget) return;
+    galleryTargetIndexRef.current = nextIndex;
+    const direction = nextIndex > currentTarget ? "next" : "prev";
+    setImageDirection(direction);
+    setGalleryDrag({
+      active: true,
+      rawIndex: nextIndex,
+      direction,
+      settling: true,
+    });
+    if (gallerySettleTimerRef.current) window.clearTimeout(gallerySettleTimerRef.current);
+    gallerySettleTimerRef.current = window.setTimeout(() => {
+      setImageIndex(nextIndex);
+      setGalleryDrag({
+        active: false,
+        rawIndex: nextIndex,
+        direction,
+        settling: false,
+      });
+      gallerySettleTimerRef.current = null;
+    }, 480);
+  };
+
+  useEffect(() => () => {
+    if (gallerySettleTimerRef.current) window.clearTimeout(gallerySettleTimerRef.current);
+    if (galleryTouchRef.current.frame != null) {
+      window.cancelAnimationFrame(galleryTouchRef.current.frame);
+    }
+  }, []);
 
   // Mobile swipe (image carousel): keep logic local & non-invasive.
   const canSwipeImages = isMobileView && hasMultipleImages && inlineScale <= 1;
@@ -567,6 +850,37 @@ const QuickViewModal = ({
       inlineGestureRef.current.mode = "pinch";
       inlineGestureRef.current.startDist = d || 1;
       inlineGestureRef.current.startScale = inlineScale;
+      return;
+    }
+
+    if (pageFullWidth && touches.length === 1 && inlineScale <= 1 && images.length > 1) {
+      if (gallerySettleTimerRef.current) {
+        window.clearTimeout(gallerySettleTimerRef.current);
+        gallerySettleTimerRef.current = null;
+        const settledIndex = galleryTargetIndexRef.current;
+        setImageIndex(settledIndex);
+        setGalleryDrag({
+          active: false,
+          rawIndex: settledIndex,
+          direction: settledIndex >= imageIndex ? "next" : "prev",
+          settling: false,
+        });
+      }
+      const startIndex = galleryTargetIndexRef.current;
+      galleryTouchRef.current = {
+        active: true,
+        startX: touches[0].clientX,
+        startY: touches[0].clientY,
+        startIndex,
+        pendingX: touches[0].clientX,
+        target: e.currentTarget,
+      };
+      setGalleryDrag({
+        active: false,
+        rawIndex: startIndex,
+        direction: "next",
+        settling: false,
+      });
       return;
     }
 
@@ -595,6 +909,42 @@ const QuickViewModal = ({
     if (!isMobileView) return;
     const touches = e?.touches;
     if (!touches || touches.length === 0) return;
+
+    if (galleryTouchRef.current.active && touches.length === 1 && inlineScale <= 1) {
+      galleryTouchRef.current.pendingX = touches[0].clientX;
+      const deltaX = touches[0].clientX - galleryTouchRef.current.startX;
+      const deltaY = touches[0].clientY - (galleryTouchRef.current.startY || touches[0].clientY);
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        if (galleryTouchRef.current.frame != null) {
+          window.cancelAnimationFrame(galleryTouchRef.current.frame);
+          galleryTouchRef.current.frame = null;
+        }
+        galleryTouchRef.current.active = false;
+        return;
+      }
+      if (typeof e?.preventDefault === "function") e.preventDefault();
+      if (galleryTouchRef.current.frame == null) {
+        galleryTouchRef.current.frame = window.requestAnimationFrame(() => {
+          galleryTouchRef.current.frame = null;
+          const target = galleryTouchRef.current.target;
+          if (!target || !target.isConnected) return;
+          const rect = target.getBoundingClientRect();
+          const delta = galleryTouchRef.current.pendingX - galleryTouchRef.current.startX;
+          const raw = Math.max(
+            0,
+            Math.min(images.length - 1, galleryTouchRef.current.startIndex - delta / rect.width),
+          );
+          const direction = raw >= galleryTouchRef.current.startIndex ? "next" : "prev";
+          setGalleryDrag({
+            active: Math.abs(raw - galleryTouchRef.current.startIndex) > 0.001,
+            rawIndex: raw,
+            direction,
+            settling: false,
+          });
+        });
+      }
+      return;
+    }
 
     if (inlineGestureRef.current.mode === "pinch" && touches.length === 2) {
       if (typeof e?.preventDefault === "function") e.preventDefault();
@@ -638,6 +988,20 @@ const QuickViewModal = ({
   const onImgTouchEnd = (e) => {
     if (!isMobileView) return;
 
+    if (galleryTouchRef.current.active) {
+      if (galleryTouchRef.current.frame != null) {
+        window.cancelAnimationFrame(galleryTouchRef.current.frame);
+        galleryTouchRef.current.frame = null;
+      }
+      finishGalleryTouch(
+        e?.changedTouches?.[0]?.clientX ??
+          galleryTouchRef.current.pendingX ??
+          galleryTouchRef.current.startX,
+        galleryTouchRef.current.target?.getBoundingClientRect(),
+      );
+      return;
+    }
+
     if (inlineGestureRef.current.mode) {
       inlineGestureRef.current.mode = null;
       if (inlineScale <= 1) {
@@ -671,6 +1035,7 @@ const QuickViewModal = ({
 
   useEffect(() => {
     // Reset inline zoom when image changes / variant changes.
+    setImageLoaded(false);
     setInlineScale(1);
     setInlinePos({ x: 0, y: 0 });
     inlineGestureRef.current.mode = null;
@@ -890,6 +1255,7 @@ const QuickViewModal = ({
             name: String(product.title || product.name || "").trim() || "Product",
             slug: product.handle || product.slug || "",
             price: Number.isFinite(numericPrice) ? numericPrice : 0,
+            couponCode: selectedCoupon?.code || "",
             color: resolvedColor || null,
             size: selectedSize || null,
             quantity,
@@ -918,6 +1284,7 @@ const QuickViewModal = ({
           name: String(product.title || product.name || "").trim() || "Product",
           slug: product.handle || product.slug || "",
           price: Number.isFinite(numericPrice) ? numericPrice : 0,
+          couponCode: selectedCoupon?.code || "",
           color: resolvedColor || null,
           size: selectedSize || null,
           quantity,
@@ -949,7 +1316,7 @@ const QuickViewModal = ({
   );
 
   // ─── MODERN WISHLIST HEART ────────────────────────────────────────────────────
-  const heartIcon = (
+  const legacyHeartIcon = (
     <svg
       viewBox="0 0 15 13"
       fill={isWishlisted ? "#ef4444" : "none"}
@@ -963,6 +1330,22 @@ const QuickViewModal = ({
         d="M12.564 6.25293C13.0927 5.70605 13.357 5.04069 13.357 4.25684C13.357 3.45475 13.0289 2.74382 12.3726 2.12402C11.8258 1.68652 11.1877 1.49512 10.4586 1.5498C9.74763 1.60449 9.13695 1.89616 8.62654 2.4248L7.66951 3.38184L6.71248 2.4248C6.20206 1.89616 5.58227 1.60449 4.8531 1.5498C4.14216 1.49512 3.51326 1.68652 2.96638 2.12402C2.31013 2.74382 1.98201 3.45475 1.98201 4.25684C1.98201 5.04069 2.24633 5.70605 2.77498 6.25293L7.58748 11.1201C7.64216 11.193 7.69685 11.193 7.75154 11.1201L12.564 6.25293Z"
         fill={isWishlisted ? "#ef4444" : "#888"}
       />
+    </svg>
+  );
+
+  const heartIcon = (
+    <svg
+      viewBox="0 0 24 24"
+      fill={isWishlisted ? "#ef4444" : "none"}
+      stroke={isWishlisted ? "#ef4444" : "#685343"}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ width: 21, height: 21, transition: "fill 0.2s, stroke 0.2s" }}
+      aria-hidden="true"
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
     </svg>
   );
 
@@ -993,7 +1376,7 @@ const QuickViewModal = ({
         .qv-divider {
           height: 1px;
           background: #f1f5f9;
-          margin: 14px 0;
+          margin: 8px 0;
         }
 
         /* ── CLOSE BUTTON ── */
@@ -1020,21 +1403,49 @@ const QuickViewModal = ({
 
         /* ── WISHLIST BUTTON ── */
         .qv-wish-btn {
-          width: 40px;
-          height: 40px;
-          border: 1px solid #e2e8f0;
-          border-radius: 50%;
-          background: #fff;
+          width: 32px;
+          height: 32px;
+          border: none;
+          border-radius: 0;
+          padding: 0;
+          background: transparent;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           flex-shrink: 0;
-          transition: border-color 0.15s, background 0.15s, transform 0.1s;
+          transition: color 0.15s, transform 0.1s;
         }
         .qv-wish-btn:hover {
-          border-color: #ef4444;
-          background: #fff5f5;
+          color: #ef4444;
+          transform: scale(1.08);
+        }
+        .qv-wish-btn--pulse {
+          animation: qv-wishlist-pop 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes qv-wishlist-pop {
+          0% { transform: scale(1); }
+          45% { transform: scale(1.42); }
+          75% { transform: scale(0.92); }
+          100% { transform: scale(1); }
+        }
+        .qv-share-btn {
+          width: 32px;
+          height: 32px;
+          border: none;
+          border-radius: 0;
+          padding: 0;
+          background: transparent;
+          color: #685343;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          flex-shrink: 0;
+          transition: color 0.15s, transform 0.1s;
+        }
+        .qv-share-btn:hover {
+          color: #8a6338;
           transform: scale(1.08);
         }
         .qv-wish-btn:disabled {
@@ -1067,6 +1478,11 @@ const QuickViewModal = ({
           background: #fff;
           box-shadow: 0 4px 14px rgba(0,0,0,0.15);
         }
+        .qv-arrow:disabled {
+          opacity: 0.35;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
 
         /* ── THUMBNAIL ── */
         .qv-thumb {
@@ -1086,13 +1502,13 @@ const QuickViewModal = ({
           border-color: #94a3b8;
         }
         .qv-thumb-active {
-          border-color: #0f172a !important;
+          border-color: #b79160 !important;
         }
 
         /* ── COLOR SWATCH ── */
         .qv-color-dot {
-          width: 30px;
-          height: 30px;
+          width: 26px;
+          height: 26px;
           border-radius: 50%;
           cursor: pointer;
           border: 2px solid transparent;
@@ -1104,8 +1520,8 @@ const QuickViewModal = ({
           transform: scale(1.12);
         }
         .qv-color-dot-active {
-          border-color: #0f172a !important;
-          box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0f172a;
+          border-color: transparent !important;
+          box-shadow: 0 0 0 2px #fff, 0 0 0 3px #000;
         }
 
         /* ── SIZE BUTTON ── */
@@ -1128,9 +1544,9 @@ const QuickViewModal = ({
           background: #f8fafc;
         }
         .qv-size-btn-active {
-          border-color: #0f172a !important;
+          border-color: #b79160 !important;
           border-width: 1.5px !important;
-          background: #0f172a !important;
+          background: #685343 !important;
           color: #fff !important;
         }
         .qv-size-btn:disabled {
@@ -1162,30 +1578,38 @@ const QuickViewModal = ({
 
         /* ── SPEC GRID ── */
         .qv-spec-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1px;
-          background: #e2e8f0;
-          border-radius: 10px;
-          overflow: hidden;
-          border: 1px solid #e2e8f0;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr);
+          width: 100%;
+          box-sizing: border-box;
+          gap: 8px;
+          background: transparent;
+          border-radius: 0;
+          overflow: visible;
+          border: 0;
         }
         .qv-spec-cell {
-          padding: 10px 12px;
-          background: #fff;
+          width: 100%;
+          box-sizing: border-box;
+          min-height: 58px;
+          padding: 11px 13px;
+          border: 1px solid #eee3d6;
+          border-radius: 10px;
+          background: #fbf7f1;
+          box-shadow: 0 3px 10px rgba(104, 83, 67, 0.05);
         }
         .qv-spec-key {
-          font-size: 10px;
-          font-weight: 600;
+          font-size: 9px;
+          font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 0.06em;
-          color: #94a3b8;
-          margin-bottom: 3px;
+          letter-spacing: 0.08em;
+          color: #8a6338;
+          margin-bottom: 5px;
         }
         .qv-spec-val {
           font-size: 13px;
-          font-weight: 500;
-          color: #0f172a;
+          font-weight: 600;
+          color: #4f3d31;
           line-height: 1.35;
         }
 
@@ -1193,43 +1617,58 @@ const QuickViewModal = ({
         .qv-qty-wrap {
           display: inline-flex;
           align-items: center;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          overflow: hidden;
-          height: 40px;
+          justify-content: space-between;
+          gap: 0;
+          min-width: 116px;
+          padding: 3px 10px;
+          border-radius: 999px;
+          border: 1px solid #e4d7ca;
+          background: #fff;
+          box-shadow: 0 3px 10px rgba(104, 83, 67, 0.08);
+          height: 34px;
         }
         .qv-qty-btn {
-          width: 38px;
-          height: 40px;
+          width: 24px;
+          height: 24px;
           border: none;
-          background: #f8fafc;
+          border-radius: 50%;
+          background: transparent;
           cursor: pointer;
-          font-size: 18px;
-          color: #334155;
-          transition: background 0.12s;
+          font-size: 17px;
+          line-height: 1;
+          color: #685343;
+          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
         .qv-qty-btn:hover {
-          background: #f1f5f9;
+          background: #ebe1d8;
+          color: #4f3d31;
+          transform: scale(1.05);
         }
         .qv-qty-btn:disabled {
           opacity: 0.4;
           cursor: not-allowed;
+          transform: none;
         }
         .qv-qty-input {
-          width: 46px;
-          height: 40px;
-          border: none;
-          border-left: 1px solid #e2e8f0;
-          border-right: 1px solid #e2e8f0;
+          width: 26px;
+          height: 26px;
+          border: 1px solid #e4d7ca;
+          border-radius: 50%;
           text-align: center;
-          font-size: 14px;
-          font-weight: 500;
-          color: #0f172a;
+          font-size: 12px;
+          font-weight: 700;
+          color: #685343;
           background: #fff;
+          appearance: textfield;
+        }
+        .qv-qty-input::-webkit-outer-spin-button,
+        .qv-qty-input::-webkit-inner-spin-button {
+          margin: 0;
+          appearance: none;
         }
         .qv-qty-input:focus {
           outline: none;
@@ -1237,11 +1676,10 @@ const QuickViewModal = ({
 
         /* ── ADD TO CART BUTTON ── */
         .qv-atc-btn {
-          width: 100%;
-          padding: 14px 20px;
+          padding: 9px 13px;
           border: none;
           border-radius: 10px;
-          font-size: 15px;
+          font-size: 14px;
           font-weight: 600;
           cursor: pointer;
           letter-spacing: -0.01em;
@@ -1255,9 +1693,9 @@ const QuickViewModal = ({
           transform: translateY(0);
         }
         .qv-atc-btn-available {
-          background: #0f172a;
+          background: #685343;
           color: #fff;
-          box-shadow: 0 4px 14px rgba(15,23,42,0.18);
+          box-shadow: 0 4px 14px rgba(48,37,31,0.18);
         }
         .qv-atc-btn-oos {
           background: #e2e8f0;
@@ -1267,7 +1705,7 @@ const QuickViewModal = ({
 
         /* ── PRICE ── */
         .qv-price-main {
-          font-size: 24px;
+          font-size: 22px;
           font-weight: 700;
           color: #0f172a;
           letter-spacing: -0.03em;
@@ -1276,6 +1714,54 @@ const QuickViewModal = ({
           font-size: 15px;
           color: #94a3b8;
           text-decoration: line-through;
+        }
+        .qv-buy-price {
+          position: relative;
+          display: inline-grid;
+          min-width: 3.6em;
+          overflow: hidden;
+          vertical-align: middle;
+          text-align: left;
+        }
+        .qv-buy-price-new,
+        .qv-buy-price-old {
+          grid-area: 1 / 1;
+          display: inline-block;
+          white-space: nowrap;
+        }
+        .qv-buy-price-old {
+          position: relative;
+          color: inherit;
+          opacity: 0;
+          transform: translateX(-18px);
+        }
+        .qv-buy-price-new {
+          position: relative;
+          z-index: 1;
+          opacity: 1;
+          transform: translateX(0);
+        }
+        .qv-buy-price--animate .qv-buy-price-old {
+          animation: qv-buy-price-old-exit 1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+        .qv-buy-price--animate .qv-buy-price-new {
+          animation: qv-buy-price-slide-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) 1s both;
+        }
+        @keyframes qv-buy-price-old-exit {
+          0%, 48% { opacity: 1; transform: translateX(0); }
+          100% { opacity: 0; transform: translateX(-18px); }
+        }
+        @keyframes qv-buy-price-slide-in {
+          0%, 1% { opacity: 0; transform: translateX(100%); }
+          55% { opacity: 1; }
+          100% { opacity: 1; transform: translateX(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .qv-buy-price-old,
+          .qv-buy-price-new {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+          }
         }
         .qv-sale-badge {
           font-size: 11px;
@@ -1298,7 +1784,7 @@ const QuickViewModal = ({
         .qv-size-guide-link {
           font-size: 12px;
           font-weight: 500;
-          color: #2563eb;
+          color: #8a6338;
           background: none;
           border: none;
           padding: 0;
@@ -1317,14 +1803,14 @@ const QuickViewModal = ({
         .qv-desc-toggle {
           font-size: 12px;
           font-weight: 600;
-          color: #0f172a;
+          color: #8b5d2d;
           background: none;
           border: none;
           padding: 4px 0 0;
           cursor: pointer;
-          text-decoration: underline;
-          text-underline-offset: 2px;
+          text-decoration: none;
         }
+        .qv-desc-toggle:hover { color: #685343; }
 
         /* ── PRODUCT TITLE ── */
         .qv-product-title {
@@ -1358,6 +1844,305 @@ const QuickViewModal = ({
           background: #fff;
         }
 
+        .qv-page-product {
+          color: #1f2937;
+          overscroll-behavior-x: none;
+          overflow-x: hidden;
+        }
+        .qv-page-image-panel {
+          display: block !important;
+          width: min(100%, 560px);
+        }
+        .qv-page-main-image {
+          width: 100%;
+        }
+        .qv-page-thumbnails {
+          grid-column: 1;
+          grid-row: 1;
+          display: flex !important;
+          flex-direction: column !important;
+          flex-wrap: nowrap !important;
+          margin-top: 0 !important;
+          padding: 0 !important;
+        }
+        .qv-page-image-frame {
+          cursor: crosshair;
+          background: linear-gradient(110deg, #f1f3f5 8%, #fafafa 18%, #f1f3f5 33%);
+          background-size: 200% 100%;
+          animation: qv-shimmer 1.4s linear infinite;
+        }
+        .qv-page-image-frame img {
+          opacity: 0;
+          transition: opacity 0.22s ease;
+        }
+        .qv-page-image-frame img.qv-image-loaded {
+          opacity: 1;
+        }
+        .qv-gallery-slidebar {
+          position: relative;
+          left: auto;
+          right: auto;
+          bottom: auto;
+          z-index: 4;
+          display: flex;
+          align-items: center;
+          gap: 0;
+          width: min(72%, 280px);
+          margin-left: auto;
+          margin-right: auto;
+          padding: 0;
+          margin-top: 16px;
+          height: 3px;
+          background: #e5e7eb;
+          border-radius: 4px;
+          overflow: hidden;
+          touch-action: pan-y;
+        }
+        .qv-gallery-slide-segment {
+          flex: 1;
+          height: 3px;
+          min-width: 0;
+          padding: 0;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
+          cursor: pointer;
+          position: relative;
+          z-index: 1;
+          transition: none;
+        }
+        .qv-gallery-slidebar-progress {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          z-index: 2;
+          background: #685343;
+          border-radius: 4px;
+          pointer-events: none;
+          transition: left 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .qv-gallery-drag-track {
+          position: absolute !important;
+          inset: 0;
+          display: flex;
+          width: 100%;
+          height: 100% !important;
+          z-index: 1;
+          pointer-events: none;
+          transition: none;
+          will-change: transform;
+        }
+        .qv-gallery-drag-track-settling {
+          transition: transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .qv-gallery-drag-track-resting {
+          transition: none;
+        }
+        .qv-gallery-drag-track img {
+          width: 100%;
+          height: 100% !important;
+          min-width: 100%;
+          object-fit: contain;
+          object-position: center;
+          background: #fff;
+          opacity: 1 !important;
+          display: block;
+        }
+        .qv-gallery-image.qv-gallery-slide-next {
+          animation: qv-gallery-slide-next 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .qv-gallery-image.qv-gallery-slide-prev {
+          animation: qv-gallery-slide-prev 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        @keyframes qv-gallery-slide-next {
+          from { opacity: 0; transform: translate3d(22px, 0, 0); }
+          to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+        @keyframes qv-gallery-slide-prev {
+          from { opacity: 0; transform: translate3d(-22px, 0, 0); }
+          to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+        @keyframes qv-shimmer {
+          to { background-position-x: -200%; }
+        }
+        .qv-page-lens {
+          display: none;
+          position: absolute;
+          pointer-events: none;
+          width: 150px;
+          height: 150px;
+          border: 2px solid rgba(31, 41, 55, 0.25);
+          border-radius: 50%;
+          box-shadow: 0 6px 18px rgba(15, 23, 42, 0.18);
+          background-repeat: no-repeat;
+          background-size: 250% 250%;
+          transform: translate(-50%, -50%);
+          z-index: 2;
+        }
+        .qv-page-lens--visible {
+          display: block;
+        }
+        .qv-page-sticky { display: none; opacity: 0; transform: translateY(18px); transition: opacity 0.22s ease, transform 0.22s ease; pointer-events: none; }
+        .qv-page-sticky--visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .qv-page-product .qv-atc-btn { transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease; }
+        .qv-page-product .qv-atc-btn:hover:not(:disabled) { transform: scale(1.02); }
+         .qv-page-product .qv-product-title { font-size: 23px !important; }
+         .qv-page-product .qv-price-main { font-size: 22px !important; }
+         .qv-page-product .qv-section-label { margin-bottom: 5px; }
+         .qv-page-product .qv-desc-text { font-size: 13px; line-height: 1.45; }
+         .qv-page-product .qv-page-info { padding-top: 12px !important; padding-bottom: 20px !important; }
+         .qv-page-product .qv-offer-card { padding: 12px; margin: 12px 0; }
+         .qv-page-product .qv-delivery-card { padding: 7px 9px; margin: 7px 0 9px; }
+         .qv-page-product .qv-info-tabs { margin-top: 16px; }
+        .qv-page-product .qv-atc-btn:first-child,
+        .qv-page-sticky .qv-atc-btn:first-child {
+          background: #fff !important;
+          color: #685343 !important;
+          border-color: #685343 !important;
+          box-shadow: none;
+        }
+        .qv-page-product .qv-atc-btn:first-child:hover:not(:disabled),
+        .qv-page-sticky .qv-atc-btn:first-child:hover:not(:disabled) {
+          background: #fbf7f1 !important;
+          border-color: #4f3d31 !important;
+        }
+        .qv-page-product .qv-atc-btn:last-child,
+        .qv-page-sticky .qv-atc-btn:last-child { background: #8a6338 !important; color: #fff !important; border-color: #8a6338 !important; }
+        .qv-page-product .qv-buy-now-btn:not(.qv-atc-btn-oos),
+        .qv-page-sticky .qv-buy-now-btn:not(.qv-atc-btn-oos) {
+          background: #f8e9c8 !important;
+          background-image: none !important;
+          color: #4f3d31 !important;
+          border: 1px solid #dec58f !important;
+          box-shadow: none;
+          transform: none;
+          transition: background 0.2s ease, border-color 0.2s ease !important;
+        }
+        .qv-page-product .qv-buy-now-btn:not(.qv-atc-btn-oos):hover,
+        .qv-page-sticky .qv-buy-now-btn:not(.qv-atc-btn-oos):hover {
+          background: #f1d9a6 !important;
+          box-shadow: none;
+          transform: none !important;
+        }
+        .qv-page-product .qv-buy-now-btn:not(.qv-atc-btn-oos):active,
+        .qv-page-sticky .qv-buy-now-btn:not(.qv-atc-btn-oos):active {
+          box-shadow: none;
+          transform: none !important;
+        }
+        .qv-offer-card,
+        .qv-delivery-card,
+        .qv-info-tabs {
+          border: 1px solid #edf0f3;
+          border-radius: 8px;
+          background: #fff;
+          box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+        }
+        .qv-offer-card { padding: 16px; margin: 18px 0; }
+        .qv-page-product .qv-offer-card { padding: 0; margin: 12px 0; border: 0; background: #fff; box-shadow: none; }
+        .qv-offer-row { position: relative; display: flex; gap: 12px; align-items: center; padding: 24px 12px 10px; color: #374151; font-size: 12px; line-height: 1.4; border: 1px solid #eee3d6; border-radius: 10px; background: #fbf7f1; box-shadow: 0 4px 12px rgba(104, 83, 67, 0.06); }
+        .qv-offer-row + .qv-offer-row { margin-top: 9px; }
+        .qv-offer-tag { color: #8a6338; font-size: 15px; line-height: 1; }
+        .qv-offer-apply { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex-shrink: 0; min-height: 28px; border: 0; border-radius: 8px; padding: 5px 10px; background: #dfc6a5; color: #4f3d31; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, color 0.2s ease; }
+        .qv-offer-apply::before { content: none; }
+        .qv-offer-apply:hover { background: #d7b991; color: #4f3d31; transform: translateY(-1px); }
+        .qv-offer-apply.is-applied { background: #dfc6a5; color: #4f3d31; animation: qv-promo-copied 0.42s cubic-bezier(0.22, 1, 0.36, 1); }
+        .qv-offer-apply.is-applied:hover { background: #d7b991; transform: translateY(-1px); }
+        .qv-offer-apply .qv-offer-tick { display: inline-block; animation: qv-offer-tick 0.28s ease-out; }
+        @keyframes qv-offer-tick { from { opacity: 0; transform: scale(0.5) rotate(-12deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+        @keyframes qv-promo-copied {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(215, 185, 145, 0); }
+          45% { transform: scale(1.06); box-shadow: 0 0 0 6px rgba(215, 185, 145, 0.24); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(215, 185, 145, 0); }
+        }
+        .qv-offer-apply > span,
+        .qv-offer-apply > svg { position: relative; z-index: 1; }
+        .qv-offer-apply.is-applied > span,
+        .qv-offer-apply.is-applied > svg {
+          animation: qv-promo-flip 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+          backface-visibility: hidden;
+          transform-origin: center;
+        }
+        .qv-offer-apply.is-applied > svg { animation-delay: 0.1s; }
+        @keyframes qv-promo-flip {
+          0% { opacity: 0; transform: perspective(400px) rotateX(-90deg); }
+          60% { opacity: 1; transform: perspective(400px) rotateX(12deg); }
+          100% { opacity: 1; transform: perspective(400px) rotateX(0); }
+        }
+        .qv-offer-terms { position: absolute; top: 0; left: 0; padding: 3px 8px; border-radius: 6px 0 6px 0; background: #f3e6d3; color: #8a6338; font-size: 10px; font-weight: 700; line-height: 1.2; }
+        .qv-delivery-card { padding: 15px; margin: 18px 0 20px; }
+        .qv-delivery-form { display: flex; gap: 6px; }
+        .qv-delivery-field { position: relative; flex: 1; min-width: 0; }
+        .qv-delivery-field label { position: absolute; left: 10px; top: 50%; z-index: 1; padding: 0 4px; color: #666f7d; background: #fff; font-size: 13px; line-height: 1.2; pointer-events: none; transform: translateY(-50%); transition: all 0.12s ease; }
+        .qv-delivery-field:focus-within label,
+        .qv-delivery-field--filled label { top: 0; color: #8f6a46; font-size: 9px; transform: translateY(-50%); }
+        .qv-delivery-form input { width: 100%; min-width: 0; height: 40px; box-sizing: border-box; border: 1px solid #d7dce2; border-radius: 7px; padding: 6px 94px 6px 10px; font: inherit; }
+        .qv-delivery-form input:focus { border-color: #b88a58; outline: none; }
+        .qv-delivery-form button { position: absolute; top: 0; right: 13px; height: 40px; border: 0; padding: 0; background: transparent; color: #8a6338; font-size: 13px; font-weight: 700; cursor: pointer; transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease; }
+        .qv-delivery-form button:hover { color: #685343; transform: translateY(-1px); }
+        .qv-delivery-form button:active { transform: translateY(0) scale(0.96); }
+        .qv-delivery-form button.qv-delivery-check-complete { color: #aa967f; cursor: default; }
+        .qv-delivery-form button.qv-delivery-check-complete:hover { color: #aa967f; transform: none; }
+        .qv-page-product .qv-delivery-card { width: calc(100% - 8px); box-sizing: border-box; }
+        .qv-page-section-heading { margin: 0; color: #1f2937; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; line-height: 1.2; text-transform: uppercase; }
+        .qv-page-product .qv-section-label,
+        .qv-page-product .qv-page-section-heading {
+          color: #374151 !important;
+          font-size: 12px !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.08em !important;
+          line-height: 1.2 !important;
+          text-transform: uppercase !important;
+        }
+        .qv-delivery-result { max-height: 0; overflow: hidden; opacity: 0; transform: translateY(-4px); color: #15803d; font-size: 11px; font-weight: 600; margin: 0; transition: max-height 0.45s ease, opacity 0.45s ease, transform 0.45s ease, margin-top 0.45s ease; }
+        .qv-delivery-result--visible { max-height: 30px; opacity: 1; transform: translate(4px, 0); margin-top: 15px; }
+        .qv-info-tabs { margin: 28px auto 0; max-width: 1280px; padding: 4px 18px; }
+        .qv-info-tabs a { color: #374151; display: inline-block; padding: 14px 18px; font-size: 13px; font-weight: 700; text-decoration: none; }
+        .qv-info-tabs a:hover { color: #8a6338; }
+        .qv-product-info-accordions { margin: 20px 0 8px; border-top: 1px solid #e5e7eb; }
+        .qv-product-info-row { border-bottom: 1px solid #e5e7eb; }
+        .qv-product-info-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 68px; border: 0; padding: 16px 2px; background: transparent; color: #374151; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-align: left; cursor: pointer; }
+        .qv-product-info-plus { display: inline-block; color: #374151; font-size: 29px; font-weight: 400; line-height: 1; transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+        .qv-product-info-plus--open { transform: rotate(180deg); }
+        .qv-product-info-content { display: grid; grid-template-rows: 0fr; opacity: 0; overflow: hidden; padding: 0 2px; transform-origin: top; transition: grid-template-rows 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, padding 0.55s ease; }
+        .qv-product-info-content--open { grid-template-rows: 1fr; opacity: 1; padding-bottom: 20px; }
+        .qv-product-info-content > * { min-height: 0; overflow: hidden; }
+        .qv-product-info-content .qv-desc-text { margin: 0; }
+        .qv-benefits-slider { position: relative; overflow-x: auto; margin: 24px 0 8px; padding: 3px 0 8px; scrollbar-width: none; }
+        .qv-benefits-slider::-webkit-scrollbar { display: none; }
+        .qv-benefits-track { display: flex; width: max-content; gap: 10px; }
+        .qv-benefit-chip { display: inline-flex; align-items: center; width: max-content; gap: 9px; padding: 12px 15px; border: 1px solid #eee3d6; border-radius: 999px; background: #fbf7f1; color: #4f3d31; font-size: 12px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 12px rgba(104, 83, 67, 0.06); }
+        .qv-benefit-chip svg { flex: 0 0 auto; color: #8a6338; }
+        @media (max-width: 767px) {
+          .qv-product-info-trigger { min-height: 58px; font-size: 12px; }
+        }
+        @media (min-width: 768px) {
+          .qv-page-product .qv-price-main { font-size: 30px; }
+          .qv-page-product .qv-page-lens--visible { display: block; }
+        }
+        @media (max-width: 767px) {
+          .qv-page-product {
+            width: 100vw !important;
+            margin-left: calc(50% - 50vw) !important;
+            margin-right: 0 !important;
+          }
+          .qv-page-image-panel { display: block !important; width: 100%; }
+          .qv-page-main-image { display: block; }
+          .qv-page-thumbnails { flex-direction: row !important; overflow-x: auto; margin-top: 10px !important; }
+          .qv-info-tabs { margin-inline: 0; padding-inline: 4px; overflow-x: auto; white-space: nowrap; }
+          .qv-info-tabs a { padding-inline: 12px; }
+          .qv-page-sticky { display: block; }
+          .qv-gallery-slidebar { left: auto; right: auto; bottom: auto; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .qv-gallery-image,
+          .qv-page-image-frame {
+            animation: none !important;
+            transition: none !important;
+          }
+        }
+
         /* ── MOBILE STICKY FOOTER ── */
         .qv-mobile-sticky {
           position: sticky;
@@ -1368,7 +2153,7 @@ const QuickViewModal = ({
         }
       `}</style>
 
-      <div
+      <div className={pageFullWidth ? "qv-page-product" : undefined}
         style={
           pageFullWidth
             ? {
@@ -1446,6 +2231,12 @@ const QuickViewModal = ({
                         boxShadow: "0 24px 64px rgba(15,23,42,0.22), 0 4px 16px rgba(15,23,42,0.08)",
                       }),
                 }),
+            ...(pageFullWidth && isMobileView
+                      ? {
+                          touchAction: "pan-y",
+                          overscrollBehaviorX: "none",
+                        }
+                      : {}),
           }}
           onClick={isPage ? undefined : (e) => e.stopPropagation()}
         >
@@ -1455,7 +2246,7 @@ const QuickViewModal = ({
               style={{
                 flexShrink: 0,
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "flex-end",
                 minHeight: 52,
                 paddingLeft: 16,
@@ -1519,6 +2310,12 @@ const QuickViewModal = ({
                   : isMobileView
                     ? "touch"
                     : undefined,
+              ...(pageFullWidth && isMobileView
+                ? {
+                    touchAction: "pan-y",
+                    overscrollBehaviorX: "none",
+                  }
+                : {}),
             }}
           >
             <div
@@ -1526,7 +2323,7 @@ const QuickViewModal = ({
                 display: "flex",
                 flexWrap: "wrap",
                 gap: isMobileView ? (pageFullWidth ? 20 : 0) : pageFullWidth ? 48 : 32,
-                alignItems: "flex-start",
+                alignItems: pageFullWidth && !isMobileView ? "flex-start" : "center",
                 flexDirection: isMobileView ? "column" : "row",
                 justifyContent: pageFullWidth && !isMobileView ? "flex-start" : undefined,
                 maxWidth: pageFullWidth && !isMobileView ? 1280 : undefined,
@@ -1536,6 +2333,7 @@ const QuickViewModal = ({
 
               {/* ── IMAGE PANEL ── */}
               <div
+                className={pageFullWidth ? "qv-page-image-panel" : undefined}
                 style={{
                   flex: isMobileView
                     ? pageFullWidth
@@ -1547,13 +2345,13 @@ const QuickViewModal = ({
                   width: isMobileView ? "100%" : undefined,
                   maxWidth: pageFullWidth
                     ? isMobileView
-                      ? "min(360px, 94vw)"
+                      ? "none"
                       : 480
                     : "100%",
                   minWidth: isMobileView ? 0 : pageFullWidth && !isMobileView ? 0 : 280,
-                  alignSelf: pageFullWidth && isMobileView ? "center" : undefined,
-                  marginLeft: pageFullWidth && isMobileView ? "auto" : undefined,
-                  marginRight: pageFullWidth && isMobileView ? "auto" : undefined,
+                  alignSelf: pageFullWidth && isMobileView ? "stretch" : undefined,
+                  marginLeft: pageFullWidth && isMobileView ? "calc(50% - 50vw)" : undefined,
+                  marginRight: pageFullWidth && isMobileView ? "calc(50% - 50vw)" : undefined,
                   position: "relative",
                   ...(isMobileView
                     ? { background: pageFullWidth ? "#fff" : "#f8fafc" }
@@ -1562,20 +2360,22 @@ const QuickViewModal = ({
               >
                 {currentImage && (
                   <div
+                    className={pageFullWidth ? "qv-page-main-image" : undefined}
                     style={{
                       position: "relative",
                       width: "100%",
-                      borderRadius: pageFullWidth ? 12 : 0,
+                      borderRadius: pageFullWidth && !isMobileView ? 12 : 0,
                       padding: 0,
                       boxSizing: "border-box",
                     }}
                   >
                     <div
+                      className={pageFullWidth ? "qv-page-image-frame" : undefined}
                       style={{
                         width: "100%",
                         aspectRatio: "3 / 4",
                         maxHeight: pageFullWidth && !isMobileView ? 560 : pageFullWidth && isMobileView ? 480 : undefined,
-                        borderRadius: pageFullWidth ? 12 : isMobileView ? 0 : 12,
+                        borderRadius: pageFullWidth && !isMobileView ? 12 : 0,
                         overflow: "hidden",
                         background: "#f1f5f9",
                         position: "relative",
@@ -1585,32 +2385,98 @@ const QuickViewModal = ({
                       onTouchMove={onImgTouchMove}
                       onTouchEnd={onImgTouchEnd}
                       onTouchCancel={onImgTouchEnd}
+                      onMouseMove={(event) => {
+                        if (isMobileView) return;
+                        if (event.target.closest(".qv-arrow")) {
+                          setIsImageHovered(false);
+                          return;
+                        }
+                        setIsImageHovered(true);
+                        const rect = event.currentTarget.getBoundingClientRect();
+                        setLensPosition({
+                          x: Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100)),
+                          y: Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100)),
+                        });
+                      }}
+                      onMouseEnter={() => {
+                        if (!isMobileView) setIsImageHovered(true);
+                      }}
+                      onMouseLeave={() => {
+                        if (!isMobileView) setIsImageHovered(false);
+                      }}
                     >
-                      <img
-                        src={currentImage}
-                        alt={product.title}
-                        draggable={false}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          display: "block",
-                          objectFit: "cover",
-                          objectPosition: "center",
-                          transform: isMobileView
-                            ? `translate3d(${inlinePos.x}px, ${inlinePos.y}px, 0) scale(${inlineScale})`
-                            : undefined,
-                          transformOrigin: "center center",
-                          transition:
-                            isMobileView && inlineGestureRef.current.mode
+                      {pageFullWidth ? (
+                        <div
+                          className={`qv-gallery-drag-track ${
+                            galleryDrag.active || galleryDrag.settling
+                              ? galleryDrag.settling
+                                ? "qv-gallery-drag-track-settling"
+                                : ""
+                              : "qv-gallery-drag-track-resting"
+                          }`}
+                          style={{
+                            width: `${Math.max(images.length, 1) * 100}%`,
+                            transform: `translate3d(${
+                              -(galleryTrackOffset / Math.max(images.length, 1)) * 100
+                            }%, 0, 0)`,
+                          }}
+                        >
+                          {images.map((src, index) => (
+                            <img
+                              key={`${src}-${index}`}
+                              src={src}
+                              alt={index === imageIndex ? product.title : ""}
+                              aria-hidden={index !== imageIndex}
+                              draggable={false}
+                              onLoad={() => setImageLoaded(true)}
+                              style={{
+                                flex: `0 0 ${100 / Math.max(images.length, 1)}%`,
+                                minWidth: `${100 / Math.max(images.length, 1)}%`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <img
+                          key={currentImage}
+                          src={currentImage}
+                          alt={product.title}
+                          draggable={false}
+                          onLoad={() => setImageLoaded(true)}
+                          className={`${imageLoaded ? "qv-image-loaded" : ""} qv-gallery-image qv-gallery-slide-${imageDirection}`}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "block",
+                            objectFit: "cover",
+                            objectPosition: "center",
+                            transform: isMobileView && (inlineScale !== 1 || inlinePos.x !== 0 || inlinePos.y !== 0)
+                              ? `translate3d(${inlinePos.x}px, ${inlinePos.y}px, 0) scale(${inlineScale})`
+                              : undefined,
+                            transformOrigin: "center center",
+                            transition: isMobileView && inlineGestureRef.current.mode
                               ? "opacity 0.2s"
                               : "opacity 0.2s, transform 0.12s ease-out",
-                          userSelect: "none",
-                          WebkitUserSelect: "none",
-                        }}
-                      />
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                          }}
+                        />
+                      )}
+                      {pageFullWidth && !isMobileView && (
+                        <span
+                          className={`qv-page-lens${isImageHovered ? " qv-page-lens--visible" : ""}`}
+                          aria-hidden="true"
+                          style={{
+                            left: `${lensPosition.x}%`,
+                            top: `${lensPosition.y}%`,
+                            backgroundImage: `url("${currentImage}")`,
+                            backgroundPosition: `${lensPosition.x}% ${lensPosition.y}%`,
+                          }}
+                        />
+                      )}
 
                       {/* Zoom button */}
-                      {currentImage && (
+                      {currentImage && !isMobileView && (
                         <button
                           type="button"
                           onClick={() => setImageLightboxOpen(true)}
@@ -1631,8 +2497,10 @@ const QuickViewModal = ({
                           <button
                             type="button"
                             onClick={goPrev}
+                            onMouseEnter={() => setIsImageHovered(false)}
                             aria-label="Previous image"
                             className="qv-arrow"
+                            disabled={imageIndex <= 0}
                             style={{ left: 10 }}
                           >
                             ‹
@@ -1640,8 +2508,10 @@ const QuickViewModal = ({
                           <button
                             type="button"
                             onClick={goNext}
+                            onMouseEnter={() => setIsImageHovered(false)}
                             aria-label="Next image"
                             className="qv-arrow"
+                            disabled={imageIndex >= images.length - 1}
                             style={{ right: 10 }}
                           >
                             ›
@@ -1652,9 +2522,72 @@ const QuickViewModal = ({
                   </div>
                 )}
 
-                {/* Thumbnails */}
-                {hasMultipleImages && (
+                {pageFullWidth && hasMultipleImages && (
                   <div
+                    className="qv-gallery-slidebar"
+                    aria-label="Product image slider"
+                    onPointerDown={(event) => {
+                      if (gallerySettleTimerRef.current) {
+                        window.clearTimeout(gallerySettleTimerRef.current);
+                        gallerySettleTimerRef.current = null;
+                        const settledIndex = galleryTargetIndexRef.current;
+                        setImageIndex(settledIndex);
+                        setGalleryDrag({
+                          active: false,
+                          rawIndex: settledIndex,
+                          direction: settledIndex >= imageIndex ? "next" : "prev",
+                          settling: false,
+                        });
+                      }
+                      event.currentTarget.setPointerCapture?.(event.pointerId);
+                      updateGalleryDrag(event.clientX, event.currentTarget.getBoundingClientRect());
+                    }}
+                    onPointerMove={(event) => {
+                      if (event.buttons !== 1) return;
+                      updateGalleryDrag(event.clientX, event.currentTarget.getBoundingClientRect());
+                    }}
+                    onPointerUp={(event) => {
+                      const rect = event.currentTarget.getBoundingClientRect();
+                      const raw = Math.max(0, Math.min(images.length - 1, ((event.clientX - rect.left) / rect.width) * (images.length - 1)));
+                      const nextIndex = raw > imageIndex
+                        ? Math.min(images.length - 1, Math.ceil(raw))
+                        : raw < imageIndex
+                          ? Math.max(0, Math.floor(raw))
+                          : imageIndex;
+                      settleGalleryTo(nextIndex);
+                    }}
+                    onPointerCancel={() => {
+                      setGalleryDrag({ active: false, rawIndex: imageIndex, direction: "next" });
+                    }}
+                  >
+                    <span
+                      className="qv-gallery-slidebar-progress"
+                      style={{
+                        width: `${100 / Math.max(images.length, 1)}%`,
+                        left: `${(galleryTrackOffset / Math.max(images.length - 1, 1)) * (100 - 100 / Math.max(images.length, 1))}%`,
+                      }}
+                    />
+                    {images.map((src, index) => (
+                      <button
+                        key={`${src}-${index}`}
+                        type="button"
+                        aria-label={`Show product image ${index + 1}`}
+                        className={`qv-gallery-slide-segment ${
+                          imageIndex === index ? "qv-gallery-slide-segment-active" : ""
+                        }`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          settleGalleryTo(index);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Thumbnails */}
+                {!pageFullWidth && hasMultipleImages && (
+                  <div
+                    className={pageFullWidth ? "qv-page-thumbnails" : undefined}
                     style={{
                       display: "flex",
                       gap: 8,
@@ -1689,9 +2622,9 @@ const QuickViewModal = ({
 
               {/* ── INFO PANEL ── */}
               <div
-                className={
-                  isMobileView || pageFullWidth ? undefined : "qv-scrollbar-hide"
-                }
+                className={`qv-page-info ${
+                  isMobileView || pageFullWidth ? "" : "qv-scrollbar-hide"
+                }`}
                 style={{
                   flex:
                     pageFullWidth && isMobileView
@@ -1724,7 +2657,7 @@ const QuickViewModal = ({
                     display: "flex",
                     alignItems: "flex-start",
                     gap: 12,
-                    marginBottom: isMobileView ? 14 : pageFullWidth ? 10 : 12,
+                    marginBottom: isMobileView ? 10 : pageFullWidth ? 8 : 10,
                   }}
                 >
                   <h2 className="qv-product-title"
@@ -1735,27 +2668,43 @@ const QuickViewModal = ({
                   >
                     {product.title}
                   </h2>
-                  <button
-                    type="button"
-                    onClick={toggleWishlist}
-                    disabled={wishlistLoading}
-                    aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                    title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-                    className="qv-wish-btn"
-                    style={{
-                      width: isMobileView ? 44 : 40,
-                      height: isMobileView ? 44 : 40,
-                      marginTop: isMobileView ? 0 : 4,
-                    }}
-                  >
-                    {heartIcon}
-                  </button>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginTop: -2 }}>
+                    <button
+                      type="button"
+                      onClick={shareProduct}
+                      aria-label="Share product"
+                      title="Share product"
+                      className="qv-share-btn"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <circle cx="18" cy="5" r="2.5" />
+                        <circle cx="6" cy="12" r="2.5" />
+                        <circle cx="18" cy="19" r="2.5" />
+                        <path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleWishlist}
+                      disabled={wishlistLoading}
+                      aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                      title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                      className={`qv-wish-btn${wishlistPulse ? " qv-wish-btn--pulse" : ""}`}
+                      style={{
+                        width: isMobileView ? 36 : 34,
+                        height: isMobileView ? 36 : 34,
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      {heartIcon}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Price row */}
                 <div
                   style={{
-                    marginBottom: isMobileView ? 18 : 16,
+                    marginBottom: isMobileView ? 12 : 12,
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
@@ -1767,7 +2716,7 @@ const QuickViewModal = ({
                     <span className="qv-price-original">{product.priceRegular}</span>
                   )}
                   {product.onSale && (
-                    <span className="qv-sale-badge">Sale</span>
+                    <span className="qv-sale-badge">{discountPercent ? `${discountPercent}% off` : "Sale"}</span>
                   )}
                   {product.tag && (
                     <span className="qv-tag-badge">{product.tag}</span>
@@ -1776,98 +2725,95 @@ const QuickViewModal = ({
 
                 <div className="qv-divider" />
 
-                {/* Description */}
-                {product.description && (
-                  <div style={{ marginBottom: isMobileView ? 16 : 14 }}>
-                    <div className="qv-section-label">About this product</div>
-                    {showFullDescription ? (
-                      <>
-                        <p className="qv-desc-text" style={{ whiteSpace: "pre-wrap" }}>
-                          {product.description}
-                        </p>
-                        {String(product.description).trim().length > 60 && (
+                {colorOptions.length > 1 && (
+                  <>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                      <span className="qv-page-section-heading">
+                        Choose Color
+                      </span>
+                      <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                        {colorOptions.map((opt) => (
                           <button
+                            key={opt.value}
                             type="button"
-                            onClick={() => setShowFullDescription(false)}
-                            className="qv-desc-toggle"
-                          >
-                            View less
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <div>
-                        <p
-                          className="qv-desc-text"
-                          style={{
-                            whiteSpace: "normal",
-                            overflow: "hidden",
-                            display: "-webkit-box",
-                            WebkitBoxOrient: "vertical",
-                            WebkitLineClamp: 3,
-                            lineClamp: 3,
-                          }}
-                        >
-                          {product.description}
-                        </p>
-                        {String(product.description).trim().length > 60 && (
-                          <button
-                            type="button"
-                            onClick={() => setShowFullDescription(true)}
-                            className="qv-desc-toggle"
-                            style={{ whiteSpace: "nowrap" }}
-                          >
-                            View more
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Specifications */}
-                {Array.isArray(product.specifications) &&
-                  product.specifications.filter((r) => r?.label || r?.value).length > 0 && (
-                    <div style={{ marginBottom: isMobileView ? 16 : 14 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          marginBottom: 8,
-                        }}
-                      >
-                        <div className="qv-section-label" style={{ marginBottom: 0 }}>
-                          Specifications
-                        </div>
-                        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>
-                          {product.specifications.filter((r) => r?.label || r?.value).length} items
-                        </span>
-                      </div>
-                      <div className="qv-spec-grid">
-                        {product.specifications
-                          .filter((r) => r?.label || r?.value)
-                          .slice(0, 10)
-                          .map((r, idx) => {
-                            const label = String(r?.label || "").trim();
-                            const value = String(r?.value || "").trim();
-                            return (
-                              <div
-                                key={`${String(r?.label || "spec")}-${idx}`}
-                                className="qv-spec-cell"
-                                style={{
-                                  borderTop: idx >= (isMobileView ? 1 : 2) ? "1px solid #f1f5f9" : "none",
-                                  borderLeft: !isMobileView && idx % 2 === 1 ? "1px solid #f1f5f9" : "none",
-                                }}
-                              >
-                                <div className="qv-spec-key">{label || "—"}</div>
-                                <div className="qv-spec-val">{value || "—"}</div>
-                              </div>
-                            );
-                          })}
+                            onClick={() => {
+                              setSelectedColor(opt.label ?? opt.value);
+                              if (typeof window !== "undefined") {
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }
+                            }}
+                            title={opt.label}
+                            aria-label={opt.label}
+                            className={`qv-color-dot ${(selectedColor || "") === String(opt.label ?? opt.value) ? "qv-color-dot-active" : ""}`}
+                            style={{ backgroundColor: opt.color || "#f5f5f5" }}
+                          />
+                        ))}
                       </div>
                     </div>
-                  )}
+                    <span
+                      className={`qv-stock-pill ${isOutOfStock ? "qv-stock-out" : "qv-stock-in"}`}
+                      style={{ flexShrink: 0 }}
+                    >
+                      <span
+                        style={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          background: isOutOfStock ? "#ef4444" : "#16a34a",
+                          display: "inline-block",
+                        }}
+                      />
+                      {isOutOfStock ? "Out of stock" : "In stock"}
+                    </span>
+                    </div>
+                    <div className="qv-divider" />
+                  </>
+                )}
+
+                {pageFullWidth && (
+                  <section className="qv-offer-card" aria-labelledby="available-offers">
+                    {productOffers.length > 0 ? (
+                      productOffers.map((offer) => (
+                        <div className="qv-offer-row" key={offer.text} style={{ alignItems: "center", justifyContent: "space-between" }}>
+                          <span>{offer.text}</span>
+                          <span className="qv-offer-terms">Buy at ₹{offer.buyAtPrice}</span>
+                          {offer.coupon?.code ? (
+                            <button
+                              type="button"
+                              className={`qv-offer-apply${selectedCoupon?.code === offer.coupon.code ? " is-applied" : ""}`}
+                              onClick={async () => {
+                                try {
+                                  await navigator.clipboard.writeText(String(offer.coupon.code));
+                                  setSelectedCoupon(offer.coupon);
+                                  toast.success("Promo code copied");
+                                } catch {
+                                  toast.error("Could not copy promo code");
+                                }
+                              }}
+                            >
+                              <span>{selectedCoupon?.code === offer.coupon.code ? "Copied" : String(offer.coupon.code)}</span>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                {selectedCoupon?.code === offer.coupon.code ? (
+                                  <path d="m5 12 4 4L19 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                ) : (
+                                  <>
+                                    <rect x="8" y="8" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+                                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" strokeWidth="2" />
+                                  </>
+                                )}
+                              </svg>
+                            </button>
+                          ) : null}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="qv-offer-row">
+                        <span>No offers available at this time.</span>
+                      </div>
+                    )}
+                  </section>
+                )}
 
                 {/* Suggested: recently viewed + recommendations (modal only) */}
                 {!isPage && (() => {
@@ -1898,6 +2844,7 @@ const QuickViewModal = ({
                             {title}
                           </h2>
                         </div>
+
                         <ProductGrid
                           products={items}
                           addToCart={onAddToCart}
@@ -1924,50 +2871,6 @@ const QuickViewModal = ({
                   );
                 })()}
 
-                {/* Size guide link */}
-                {showSizeGuideEntry && hasSelectableSizes && (
-                  <div style={{ marginBottom: isMobileView ? 14 : 12 }}>
-                    <button
-                      type="button"
-                      onClick={() => setShowSizeChart(true)}
-                      className="qv-size-guide-link"
-                      style={{
-                        display: isMobileView ? "block" : pageFullWidth && !isMobileView ? "block" : "inline",
-                        width: isMobileView ? "100%" : "auto",
-                        textAlign: isMobileView ? "center" : pageFullWidth ? "center" : "left",
-                        padding: isMobileView ? "10px 0" : 0,
-                      }}
-                    >
-                      {sizeChartLabel || "Size guide →"}
-                    </button>
-                  </div>
-                )}
-
-                {/* Color options */}
-                {product.colorOptions?.length > 0 && (
-                  <div style={{ marginBottom: 14 }}>
-                    <div className="qv-section-label">
-                      Color:{" "}
-                      <span style={{ fontWeight: 600, color: "#334155", textTransform: "none", letterSpacing: 0 }}>
-                        {selectedColor || product.colorOptions[0]?.label || product.colorOptions[0]?.value}
-                      </span>
-                    </div>
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      {product.colorOptions.map((opt) => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() => setSelectedColor(opt.label ?? opt.value)}
-                          title={opt.label}
-                          aria-label={opt.label}
-                          className={`qv-color-dot ${(selectedColor || "") === String(opt.label ?? opt.value) ? "qv-color-dot-active" : ""}`}
-                          style={{ backgroundColor: opt.color || "#f5f5f5" }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Size options */}
                 {(() => {
                   const variantSizes =
@@ -1982,29 +2885,9 @@ const QuickViewModal = ({
                             o && formatSizeForCustomerDisplay(o.value || o.label),
                         );
 
-                  const stockStatusRow = (
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                      <span
-                        className={`qv-stock-pill ${isOutOfStock ? "qv-stock-out" : "qv-stock-in"}`}
-                      >
-                        <span
-                          style={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: "50%",
-                            background: isOutOfStock ? "#ef4444" : "#16a34a",
-                            display: "inline-block",
-                            flexShrink: 0,
-                          }}
-                        />
-                        {isOutOfStock ? "Out of stock" : "In stock"}
-                      </span>
-                    </div>
-                  );
-
                   if (sizeOptions.length) {
                     return (
-                      <div style={{ marginBottom: 14 }}>
+                      <div style={{ marginBottom: 10 }}>
                         <div
                           style={{
                             display: "flex",
@@ -2019,36 +2902,85 @@ const QuickViewModal = ({
                               {sizeOptions.find((s) => s.value === selectedSize)?.label || sizeOptions[0]?.label}
                             </span>
                           </div>
-                          {stockStatusRow}
                         </div>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                          {sizeOptions.map((opt) => (
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                            {sizeOptions.map((opt) => (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => setSelectedSize(opt.value)}
+                                title={opt.label}
+                                aria-label={opt.label}
+                                disabled={opt.stock != null ? opt.stock <= 0 : false}
+                                className={`qv-size-btn ${selectedSize === opt.value ? "qv-size-btn-active" : ""}`}
+                                style={{
+                                  height: isMobileView ? 40 : 42,
+                                }}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
+                          {showSizeGuideEntry && hasSelectableSizes && (
                             <button
-                              key={opt.value}
                               type="button"
-                              onClick={() => setSelectedSize(opt.value)}
-                              title={opt.label}
-                              aria-label={opt.label}
-                              disabled={opt.stock != null ? opt.stock <= 0 : false}
-                              className={`qv-size-btn ${selectedSize === opt.value ? "qv-size-btn-active" : ""}`}
-                              style={{
-                                height: isMobileView ? 40 : 42,
-                              }}
+                              onClick={() => setShowSizeChart(true)}
+                              className="qv-size-guide-link"
+                              style={{ padding: 0, whiteSpace: "nowrap", flexShrink: 0 }}
                             >
-                              {opt.label}
+                              {sizeChartLabel || "Size guide →"}
                             </button>
-                          ))}
+                          )}
                         </div>
                       </div>
                     );
                   }
 
-                  if (selectedStock != null) {
-                    return <div style={{ marginBottom: 14 }}>{stockStatusRow}</div>;
-                  }
-
                   return null;
                 })()}
+
+                {pageFullWidth && (
+                  <section className="qv-delivery-card" aria-labelledby="delivery-check">
+                    <div id="delivery-check" className="qv-page-section-heading" style={{ marginBottom: 17, paddingLeft: 4, transform: "translateY(4px)" }}>
+                      Check Delivery
+                    </div>
+                    <div className="qv-delivery-form">
+                      <div className={`qv-delivery-field${pincode ? " qv-delivery-field--filled" : ""}`}>
+                        <label htmlFor="delivery-pincode">Enter Pincode</label>
+                        <input
+                          id="delivery-pincode"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder=""
+                          aria-label="Delivery pincode"
+                          value={pincode}
+                          onChange={(event) => {
+                            setPincode(event.target.value.replace(/\D/g, "").slice(0, 6));
+                            setDeliveryChecked(false);
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              setDeliveryChecked(/^\d{6}$/.test(pincode));
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className={deliveryChecked ? "qv-delivery-check-complete" : undefined}
+                          aria-label={deliveryChecked ? "Pincode checked" : "Check Pincode"}
+                          onClick={() => setDeliveryChecked(/^\d{6}$/.test(pincode))}
+                        >
+                          Check Pincode
+                        </button>
+                      </div>
+                    </div>
+                    <p className={`qv-delivery-result${deliveryChecked ? " qv-delivery-result--visible" : ""}`} aria-live="polite">
+                      Delivery within 7 - 10 business days.
+                    </p>
+                  </section>
+                )}
 
                 {/* Quantity + Add to cart */}
                 <div
@@ -2058,62 +2990,16 @@ const QuickViewModal = ({
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "stretch",
-                          width: "100%",
-                          maxWidth: !isMobileView ? 420 : undefined,
+                          width: pageFullWidth && !isMobileView ? "calc(100% - 8px)" : "100%",
+                          maxWidth: undefined,
                           paddingBottom: isMobileView ? 8 : 16,
                         }
                       : undefined
                   }
                 >
-                  {/* Quantity */}
-                  <div style={{ marginBottom: pageFullWidth ? 14 : 16 }}>
-                    <div className="qv-section-label">Quantity</div>
-                    <div className="qv-qty-wrap">
-                      <button
-                        type="button"
-                        onClick={() => setQuantity((q) => Math.max(1, (Number(q) || 1) - 1))}
-                        aria-label="Decrease"
-                        className="qv-qty-btn"
-                      >
-                        −
-                      </button>
-                      <input
-                        type="number"
-                        min={1}
-                        max={maxQty != null ? Math.max(1, maxQty) : undefined}
-                        value={quantity}
-                        onChange={(e) => {
-                          const v = parseInt(e.target.value, 10);
-                          if (isNaN(v) || v < 1) return;
-                          if (maxQty != null) {
-                            setQuantity(Math.min(v, Math.max(1, maxQty)));
-                            return;
-                          }
-                          setQuantity(v);
-                        }}
-                        className="qv-qty-input"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setQuantity((q) => {
-                            const next = (Number(q) || 1) + 1;
-                            if (maxQty != null) return Math.min(next, Math.max(1, maxQty));
-                            return next;
-                          })
-                        }
-                        aria-label="Increase"
-                        disabled={maxQty != null ? quantity >= Math.max(1, maxQty) : false}
-                        className="qv-qty-btn"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
                   {/* Add to cart button */}
                   {pageFullWidth ? (
-                    <div ref={actionRef} style={{ display: "flex", gap: 10, marginTop: 4 }}>
+                    <div ref={actionRef} style={{ display: "flex", gap: 10, marginTop: 10 }}>
                       <button
                         type="button"
                         onClick={handleAddToCart}
@@ -2124,8 +3010,8 @@ const QuickViewModal = ({
                           minWidth: 0,
                           borderRadius: isMobileView ? 12 : 10,
                           background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
-                          color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
-                          border: "1px solid #111827",
+                          color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#685343",
+                          border: "1px solid #b79160",
                           whiteSpace: "nowrap",
                         }}
                         // style={{ flex: 1, borderRadius: isMobileView ? 12 : 10 }}
@@ -2136,18 +3022,20 @@ const QuickViewModal = ({
                         type="button"
                         onClick={handleBuyNow}
                         disabled={isOutOfStock}
-                        className={`qv-atc-btn ${isOutOfStock ? "qv-atc-btn-oos" : "qv-atc-btn-available"}`}
+                        className={`qv-atc-btn qv-buy-now-btn ${isOutOfStock ? "qv-atc-btn-oos" : "qv-atc-btn-available"}`}
                         style={{
                           flex: 1,
                           minWidth: 0,
                           borderRadius: isMobileView ? 12 : 10,
-                          background: isOutOfStock ? "#e5e7eb" : "#0f172a",
+                          background: isOutOfStock ? "#e5e7eb" : "#685343",
                           color: isOutOfStock ? "#94a3b8" : "#ffffff",
-                          border: "1px solid #0f172a",
+                          border: "1px solid #685343",
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {isOutOfStock ? "Out of stock" : "Buy now"}
+                        {isOutOfStock ? (
+                          "Out of stock"
+                        ) : "Buy now"}
                       </button>
                     </div>
                   ) : (
@@ -2177,8 +3065,8 @@ const QuickViewModal = ({
                             minWidth: 0,
                             borderRadius: isMobileView ? 12 : 10,
                             background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
-                            color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
-                            border: "1px solid #111827",
+                            color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#685343",
+                            border: "1px solid #b79160",
                             whiteSpace: "nowrap",
                           }}
                         >
@@ -2188,31 +3076,86 @@ const QuickViewModal = ({
                           type="button"
                           onClick={handleBuyNow}
                           disabled={isOutOfStock}
-                          className="qv-atc-btn"
+                          className={`qv-atc-btn qv-buy-now-btn ${isOutOfStock ? "qv-atc-btn-oos" : "qv-atc-btn-available"}`}
                           style={{
                             flex: 1,
                             minWidth: 0,
                             borderRadius: isMobileView ? 12 : 10,
-                            background: isOutOfStock ? "#e5e7eb" : "#0f172a",
+                            background: isOutOfStock ? "#e5e7eb" : "#685343",
                             color: isOutOfStock ? "#94a3b8" : "#ffffff",
-                            border: "1px solid #0f172a",
+                            border: "1px solid #685343",
                             whiteSpace: "nowrap",
                           }}
                         >
-                          {isOutOfStock ? "Out of stock" : "Buy now"}
+                          {isOutOfStock ? (
+                            "Out of stock"
+                          ) : "Buy now"}
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
+
+                {pageFullWidth && (product.description || (Array.isArray(product.specifications) && product.specifications.some((r) => r?.label || r?.value))) && (
+                  <div className="qv-product-info-accordions">
+                    {product.description && (
+                      <div className="qv-product-info-row" id="product-description">
+                        <button type="button" className="qv-product-info-trigger" aria-expanded={openProductInfo === "description"} onClick={() => setOpenProductInfo((current) => current === "description" ? null : "description")}>
+                          <span>Description</span>
+                          <span className={`qv-product-info-plus${openProductInfo === "description" ? " qv-product-info-plus--open" : ""}`} aria-hidden="true">{openProductInfo === "description" ? "−" : "+"}</span>
+                        </button>
+                        <div className={`qv-product-info-content${openProductInfo === "description" ? " qv-product-info-content--open" : ""}`}><p className="qv-desc-text" style={{ whiteSpace: "pre-wrap" }}>{product.description}</p></div>
+                      </div>
+                    )}
+                    {Array.isArray(product.specifications) && product.specifications.filter((r) => r?.label || r?.value).length > 0 && (
+                      <div className="qv-product-info-row" id="product-specifications">
+                        <button type="button" className="qv-product-info-trigger" aria-expanded={openProductInfo === "specifications"} onClick={() => setOpenProductInfo((current) => current === "specifications" ? null : "specifications")}>
+                          <span>Specifications</span>
+                          <span className={`qv-product-info-plus${openProductInfo === "specifications" ? " qv-product-info-plus--open" : ""}`} aria-hidden="true">{openProductInfo === "specifications" ? "−" : "+"}</span>
+                        </button>
+                        <div className={`qv-product-info-content${openProductInfo === "specifications" ? " qv-product-info-content--open" : ""}`}><div className="qv-spec-grid">{product.specifications.filter((r) => r?.label || r?.value).slice(0, 10).map((r, idx) => <div key={`${String(r?.label || "spec")}-${idx}`} className="qv-spec-cell"><div className="qv-spec-key">{String(r?.label || "").trim() || "—"}</div><div className="qv-spec-val">{String(r?.value || "").trim() || "—"}</div></div>)}</div></div>
+                      </div>
+                    )}
+                    {pageFullWidth && (
+                      <div className="qv-benefits-slider" aria-label="Shopping benefits">
+                        <div className="qv-benefits-track">
+                          {[
+                            ["COD Available", <><path key="cod-card" d="M3 6h18v12H3z" /><path key="cod-check" d="m8 12 2 2 5-5" /></>],
+                            ["Quality Assured", <><circle key="quality-seal" cx="12" cy="12" r="8.5" /><path key="quality-check" d="m8 12 2.5 2.5L16 9" /></>],
+                            ["Free Shipping", <><path key="truck-box" d="M3 6h11v10H3zM14 9h4l3 3v4h-7z" /><path key="truck-wheel" d="M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" /></>],
+                          ].map(([label, icon]) => (
+                            <div className="qv-benefit-chip" key={label}>
+                              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                {icon}
+                              </svg>
+                              <span>{label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
+        {isPage && (
+          <>
+            {productReviews.length > 0 && (
+              <section id="product-reviews" className="qv-info-tabs" style={{ padding: "18px 22px", marginTop: 12 }}>
+                <div className="qv-section-label" style={{ color: "#1f2937", fontSize: 13 }}>Customer reviews</div>
+                <span style={{ color: "#64748b", fontSize: 13 }}>Customer reviews are available below.</span>
+              </section>
+            )}
+          </>
+        )}
+
         {/* Fixed footer for page variant: keep actions visible while scrolling */}
-        {isPage && showFixedFooter && (
+        {isPage && fixedFooterMounted && (
           <div
+            className={`qv-page-sticky${fixedFooterVisible ? " qv-page-sticky--visible" : ""}`}
             style={{
               position: "fixed",
               left: 0,
@@ -2221,7 +3164,7 @@ const QuickViewModal = ({
               zIndex: 2147483200,
               background: "#fff",
               borderTop: "1px solid #f1f5f9",
-              padding: "12px 16px",
+              padding: "9px 13px",
               boxShadow: "0 -6px 20px rgba(0,0,0,0.06)",
             }}
           >
@@ -2236,10 +3179,10 @@ const QuickViewModal = ({
                   minWidth: 0,
                   borderRadius: 12,
                   background: isOutOfStock && !isAlreadyInCart ? "#e5e7eb" : "#ffffff",
-                  color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#111827",
-                  border: "1px solid #111827",
+                  color: isOutOfStock && !isAlreadyInCart ? "#94a3b8" : "#685343",
+                  border: "1px solid #b79160",
                   whiteSpace: "nowrap",
-                  padding: "12px 16px",
+                  padding: "9px 13px",
                 }}
               >
                 {isOutOfStock ? "Out of stock" : isAlreadyInCart ? "Go to cart" : "Add to cart"}
@@ -2248,19 +3191,21 @@ const QuickViewModal = ({
                 type="button"
                 onClick={handleBuyNow}
                 disabled={isOutOfStock}
-                className="qv-atc-btn"
+                className={`qv-atc-btn qv-buy-now-btn ${isOutOfStock ? "qv-atc-btn-oos" : "qv-atc-btn-available"}`}
                 style={{
                   flex: 1,
                   minWidth: 0,
                   borderRadius: 12,
-                  background: isOutOfStock ? "#e5e7eb" : "#0f172a",
+                  background: isOutOfStock ? "#e5e7eb" : "#685343",
                   color: isOutOfStock ? "#94a3b8" : "#ffffff",
-                  border: "1px solid #0f172a",
+                  border: "1px solid #685343",
                   whiteSpace: "nowrap",
-                  padding: "12px 16px",
+                  padding: "9px 13px",
                 }}
               >
-                {isOutOfStock ? "Out of stock" : "Buy now"}
+                {isOutOfStock ? (
+                  "Out of stock"
+                ) : "Buy Now"}
               </button>
             </div>
           </div>

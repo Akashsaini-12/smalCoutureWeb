@@ -14,7 +14,6 @@ import { isInternalFreeSizeLabel } from "../utils/internalFreeSize";
 import { useDispatch, useSelector } from "react-redux";
 import ProductGrid from "../components/ProductGrid";
 import { getUserId } from "../utils/userId";
-import { resolveProductListingLabel } from "../utils/productBreadcrumb";
 
 /** Same catalog → detail shape as `mapCatalogProduct` in Product.jsx */
 function mapCatalogProduct(p, index) {
@@ -64,12 +63,13 @@ function mapCatalogProduct(p, index) {
     priceSale: hasDiscount ? `₹${discountNumber}` : "",
     onSale: hasDiscount,
     description: p.description || "",
+    offers: Array.isArray(p.offers) ? p.offers : [],
     specifications: Array.isArray(p.specifications) ? p.specifications : [],
     colorOptions: Array.isArray(p.variants)
       ? p.variants
           .filter((v) => typeof v.color === "string" && v.color.trim().length > 0)
           .slice(0, 6)
-          .map((v) => ({ value: v.color, label: v.color, color: v.colorCode || "" }))
+          .map((v) => ({ value: v.color, label: v.color, color: v.colorCode || "#111" }))
       : [],
     colors: Array.isArray(p.variants)
       ? p.variants
@@ -156,9 +156,6 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
   const dispatch = useDispatch();
   const userId = getUserId();
   const [isMobileView, setIsMobileView] = useState(false);
-  const shopCategories = useSelector((state) =>
-    Array.isArray(state?.shopCategories) ? state.shopCategories : [],
-  );
   const wishlistItems = useSelector((state) =>
     Array.isArray(state.wishlist) ? state.wishlist : [],
   );
@@ -180,6 +177,7 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
 
   const [product, setProduct] = useState(stateMatches ? fromState : null);
   const [loading, setLoading] = useState(!stateMatches);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   const [recLoading, setRecLoading] = useState(false);
@@ -196,11 +194,6 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
   }, []);
 
   const fromBrowse = location?.state?.from;
-  const listingLabel = useMemo(
-    () => resolveProductListingLabel({ fromBrowse, shopCategories }),
-    [fromBrowse, shopCategories],
-  );
-
   const goBack = useCallback(() => {
     // Prefer explicit "from" source when available (preserves selected category/filter page).
     const from = fromBrowse;
@@ -267,6 +260,11 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
       navigate("/AllProducts");
     }
   }, [navigate, fromBrowse]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsTransitioning(false), 420);
+    return () => window.clearTimeout(timer);
+  }, [handleParam]);
 
   useEffect(() => {
     let cancelled = false;
@@ -446,6 +444,21 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
       .slice(0, 6);
   }, [recommended, basePidStr]);
 
+  if (isTransitioning) {
+    return (
+      <main id="MainContent" role="main" className="template-product-main">
+        <div className="product-page-loading" role="status" aria-live="polite">
+          <div className="product-page-loading__mark" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <p>Loading product</p>
+        </div>
+      </main>
+    );
+  }
+
   if (loading) {
     return (
       <main id="MainContent" role="main" className="template-product-main">
@@ -495,44 +508,11 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
     <main
       id="MainContent"
       role="main"
-      className="template-product-main"
-      style={{ paddingBottom: 120 }}
+      className="template-product-main product-page-enter"
+      style={{ paddingBottom: 18 }}
     >
       <div className="shopify-section" id="shopify-section-product-detail">
-        <div className="m-page-header m-page-header--template-page m:text-center m-scroll-trigger animate--fade-in-up" style={{ paddingTop: 12, paddingBottom: 8 }}>
-          <nav
-            aria-label="breadcrumbs"
-            className="m-breadcrumb m:w-full "
-            role="navigation"
-          >
-            <div className="container">
-              <div className="m-breadcrumb--wrapper m:flex m:items-center m:justify-center">
-                <button
-                  type="button"
-                  className="m-breadcrumb--item"
-                  title="Back to the home page"
-                  onClick={() => navigate("/")}
-                >
-                  Home
-                </button>
-                {BREADCRUMB_SEP}
-                <button
-                  type="button"
-                  className="m-breadcrumb--item"
-                  title="Back to listing"
-                  onClick={goBack}
-                >
-                  {listingLabel}
-                </button>
-                {BREADCRUMB_SEP}
-                <span className="m-breadcrumb--item-current m-breadcrumb--item">
-                  {truncateBreadcrumbTitle(product.title)}
-                </span>
-              </div>
-            </div>
-          </nav>
-        </div>
-        <div className="container-fluid m-section-my m-section-py">
+        <div className="container-fluid m-section-my m-section-py product-page-stack product-page-stack--hero">
           <QuickViewModal
             variant="page"
             isOpen
@@ -545,7 +525,10 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
 
         {/* Bottom suggestions (above footer) */}
         {(suggestedCards.length > 0 || recCards.length > 0 || recLoading) && (
-          <div className="container-fluid m-section-my m-section-py" style={{ marginTop: 44 }}>
+          <div
+            className="container-fluid m-section-my m-section-py product-page-stack product-page-stack--suggestions"
+            style={{ marginTop: 18 }}
+          >
             {suggestedCards.length > 0 && (
               <>
                 <div className="m-section__header m:text-left homepage-section-divider">
@@ -573,7 +556,7 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
             ) : null}
 
             {recCards.length > 0 && (
-              <div style={{ marginTop: suggestedCards.length ? 28 : 0 }}>
+              <div style={{ marginTop: suggestedCards.length ? 18 : 0 }}>
                 <div className="m-section__header m:text-left">
                   <h2 className="m-section__heading h3 m-scroll-trigger animate--fade-in-up">
                     You may also like

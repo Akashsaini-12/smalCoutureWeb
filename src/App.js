@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   HashRouter,
@@ -60,6 +60,11 @@ const AppInner = () => {
   const previousRouteRef = useRef(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("scrollRestoration" in window.history)) return;
+    window.history.scrollRestoration = "manual";
+  }, []);
 
   const getActiveUserId = () => {
     try {
@@ -345,7 +350,7 @@ const AppInner = () => {
 
   // Every route navigation should open at the top of the page, except when
   // returning home after opening a product from the home page.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === "undefined") return;
 
     let homeScrollPosition = null;
@@ -376,10 +381,26 @@ const AppInner = () => {
       document.body.scrollTop = position.top;
     };
 
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    const restoreScrollBehavior = () => {
+      root.style.scrollBehavior = previousScrollBehavior;
+    };
+    root.style.scrollBehavior = "auto";
     setScrollPosition();
-    window.requestAnimationFrame(setScrollPosition);
-    window.setTimeout(setScrollPosition, homeScrollPosition ? 100 : 60);
-    window.setTimeout(setScrollPosition, homeScrollPosition ? 350 : 0);
+    const frameId = window.requestAnimationFrame(setScrollPosition);
+    const layoutTimer = window.setTimeout(setScrollPosition, homeScrollPosition ? 100 : 60);
+    const restoreTimer = window.setTimeout(() => {
+      setScrollPosition();
+      restoreScrollBehavior();
+    }, homeScrollPosition ? 350 : 120);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(layoutTimer);
+      window.clearTimeout(restoreTimer);
+      restoreScrollBehavior();
+    };
   }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
