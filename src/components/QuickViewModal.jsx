@@ -638,6 +638,8 @@ const QuickViewModal = ({
   const hasMultipleImages = images.length > 1;
   const regularPriceNumber = toPriceNumber(product?.priceRegular);
   const salePriceNumber = toPriceNumber(product?.priceSale || price);
+  const freeShippingLabel =
+    salePriceNumber >= 499 ? "Free Shipping" : "Free Shipping above ₹499";
   const discountPercent =
     regularPriceNumber > salePriceNumber && salePriceNumber > 0
       ? Math.round(((regularPriceNumber - salePriceNumber) / regularPriceNumber) * 100)
@@ -3122,7 +3124,7 @@ const QuickViewModal = ({
                           {[
                             ["COD Available", <><path key="cod-card" d="M3 6h18v12H3z" /><path key="cod-check" d="m8 12 2 2 5-5" /></>],
                             ["Quality Assured", <><circle key="quality-seal" cx="12" cy="12" r="8.5" /><path key="quality-check" d="m8 12 2.5 2.5L16 9" /></>],
-                            ["Free Shipping", <><path key="truck-box" d="M3 6h11v10H3zM14 9h4l3 3v4h-7z" /><path key="truck-wheel" d="M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" /></>],
+                            [freeShippingLabel, <><path key="truck-box" d="M3 6h11v10H3zM14 9h4l3 3v4h-7z" /><path key="truck-wheel" d="M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" /></>],
                           ].map(([label, icon]) => (
                             <div className="qv-benefit-chip" key={label}>
                               <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
