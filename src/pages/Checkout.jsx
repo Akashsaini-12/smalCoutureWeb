@@ -192,7 +192,7 @@ export default function Checkout({ cartItems = [] }) {
 
   // Notes removed from checkout UI (keep reading from navigation state to avoid breaking callers)
   const [note] = useState(() => String(location?.state?.note || ""));
-  const [couponCode, setCouponCode] = useState("");
+  const [couponCode, setCouponCode] = useState(() => String(buyNowItem?.couponCode || ""));
   const [couponStatus, setCouponStatus] = useState(null); // { valid, code, discount }
   const [paymentMethod, setPaymentMethod] = useState("");
   const [availableCoupons, setAvailableCoupons] = useState([]);
@@ -366,6 +366,38 @@ export default function Checkout({ cartItems = [] }) {
       toast.error(removeError?.message || "Failed to remove item");
     } finally {
       setRemovingItemKey("");
+    }
+  };
+
+  const handleCheckoutQuantityChange = async (item, nextQuantity) => {
+    const quantity = Math.max(1, Number(nextQuantity) || 1);
+    const previousQuantity = Math.max(1, Number(item?.quantity) || 1);
+    if (quantity === previousQuantity) return;
+
+    setItems((currentItems) =>
+      currentItems.map((currentItem) =>
+        currentItem === item ? { ...currentItem, quantity } : currentItem,
+      ),
+    );
+
+    if (isBuyNowMode || !item?._id) return;
+
+    try {
+      await updateCartQtyMongo({
+        userId,
+        cartItemId: String(item._id),
+        quantity,
+      });
+    } catch (quantityError) {
+      setItems((currentItems) =>
+        currentItems.map((currentItem) =>
+          currentItem === item
+            ? { ...currentItem, quantity: previousQuantity }
+            : currentItem,
+        ),
+      );
+      setError(quantityError?.message || "Failed to update quantity");
+      toast.error(quantityError?.message || "Failed to update quantity");
     }
   };
 
@@ -2086,7 +2118,6 @@ export default function Checkout({ cartItems = [] }) {
                             const parts = [];
                             if (it?.color) parts.push(`Color: ${it.color}`);
                             if (sizeDisp) parts.push(`Size: ${sizeDisp}`);
-                            parts.push(`Qty: ${it?.quantity || 1}`);
                             return parts.join(" · ");
                           })()}
                         </div>
@@ -2097,8 +2128,15 @@ export default function Checkout({ cartItems = [] }) {
                         ) : null}
                       </div>
 
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, fontWeight: 700, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
-                        {formatINR(parsePrice(it?.price) * Number(it?.quantity || 1))}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, fontWeight: 700, color: "#1f1a17", fontSize: 13, textAlign: "right" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "space-between", gap: 2, minWidth: 96, height: 30, padding: "2px 7px", border: "1px solid #e4d7ca", borderRadius: 999, background: "#fff", boxShadow: "0 3px 10px rgba(104, 83, 67, 0.08)" }}>
+                            <button type="button" onClick={() => handleCheckoutQuantityChange(it, Number(it?.quantity || 1) - 1)} aria-label="Decrease quantity" style={{ width: 23, height: 23, border: 0, background: "transparent", color: "#685343", cursor: "pointer", fontSize: 16, lineHeight: 1 }}>−</button>
+                            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, border: "1px solid #e4d7ca", borderRadius: "50%", background: "#fff", color: "#685343", fontSize: 12, fontWeight: 700 }}>{it?.quantity || 1}</span>
+                            <button type="button" onClick={() => handleCheckoutQuantityChange(it, Number(it?.quantity || 1) + 1)} aria-label="Increase quantity" style={{ width: 23, height: 23, border: 0, background: "transparent", color: "#685343", cursor: "pointer", fontSize: 16, lineHeight: 1 }}>+</button>
+                          </div>
+                          {formatINR(parsePrice(it?.price) * Number(it?.quantity || 1))}
+                        </div>
                         {items.length > 1 && (
                           <button
                             type="button"
