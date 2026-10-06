@@ -49,6 +49,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import DeliveryInfo from "./pages/DeliveryInfo";
 import { addToCartMongo, fetchCartMongo } from "./redux/actions";
+import { readGuestCart, writeGuestCart } from "./utils/guestCommerce";
 
 import AdminPanel from "./components/AdminPanel";
 import AdminMixMatchListPage from "./pages/AdminMixMatchListPage";
@@ -59,7 +60,7 @@ const AppInner = () => {
   const navigate = useNavigate();
   const previousRouteRef = useRef(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => readGuestCart());
 
   useEffect(() => {
     if (typeof window === "undefined" || !("scrollRestoration" in window.history)) return;
@@ -141,48 +142,25 @@ const AppInner = () => {
     if (activeUserId) {
       syncCartFromServer(activeUserId);
     } else {
-      setCartItems([]);
+      setCartItems(readGuestCart());
     }
   }, []);
+
+  useEffect(() => {
+    if (!getActiveUserId()) writeGuestCart(cartItems);
+  }, [cartItems]);
 
   const addToCart = async (product, quantity = 1, options = {}) => {
     if (!product) return;
 
     const { openDrawer = location.pathname !== "/cart" } = options;
 
-    // If user is not logged in, show login page instead of adding to cart.
-    // (Cart is currently tied to Mongo `userId` so we must not create "guest" cart rows.)
-    try {
-      const token = localStorage.getItem("token");
-      const rawUser = localStorage.getItem("user");
-      const isLoggedIn = Boolean(token && rawUser);
-      if (!isLoggedIn) {
-        navigate("/login", {
-          state: {
-            returnTo: "/checkout",
-            buyNowItem: {
-              userId: product.userId || undefined,
-              productId: product.productId ?? product.id,
-              variantId: product.variantId ?? product.variant_id ?? null,
-              name: product.title || product.name || "Product",
-              slug: product.slug || product.handle || "",
-              price: product.priceSale || product.priceRegular || product.price || 0,
-              color: product.color || null,
-              size: product.size || null,
-              quantity: 1,
-              image: typeof product.mainImage === "string" ? product.mainImage : product.mainImage?.src || "",
-            },
-          },
-        });
-        return;
-      }
-    } catch {
-      navigate("/login");
-      return;
-    }
-
     const variantId = product.variantId ?? product.variant_id;
     const activeUserId = getActiveUserId();
+    const priceValue = Number(
+      String(product.priceSale || product.priceRegular || product.price || "0").replace(/[^\d.]/g, "") || "0",
+    );
+    const safePrice = Number.isFinite(priceValue) ? priceValue : 0;
 
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -190,17 +168,13 @@ const AppInner = () => {
 
     if (variantId != null && activeUserId) {
       try {
-        const priceValue = Number(
-          String(product.priceSale || product.priceRegular || product.price || "0").replace(/[^\d.]/g, "") || "0",
-        );
-
         await addToCartMongo({
           userId: activeUserId,
           productId: product.productId ?? product.id,
           variantId,
           name: product.title || product.name || "Product",
           slug: product.slug || product.handle || "",
-          price: Number.isFinite(priceValue) ? priceValue : 0,
+          price: safePrice,
           color: product.color || null,
           size: product.size || null,
           quantity: Math.max(1, Number(quantity) || 1),
@@ -272,8 +246,6 @@ const AppInner = () => {
             : i,
         );
       }
-      const price =
-        product.priceSale || product.priceRegular || product.price || "$0.00";
       const image =
         typeof product.mainImage === "string"
           ? product.mainImage
@@ -286,8 +258,10 @@ const AppInner = () => {
         {
           productId: product.productId ?? product.id,
           variantId,
-          title: product.title,
-          price,
+        name: product.title || product.name || "Product",
+        slug: product.slug || product.handle || "",
+        title: product.title,
+        price: safePrice,
           quantity: clampedQty,
           image,
           color: product.color ?? null,
@@ -982,32 +956,28 @@ const AppInner = () => {
           <Route
             path="/cart"
             element={
-              <RequireAuth>
-                <Cart
-                  cartItems={cartItems}
-                  removeFromCart={removeFromCart}
-                  updateCartQuantity={updateCartQuantity}
-                  addToCart={addToCart}
-                  refreshCartState={syncCartFromServer}
-                />
-              </RequireAuth>
+              <Cart
+                cartItems={cartItems}
+                removeFromCart={removeFromCart}
+                updateCartQuantity={updateCartQuantity}
+                addToCart={addToCart}
+                refreshCartState={syncCartFromServer}
+              />
             }
           />
           <Route
             path="/checkout"
             element={
-              <RequireAuth>
-                <Checkout cartItems={cartItems} />
-              </RequireAuth>
+              <Checkout
+                cartItems={cartItems}
+                onCartChange={setCartItems}
+                onOrderPlaced={() => setCartItems([])}
+              />
             }
           />
           <Route
             path="/order-success"
-            element={
-              <RequireAuth>
-                <OrderSuccess />
-              </RequireAuth>
-            }
+            element={<OrderSuccess />}
           />
           <Route
             path="/orders"
@@ -1043,11 +1013,7 @@ const AppInner = () => {
           />
           <Route
             path="/wishlist"
-            element={
-              <RequireAuth>
-                <WishList addToCart={addToCart} />
-              </RequireAuth>
-            }
+            element={<WishList addToCart={addToCart} />}
           />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/admin/mix-match" element={<AdminMixMatchListPage />} />
