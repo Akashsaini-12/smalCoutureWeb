@@ -5,6 +5,7 @@ import {
   normalizeCatalogProductRecord,
   normalizeCatalogSearchResponse,
 } from "../utils/ensureHttpsUrl";
+import { readGuestWishlist, writeGuestWishlist } from "../utils/guestCommerce";
 
 
 // const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://website-backend-bot8.vercel.app";
@@ -692,6 +693,23 @@ export async function removeCartMongo(payload) {
 
 // Wishlist APIs
 export async function addToWishlistMongo(payload) {
+  if (!String(payload?.userId || "").trim()) {
+    const productId = String(payload?.productId || "").trim();
+    if (!productId) throw new Error("productId is required");
+    const items = readGuestWishlist();
+    const existing = items.find((item) => String(item?.productId || "") === productId);
+    if (!existing) {
+      items.push({
+        productId,
+        name: String(payload?.name || "Product"),
+        slug: String(payload?.slug || ""),
+        price: Number(payload?.price || 0),
+        image: String(payload?.image || ""),
+      });
+      writeGuestWishlist(items);
+    }
+    return { items };
+  }
   return fetchJson(`${API_BASE}/api/wishlist`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -700,6 +718,14 @@ export async function addToWishlistMongo(payload) {
 }
 
 export async function removeWishlistMongo(payload) {
+  if (!String(payload?.userId || "").trim()) {
+    const productId = String(payload?.productId || payload?.wishlistItemId || "").trim();
+    const items = readGuestWishlist().filter((item) =>
+      String(item?.productId || item?._id || "") !== productId
+    );
+    writeGuestWishlist(items);
+    return { items };
+  }
   return fetchJson(`${API_BASE}/api/wishlist`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -803,9 +829,13 @@ export async function validateCoupon(payload) {
 }
 
 export async function listOrders(payload) {
+  const token = localStorage.getItem("token") || "";
   return fetchJson(`${API_BASE}/api/orders/list`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(payload || {}),
   });
 }
@@ -963,6 +993,9 @@ export async function adminDeleteCoupon(payload) {
 
 // Plain async helper (used in QuickViewModal for wishlist status check)
 export async function fetchWishlistList(userId) {
+  if (!String(userId || "").trim()) {
+    return { items: readGuestWishlist() };
+  }
   return fetchJson(`${API_BASE}/api/wishlist/list`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -971,6 +1004,10 @@ export async function fetchWishlistList(userId) {
 }
 
 export const fetchWishlistMongo = (userId) => async (dispatch) => {
+  if (!String(userId || "").trim()) {
+    dispatch({ type: "FETCH_WISHLIST", payload: readGuestWishlist() });
+    return;
+  }
   try {
     const res = await fetch(`${API_BASE}/api/wishlist/list`, {
       method: "POST",
