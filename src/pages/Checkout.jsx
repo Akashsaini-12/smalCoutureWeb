@@ -60,6 +60,19 @@ function getSignedInUserEmail() {
   }
 }
 
+function getStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null") || {};
+  } catch {
+    return {};
+  }
+}
+
+function splitName(name) {
+  const [firstName = "", ...rest] = String(name || "").trim().split(/\s+/);
+  return { firstName, lastName: rest.join(" ") };
+}
+
 /** Backend may send `(Color/M)` or `(Color, no size)` — slash-only regex wrongly failed and marked every line OOS */
 function parseOutOfStockBannerMessage(msg) {
   if (typeof msg !== "string") return null;
@@ -166,10 +179,11 @@ function FloatingAddressField({ label, value, onChange, inputMode, type = "text"
   );
 }
 
-export default function Checkout({ cartItems = [] }) {
+export default function Checkout({ cartItems = [], onCartChange, onOrderPlaced }) {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = getUserId();
+  const storedUser = getStoredUser();
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileKeyboardOpen, setIsMobileKeyboardOpen] = useState(false);
 
@@ -199,8 +213,11 @@ export default function Checkout({ cartItems = [] }) {
   const [openCouponInfo, setOpenCouponInfo] = useState(null);
   const [paying, setPaying] = useState(false);
 
-  const [customerName, setCustomerName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [firstName, setFirstName] = useState(String(storedUser.firstName || ""));
+  const [lastName, setLastName] = useState(String(storedUser.lastName || ""));
+  const [email, setEmail] = useState(String(storedUser.email || ""));
+  const customerName = `${firstName} ${lastName}`.trim();
+  const [phone, setPhone] = useState(String(storedUser.phone || ""));
   const [alternatePhone, setAlternatePhone] = useState("");
   const [address1, setAddress1] = useState("");
   const [city, setCity] = useState("");
@@ -227,6 +244,12 @@ export default function Checkout({ cartItems = [] }) {
       null
     );
   }, [savedAddresses, selectedAddressId]);
+
+  const setCustomerNameFromAddress = (name) => {
+    const parts = splitName(name);
+    setFirstName(parts.firstName);
+    setLastName(parts.lastName);
+  };
 
   const primaryVisibleAddress = useMemo(() => {
     if (!savedAddresses.length) return null;
@@ -303,8 +326,9 @@ export default function Checkout({ cartItems = [] }) {
       return null;
     }
     return {
-      name: found.name || customerName,
-      phone: found.phone || phone,
+      name: customerName,
+      phone,
+      alternatePhone,
       address1: found.address1 || address1,
       city: found.city || city,
       state: found.state || state,
@@ -315,7 +339,9 @@ export default function Checkout({ cartItems = [] }) {
   const validateStockBeforePaymentOrOrder = async (lines) => {
     if (isBuyNowMode) return true; // buy-now uses server-side enforcement only
     try {
-      const stockRes = await validateCartStock({ userId });
+      const stockRes = await validateCartStock(
+        userId ? { userId } : { items: lines },
+      );
       const list = Array.isArray(stockRes?.items) ? stockRes.items : [];
       const ok = Boolean(stockRes?.ok);
       if (!ok) {
@@ -323,6 +349,7 @@ export default function Checkout({ cartItems = [] }) {
         toast.error("Out of stock — please review cart");
         return false;
       }
+      if (!userId) return true;
       // Require 1:1 match with current cart (prevents stale hidden lines)
       for (const line of lines || []) {
         const cid = String(line?._id || "");
@@ -349,6 +376,13 @@ export default function Checkout({ cartItems = [] }) {
     try {
       if (isBuyNowMode) {
         setItems([]);
+        return;
+      }
+
+      if (!userId) {
+        const nextItems = items.filter((currentItem) => currentItem !== item);
+        setItems(nextItems);
+        onCartChange?.(nextItems);
         return;
       }
 
@@ -380,7 +414,15 @@ export default function Checkout({ cartItems = [] }) {
       ),
     );
 
-    if (isBuyNowMode || !item?._id) return;
+    if (isBuyNowMode) return;
+    if (!userId) {
+      const nextItems = items.map((currentItem) =>
+        currentItem === item ? { ...currentItem, quantity } : currentItem,
+      );
+      onCartChange?.(nextItems);
+      return;
+    }
+    if (!item?._id) return;
 
     try {
       await updateCartQtyMongo({
@@ -554,6 +596,16 @@ export default function Checkout({ cartItems = [] }) {
 
   useEffect(() => {
     let mounted = true;
+    if (!userId) {
+      setSavedAddresses([]);
+      setSelectedAddressId("");
+      setShowAddressForm(true);
+      setShowAddressOptions(false);
+      setAddrLoading(false);
+      return () => {
+        mounted = false;
+      };
+    }
     setAddrLoading(true);
     setAddrError("");
     listAddresses({ userId })
@@ -574,7 +626,7 @@ export default function Checkout({ cartItems = [] }) {
           setShowAddressForm(false);
           setShowAddressOptions(false);
           if (defaultSelection) {
-            setCustomerName(defaultSelection.name || "");
+            setCustomerNameFromAddress(defaultSelection.name || "");
             setPhone(defaultSelection.phone || "");
             setAlternatePhone(defaultSelection.alternatePhone || "");
             setAddress1(defaultSelection.address1 || "");
@@ -586,7 +638,7 @@ export default function Checkout({ cartItems = [] }) {
           }
         } else {
           setSelectedAddressId("");
-          setCustomerName("");
+          setCustomerNameFromAddress("");
           setPhone("");
           setAlternatePhone("");
           setAddress1("");
@@ -610,7 +662,7 @@ export default function Checkout({ cartItems = [] }) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     // Keep shipping preview fresh when pincode changes (basic)
@@ -652,7 +704,7 @@ export default function Checkout({ cartItems = [] }) {
     setSelectedAddressId(normalizedId);
     setShowAddressOptions(false);
     if (!found) return;
-    setCustomerName(found.name || "");
+    setCustomerNameFromAddress(found.name || "");
     setPhone(found.phone || "");
     setAlternatePhone(found.alternatePhone || "");
     setAddress1(found.address1 || "");
@@ -670,7 +722,7 @@ export default function Checkout({ cartItems = [] }) {
     setSelectedAddressId(normalizedId);
     setShowAddressOptions(false);
     if (!found) return;
-    setCustomerName(found.name || "");
+    setCustomerNameFromAddress(found.name || "");
     setPhone(found.phone || "");
     setAlternatePhone(found.alternatePhone || "");
     setAddress1(found.address1 || "");
@@ -695,7 +747,7 @@ export default function Checkout({ cartItems = [] }) {
     setSelectedAddressId("");
     setAddressLabel("Home");
     setIsDefaultAddress(savedAddresses.length === 0);
-    setCustomerName("");
+    setCustomerNameFromAddress("");
     setPhone("");
     setAlternatePhone("");
     setAddress1("");
@@ -719,7 +771,7 @@ export default function Checkout({ cartItems = [] }) {
 
     setSelectedAddressId(normalizedId);
     if (found) {
-      setCustomerName(found.name || "");
+      setCustomerNameFromAddress(found.name || "");
       setPhone(found.phone || "");
       setAlternatePhone(found.alternatePhone || "");
       setAddress1(found.address1 || "");
@@ -739,7 +791,7 @@ export default function Checkout({ cartItems = [] }) {
     setSelectedAddressId(normalizedId);
     const found = savedAddresses.find((a) => String(a?._id) === normalizedId);
     if (found) {
-      setCustomerName(found.name || "");
+      setCustomerNameFromAddress(found.name || "");
       setPhone(found.phone || "");
       setAlternatePhone(found.alternatePhone || "");
       setAddress1(found.address1 || "");
@@ -757,11 +809,6 @@ export default function Checkout({ cartItems = [] }) {
   async function handleSaveAddress() {
     setAddrError("");
 
-    if (!userId) {
-      setAddrError("Please log in to save an address.");
-      return;
-    }
-
     const normalizedName = String(customerName || "").trim();
     const normalizedAddress1 = String(address1 || "").trim();
     const normalizedCity = String(city || "").trim();
@@ -770,8 +817,13 @@ export default function Checkout({ cartItems = [] }) {
     const cleanAlternatePhone = sanitizeNumericInput(alternatePhone, 10);
     const cleanPincode = sanitizeNumericInput(pincode, 6);
 
-    if (!normalizedName) {
-      setAddrError("Please enter your full name.");
+    if (!String(firstName || "").trim()) {
+      setAddrError("Please enter your first name.");
+      return;
+    }
+
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
+      setAddrError("Please enter a valid email address.");
       return;
     }
 
@@ -803,6 +855,27 @@ export default function Checkout({ cartItems = [] }) {
     try {
       setCity(normalizedCity);
       setState(normalizedState);
+
+      if (!userId) {
+        const guestAddress = {
+          _id: "guest-checkout",
+          label: addressLabel || "Home",
+          name: normalizedName,
+          phone: cleanPhone,
+          alternatePhone: cleanAlternatePhone,
+          address1: normalizedAddress1,
+          city: normalizedCity,
+          state: normalizedState,
+          pincode: cleanPincode,
+          isDefault: true,
+        };
+        setSavedAddresses([guestAddress]);
+        setSelectedAddressId(guestAddress._id);
+        setShowAddressOptions(false);
+        setShowAddressForm(false);
+        window.setTimeout(() => scrollToSection(addressSectionRef), 60);
+        return;
+      }
 
       const res = await saveAddress({
         userId,
@@ -837,6 +910,13 @@ export default function Checkout({ cartItems = [] }) {
     try {
       const normalizedId = String(targetId || "");
       if (!normalizedId) return;
+      if (!userId) {
+        setSavedAddresses([]);
+        setSelectedAddressId("");
+        setShowAddressForm(true);
+        setShowAddressOptions(false);
+        return;
+      }
       await deleteAddress({ userId, addressId: normalizedId });
       const listRes = await listAddresses({ userId });
       const list = Array.isArray(listRes?.items) ? listRes.items : [];
@@ -943,7 +1023,7 @@ export default function Checkout({ cartItems = [] }) {
       }
 
       let orderItems = items;
-      if (!isBuyNowMode) {
+      if (!isBuyNowMode && userId) {
         try {
           const cartSnap = await fetchCartMongo(userId);
           const liveLines = Array.isArray(cartSnap?.items) ? cartSnap.items : [];
@@ -959,29 +1039,41 @@ export default function Checkout({ cartItems = [] }) {
         } catch {
           // Server down → checkout still validates; UX may show server error afterward
         }
+      } else if (!isBuyNowMode) {
+        const ok = await validateStockBeforePaymentOrOrder(items);
+        if (!ok) return;
       } else if (buyNowItem) {
         orderItems = [buyNowItem];
       }
 
       const shippingAddress = ensureSavedAddressSelected();
       if (!shippingAddress) return;
+      const customer = {
+        firstName: String(firstName || "").trim(),
+        lastName: String(lastName || "").trim(),
+        email: String(email || "").trim().toLowerCase(),
+        phone: String(phone || "").trim(),
+      };
 
       const res = isBuyNowMode
         ? await createBuyNowCheckout({
-          userId,
+          ...(userId ? { userId } : {}),
           paymentMethod,
           note,
           couponCode,
           shippingAddress,
+          customer,
           item: buyNowItem,
           ...(paymentPayload ? { payment: paymentPayload } : {}),
         })
         : await createCheckout({
-          userId,
+          ...(userId ? { userId } : {}),
           paymentMethod,
           note,
           couponCode,
           shippingAddress,
+          customer,
+          ...(!userId ? { items: orderItems } : {}),
           ...(paymentPayload ? { payment: paymentPayload } : {}),
         });
 
@@ -990,6 +1082,7 @@ export default function Checkout({ cartItems = [] }) {
         setError("Order was not created. Please try again.");
         return;
       }
+      if (!isBuyNowMode) onOrderPlaced?.();
       const calculatedTotal = orderItems.reduce((sum, it) => {
         const price = parsePrice(it?.price);
         const qty = Number(it?.quantity || 1);
@@ -1006,7 +1099,7 @@ export default function Checkout({ cartItems = [] }) {
         value: purchaseTotal,
         currency: "INR",
         customer: {
-          email: getSignedInUserEmail(),
+          email: email.trim().toLowerCase() || getSignedInUserEmail(),
           phone: String(shippingAddress?.phone || "").trim(),
           zip: String(shippingAddress?.pincode || "").trim(),
         },
@@ -1052,8 +1145,12 @@ export default function Checkout({ cartItems = [] }) {
     try {
       setPaying(true);
       // Always validate stock BEFORE opening Razorpay to avoid paying for an OOS cart.
-      const cartSnap = await fetchCartMongo(userId).catch(() => null);
-      const liveLines = Array.isArray(cartSnap?.items) ? cartSnap.items : items;
+      const cartSnap = userId
+        ? await fetchCartMongo(userId).catch(() => null)
+        : null;
+      const liveLines = userId && Array.isArray(cartSnap?.items)
+        ? cartSnap.items
+        : items;
       const ok = await validateStockBeforePaymentOrOrder(liveLines);
       if (!ok) {
         setPaying(false);
@@ -1310,6 +1407,49 @@ export default function Checkout({ cartItems = [] }) {
                 </div>
               </div>
 
+              <div style={{ marginBottom: 16, padding: 14, border: "1px solid #e5e7eb", borderRadius: 12, background: "#fff" }}>
+                <div style={{ marginBottom: 12, color: "#0f172a", fontSize: 14, fontWeight: 800 }}>
+                  Contact details
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))", gap: 12 }}>
+                  <FloatingAddressField
+                    label="First name *"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First name *"
+                  />
+                  <FloatingAddressField
+                    label="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last name"
+                  />
+                  <FloatingAddressField
+                    label="Email (Optional)"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email (Optional)"
+                  />
+                  <FloatingAddressField
+                    label="10-digit mobile number *"
+                    value={phone}
+                    onChange={(e) => setPhone(sanitizeNumericInput(e.target.value, 10))}
+                    placeholder="10-digit mobile number *"
+                    inputMode="numeric"
+                    maxLength={10}
+                  />
+                  <FloatingAddressField
+                    label="Alternate phone number (Optional)"
+                    value={alternatePhone}
+                    onChange={(e) => setAlternatePhone(sanitizeNumericInput(e.target.value, 10))}
+                    placeholder="Alternate phone number (Optional)"
+                    inputMode="numeric"
+                    maxLength={10}
+                  />
+                </div>
+              </div>
+
               <div style={{ marginBottom: 8 }}>
 
                 {addrLoading ? (
@@ -1338,6 +1478,7 @@ export default function Checkout({ cartItems = [] }) {
                           {primaryVisibleAddress ? primaryVisibleAddress.name || "Customer" : "No saved address"}
                         </span>
                       </div>
+                      {primaryVisibleAddress ? (
                       <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
                         <button
                           type="button"
@@ -1394,6 +1535,7 @@ export default function Checkout({ cartItems = [] }) {
                           ×
                         </button>
                       </div>
+                      ) : null}
                     </div>
                     {primaryVisibleAddress ? (
                       <>
@@ -1655,29 +1797,6 @@ export default function Checkout({ cartItems = [] }) {
                      inputMode="numeric"
                      maxLength={6}
                    />
-                   <FloatingAddressField
-                     label="Enter your full name *"
-                     value={customerName}
-                     onChange={(e) => setCustomerName(e.target.value)}
-                     placeholder="Enter your full name *"
-                   />
-                   <FloatingAddressField
-                     label="10-digit mobile number *"
-                     value={phone}
-                     onChange={(e) => setPhone(sanitizeNumericInput(e.target.value, 10))}
-                     placeholder="10-digit mobile number *"
-                     inputMode="numeric"
-                     maxLength={10}
-                   />
-                   <FloatingAddressField
-                     label="Alternate phone number (Optional)"
-                     value={alternatePhone}
-                     onChange={(e) => setAlternatePhone(sanitizeNumericInput(e.target.value, 10))}
-                     placeholder="Alternate phone number (Optional)"
-                     inputMode="numeric"
-                     maxLength={10}
-                   />
-
                    <div>
                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, marginBottom: 8 }}>
                        <div style={{ fontSize: 15, fontWeight: 700, color: "#111827", whiteSpace: "nowrap" }}>Type of address</div>
@@ -1718,7 +1837,7 @@ export default function Checkout({ cartItems = [] }) {
 
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, marginTop: 16, paddingTop: 14, borderTop: "1px solid #e7e0d8" }}>
                     <button type="button" onClick={handleSaveAddress} style={{ ...smallPrimaryBtn, minHeight: 40, fontSize: 13, borderRadius: 8, background: "#5d432f", padding: "9px 12px" }}>
-                      {selectedAddressId ? "Update address" : "Save address"}
+                      {!userId ? "Use this address" : selectedAddressId ? "Update address" : "Save address"}
                     </button>
                     <button
                       type="button"
@@ -1728,7 +1847,7 @@ export default function Checkout({ cartItems = [] }) {
                         if (selectedAddressId) {
                           const found = savedAddresses.find((a) => String(a?._id) === String(selectedAddressId));
                           if (found) {
-                            setCustomerName(found.name || "");
+                            setCustomerNameFromAddress(found.name || "");
                             setPhone(found.phone || "");
                             setAlternatePhone(found.alternatePhone || "");
                             setAddress1(found.address1 || "");
@@ -1739,7 +1858,7 @@ export default function Checkout({ cartItems = [] }) {
                             setIsDefaultAddress(Boolean(found.isDefault));
                           }
                         } else {
-                          setCustomerName("");
+                          setCustomerNameFromAddress("");
                           setPhone("");
                           setAlternatePhone("");
                           setAddress1("");
