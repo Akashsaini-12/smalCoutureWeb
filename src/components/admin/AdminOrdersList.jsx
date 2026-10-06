@@ -108,8 +108,11 @@ export default function AdminOrdersList({
             ) : (
               safeItems.map((o, idx) => {
                 const ship = o?.shippingAddress || o?.address || {};
-                const name = ship?.name || o?.userName || o?.customerName || o?.name || "-";
-                const phone = ship?.phone || o?.phone || "-";
+                const customerName = [o?.customer?.firstName, o?.customer?.lastName]
+                  .filter(Boolean)
+                  .join(" ");
+                const name = ship?.name || customerName || o?.userName || o?.customerName || o?.name || "-";
+                const phone = o?.customer?.phone || ship?.phone || o?.phone || "-";
                 const addressLine = [
                   ship?.line1 || ship?.address1,
                   ship?.line2 || ship?.address2,
@@ -133,6 +136,9 @@ export default function AdminOrdersList({
                     <div className="admin-orders-phone">
                       {phone}
                     </div>
+                    {o?.customer?.email ? (
+                      <div className="admin-orders-phone">{o.customer.email}</div>
+                    ) : null}
                     <div className="admin-orders-address">
                       {addressLine || "Address: -"}
                     </div>

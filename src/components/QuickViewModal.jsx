@@ -242,15 +242,6 @@ const QuickViewModal = ({
     };
   }, [isPage, userId]);
 
-  const token = (() => {
-    try {
-      return localStorage.getItem("token");
-    } catch {
-      return null;
-    }
-  })();
-  const isLoggedIn = Boolean(token);
-
   const norm = (v) => String(v ?? "").trim().toLowerCase();
 
   const listingLabel = (() => {
@@ -497,12 +488,6 @@ const QuickViewModal = ({
     let mounted = true;
     if ((!isOpen && !isPage) || !product) return undefined;
 
-    if (!isLoggedIn) {
-      setIsWishlisted(false);
-      setWishlistLoading(false);
-      return undefined;
-    }
-
     const pid = resolveProductId(product);
     if (!pid) return undefined;
 
@@ -526,15 +511,10 @@ const QuickViewModal = ({
     return () => {
       mounted = false;
     };
-  }, [isOpen, isPage, product, userId, isLoggedIn]);
+  }, [isOpen, isPage, product, userId]);
 
   const toggleWishlist = async () => {
     if (!product) return;
-
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
 
     const productId = resolveProductId(product);
     if (!productId) return;
@@ -1144,12 +1124,6 @@ const QuickViewModal = ({
 
   const runAddToCartPipeline = async (opts = {}) => {
     const { openDrawer = true } = opts || {};
-    if (!isLoggedIn) {
-      navigate("/login");
-      if (!isPage) onClose?.();
-      return false;
-    }
-
     if (isOutOfStock) return false;
     if (maxQty != null && quantity > maxQty) {
       setQuantity(Math.max(1, maxQty));
@@ -1240,35 +1214,6 @@ const QuickViewModal = ({
   };
 
   const handleBuyNow = async () => {
-    if (!isLoggedIn) {
-      const numericPrice = Number(
-        String(product.priceSale || product.priceRegular || product.price || "")
-          .replace(/[^\d.]/g, ""),
-      );
-      navigate("/login", {
-        state: {
-          returnTo: "/checkout",
-          buyNowItem: {
-            userId,
-            productId: String(product.productId ?? product.id ?? product._id ?? ""),
-            variantId: String(
-              (product.variantId != null && product.variantId !== "" ? product.variantId : activeVariant?._id) || "",
-            ),
-            name: String(product.title || product.name || "").trim() || "Product",
-            slug: product.handle || product.slug || "",
-            price: Number.isFinite(numericPrice) ? numericPrice : 0,
-            couponCode: selectedCoupon?.code || "",
-            color: resolvedColor || null,
-            size: selectedSize || null,
-            quantity,
-            image: mainSrc || (Array.isArray(images) && images[0]) || "",
-          },
-        },
-      });
-      if (!isPage) onClose?.();
-      return;
-    }
-
     // Single-item checkout: pass the selected variant as navigation state.
     // Checkout will use this when present (without affecting normal cart checkout).
     const numericPrice = Number(

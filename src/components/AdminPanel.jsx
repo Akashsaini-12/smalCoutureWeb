@@ -166,6 +166,7 @@ function ProductDetail({ item }) {
 function OrderDetail({ order, onItemClick }) {
   const items = Array.isArray(order?.items) ? order.items : [];
   const shipping = order?.shippingAddress || {};
+  const customer = order?.customer || {};
   const statusKey = String(order?.status || "created").toLowerCase();
   const paymentKey = String(order?.paymentStatus || "pending").toLowerCase();
 
@@ -337,11 +338,11 @@ function OrderDetail({ order, onItemClick }) {
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 10, fontSize: 12 }}>
                   <div style={{ color: "#94a3b8", fontWeight: 900 }}>Email</div>
-                  <div style={{ color: "#4f46e5", fontWeight: 950, wordBreak: "break-all" }}>{order?.email || shipping?.email || "-"}</div>
+                  <div style={{ color: "#4f46e5", fontWeight: 950, wordBreak: "break-all" }}>{customer?.email || order?.email || shipping?.email || "-"}</div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 10, fontSize: 12 }}>
                   <div style={{ color: "#94a3b8", fontWeight: 900 }}>Phone</div>
-                  <div style={{ color: "#0f172a", fontWeight: 950 }}>{order?.phone || shipping?.phone || "-"}</div>
+                  <div style={{ color: "#0f172a", fontWeight: 950 }}>{customer?.phone || order?.phone || shipping?.phone || "-"}</div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 10, fontSize: 12 }}>
                   <div style={{ color: "#94a3b8", fontWeight: 900 }}>Alternate phone</div>
@@ -777,8 +778,15 @@ function AdminOrdersTab({ adminListOrders, adminDeleteOrder }) {
       const oid = String(o?._id || "").toLowerCase();
       const orderNumber = `#${String(o?.orderNumber || o?.orderNo || o?._id || "").slice(-8)}`.toLowerCase();
       const uid = String(o?.userId || "").toLowerCase();
-      const mail = String(o?.shippingAddress?.name || "").toLowerCase(); // fallback
-      return oid.includes(q) || orderNumber.includes(q) || uid.includes(q) || mail.includes(q);
+      const customer = o?.customer || {};
+      const customerSearch = [
+        o?.shippingAddress?.name,
+        customer?.firstName,
+        customer?.lastName,
+        customer?.email,
+        customer?.phone,
+      ].join(" ").toLowerCase();
+      return oid.includes(q) || orderNumber.includes(q) || uid.includes(q) || customerSearch.includes(q);
     });
   }, [orders, query]);
 
@@ -873,7 +881,7 @@ function AdminOrdersTab({ adminListOrders, adminDeleteOrder }) {
           </div>
           <div style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9, background: "#fff", color: "#111", fontSize: 12, lineHeight: 1.5 }}>
             <strong>Order total: {formatINR(deleteTarget?.total)}</strong>
-            <div>Customer: {deleteTarget?.shippingAddress?.name || deleteTarget?.customerName || "Unavailable"}</div>
+            <div>Customer: {deleteTarget?.shippingAddress?.name || [deleteTarget?.customer?.firstName, deleteTarget?.customer?.lastName].filter(Boolean).join(" ") || deleteTarget?.customerName || "Unavailable"}</div>
           </div>
           <input value={adminIdentifier} onChange={(event) => setAdminIdentifier(event.target.value)} placeholder="Admin email or mobile" autoComplete="username" required style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9 }} />
           <input value={adminPassword} onChange={(event) => setAdminPassword(event.target.value)} placeholder="Admin password" type="password" autoComplete="current-password" required style={{ padding: "9px 11px", border: "1px solid #d9d9d9", borderRadius: 9 }} />

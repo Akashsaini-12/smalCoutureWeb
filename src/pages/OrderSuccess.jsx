@@ -8,6 +8,13 @@ import {
 export default function OrderSuccess() {
   const location = useLocation();
   const purchaseTrackedRef = useRef(false);
+  const hasAccount = (() => {
+    try {
+      return Boolean(localStorage.getItem("token") && localStorage.getItem("user"));
+    } catch {
+      return false;
+    }
+  })();
   const params = new URLSearchParams(location.search);
   const orderId = params.get("orderId");
   const orderNumber = orderId ? String(orderId).replace(/^#/, "").slice(-8) : "";
@@ -71,7 +78,9 @@ export default function OrderSuccess() {
         </div>
 
         <div className="order-success-actions">
-          <Link to="/orders" className="order-success-primary">View my orders</Link>
+          {hasAccount ? (
+            <Link to="/orders" className="order-success-primary">View my orders</Link>
+          ) : null}
           <Link to="/" className="order-success-secondary">Continue shopping</Link>
         </div>
       </section>

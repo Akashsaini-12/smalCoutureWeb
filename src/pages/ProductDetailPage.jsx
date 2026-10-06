@@ -332,7 +332,6 @@ function ProductDetailPageContent({ handleParam, addToCart, cartItems = [] }) {
 
   // Wishlist for suggested grids
   useEffect(() => {
-    if (!userId) return;
     dispatch(fetchWishlistMongo(userId));
   }, [dispatch, userId]);
 
