@@ -352,7 +352,6 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   };
 
   useEffect(() => {
-    if (!userId) return;
     dispatch(fetchWishlistMongo(userId));
   }, [dispatch, userId]);
 
@@ -504,6 +503,15 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
   // Load cart items from MongoDB via API (same as CartDrawer)
   useEffect(() => {
     let mounted = true;
+    if (!userId) {
+      setApiMode(false);
+      setApiCartItems([]);
+      setApiLoading(false);
+      setApiError("");
+      return () => {
+        mounted = false;
+      };
+    }
     setApiLoading(true);
     setApiError("");
     setApiMode(true);
@@ -525,7 +533,7 @@ export default function Cart({ cartItems = [], removeFromCart, updateCartQuantit
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [userId]);
 
   // Fetch recently viewed for "Suggested for you"
   useEffect(() => {
