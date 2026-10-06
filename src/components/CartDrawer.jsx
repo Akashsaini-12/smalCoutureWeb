@@ -359,6 +359,13 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
 
   useEffect(() => {
     if (!isOpen) return;
+    if (!userId) {
+      setApiMode(false);
+      setApiCartItems([]);
+      setApiLoading(false);
+      setApiError("");
+      return;
+    }
     let mounted = true;
     listAvailableCoupons({ userId, limit: 10 })
       .then((res) => {
@@ -372,7 +379,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems = [], removeFrom
     return () => {
       mounted = false;
     };
-  }, [isOpen]);
+  }, [isOpen, userId]);
 
   useEffect(() => {
     if (!isOpen) return;
