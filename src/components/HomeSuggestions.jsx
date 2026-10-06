@@ -117,7 +117,6 @@ export default function HomeSuggestions({ addToCart, cartItems = [] }) {
   }, []);
 
   useEffect(() => {
-    if (!userId) return;
     dispatch(fetchWishlistMongo(userId));
   }, [dispatch, userId]);
 
